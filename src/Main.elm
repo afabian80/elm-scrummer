@@ -12,6 +12,14 @@ import Json.Encode as E
 import Task
 
 
+
+-- TODO use custom text in new task title
+-- TODO click to edit task
+-- TODO add delete button after task
+-- TODO add undo/redo
+-- TODO render links in task title
+
+
 type alias Task =
     { title : String
     , modificationTime : Int
