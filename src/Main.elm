@@ -1,11 +1,14 @@
 port module Main exposing (..)
 
 import Browser
+import File
 import File.Download as Download
+import File.Select as Select
 import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
+import Task
 
 
 type alias Model =
@@ -15,6 +18,9 @@ type alias Model =
 type Msg
     = Increment
     | Download
+    | UploadRequest
+    | UploadFileSelected File.File
+    | UploadFileLoaded String
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -60,6 +66,7 @@ view model =
         [ text (String.fromInt model)
         , button [ onClick Increment ] [ text "Increment" ]
         , button [ onClick Download ] [ text "Download" ]
+        , button [ onClick UploadRequest ] [ text "Upload" ]
         ]
 
 
@@ -80,6 +87,24 @@ update msg model =
 
         Download ->
             ( model, Download.string "akos.json" "text/json" (E.encode 4 (encodeModel model)) )
+
+        UploadRequest ->
+            ( model, Select.file [ "text/json" ] UploadFileSelected )
+
+        UploadFileSelected file ->
+            ( model, Task.perform UploadFileLoaded (File.toString file) )
+
+        UploadFileLoaded text ->
+            let
+                modelResult =
+                    D.decodeString modelDecoder text
+            in
+            case modelResult of
+                Ok m ->
+                    ( m, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
