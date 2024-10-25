@@ -12,15 +12,16 @@ import Task
 
 
 type alias Model =
-    Int
+    { data : Int
+    }
 
 
 type Msg
     = Increment
     | Download
-    | UploadRequest
-    | UploadFileSelected File.File
-    | UploadFileLoaded String
+    | FileRequested
+    | FileSelected File.File
+    | FileLoaded String
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -36,14 +37,14 @@ main =
         }
 
 
-modelDecoder : D.Decoder Int
+modelDecoder : D.Decoder Model
 modelDecoder =
-    D.field "age" D.int
+    D.map Model (D.field "data" D.int)
 
 
 encodeModel : Model -> E.Value
 encodeModel model =
-    E.object [ ( "age", E.int model ) ]
+    E.object [ ( "data", E.int model.data ) ]
 
 
 init : E.Value -> ( Model, Cmd Msg )
@@ -57,16 +58,16 @@ init flag =
             ( model, Cmd.none )
 
         Err _ ->
-            ( 0, Cmd.none )
+            ( Model 0, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ text (String.fromInt model)
+        [ text (String.fromInt model.data)
         , button [ onClick Increment ] [ text "Increment" ]
         , button [ onClick Download ] [ text "Download" ]
-        , button [ onClick UploadRequest ] [ text "Upload" ]
+        , button [ onClick FileRequested ] [ text "Upload" ]
         ]
 
 
@@ -83,18 +84,18 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Increment ->
-            ( model + 1, Cmd.none )
+            ( { model | data = model.data + 1 }, Cmd.none )
 
         Download ->
             ( model, Download.string "akos.json" "text/json" (E.encode 4 (encodeModel model)) )
 
-        UploadRequest ->
-            ( model, Select.file [ "text/json" ] UploadFileSelected )
+        FileRequested ->
+            ( model, Select.file [ "text/json" ] FileSelected )
 
-        UploadFileSelected file ->
-            ( model, Task.perform UploadFileLoaded (File.toString file) )
+        FileSelected file ->
+            ( model, Task.perform FileLoaded (File.toString file) )
 
-        UploadFileLoaded text ->
+        FileLoaded text ->
             let
                 modelResult =
                     D.decodeString modelDecoder text
