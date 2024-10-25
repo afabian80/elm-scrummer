@@ -108,11 +108,11 @@ init flag =
 view : Model -> Html Msg
 view model =
     div []
-        [ ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
-        , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
+        [ button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
+        , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
         , div [ style "color" "red" ] [ text model.log ]
