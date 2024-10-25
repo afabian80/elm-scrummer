@@ -29,6 +29,7 @@ type Msg
     | FileRequested
     | FileSelected File.File
     | FileLoaded String
+    | AddAutoTask
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -78,6 +79,7 @@ view model =
         [ text ("Data: " ++ String.fromInt model.data)
         , ul [] (renderTasks model.persistentCore.tasks)
         , button [ onClick Increment ] [ text "Increment" ]
+        , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
         , text model.log
@@ -114,7 +116,6 @@ update msg modelOriginal =
         Increment ->
             ( { model
                 | data = model.data + 1
-                , persistentCore = addNewTask model
               }
             , Cmd.none
             )
@@ -139,6 +140,13 @@ update msg modelOriginal =
 
                 Err e ->
                     ( { model | log = D.errorToString e }, Cmd.none )
+
+        AddAutoTask ->
+            ( { model
+                | persistentCore = addNewTask model
+              }
+            , Cmd.none
+            )
 
 
 addNewTask : Model -> ModelCore
