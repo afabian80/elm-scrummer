@@ -15,10 +15,10 @@ type Msg
     = Increment
 
 
-port saveToLocalStorage : String -> Cmd msg
+port saveToLocalStorage : E.Value -> Cmd msg
 
 
-main : Program String Model Msg
+main : Program E.Value Model Msg
 main =
     Browser.element
         { init = init
@@ -28,8 +28,8 @@ main =
         }
 
 
-flagDecoder : D.Decoder Int
-flagDecoder =
+modelDecoder : D.Decoder Int
+modelDecoder =
     D.field "age" D.int
 
 
@@ -38,15 +38,15 @@ encode model =
     E.object [ ( "age", E.int model ) ]
 
 
-init : String -> ( Model, Cmd Msg )
+init : E.Value -> ( Model, Cmd Msg )
 init flag =
     let
         f =
-            D.decodeString flagDecoder flag
+            D.decodeValue modelDecoder flag
     in
     case f of
-        Ok x ->
-            ( x, Cmd.none )
+        Ok model ->
+            ( model, Cmd.none )
 
         Err _ ->
             ( 0, Cmd.none )
@@ -68,8 +68,7 @@ updateWithStorage msg model =
         ( newModel, cmds ) =
             update msg model
     in
-    -- ( newModel, Cmd.batch [ saveToLocalStorage (encode model), cmds ] )
-    ( newModel, Cmd.batch [ saveToLocalStorage "{\"age\": 23}", cmds ] )
+    ( newModel, Cmd.batch [ saveToLocalStorage (encode model), cmds ] )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

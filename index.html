@@ -18,7 +18,7 @@
     // };
     var storageKey = "mykey"
     var storageValueNull = localStorage.getItem(storageKey)
-    var storageValue = storageValueNull ? storageValueNull : ""
+    var storageValue = storageValueNull ? JSON.parse(storageValueNull) : ""
 
     var app = Elm.Main.init({
         node: document.getElementById("app"),
@@ -27,7 +27,7 @@
     });
 
     app.ports.saveToLocalStorage.subscribe(function (message) {
-        localStorage.setItem(storageKey, message)
+        localStorage.setItem(storageKey, JSON.stringify(message))
     });
 </script>
 
