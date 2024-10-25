@@ -70,7 +70,7 @@ init flag =
             ( Model 0 "" modelCore, Cmd.none )
 
         Err e ->
-            ( Model 0 (D.errorToString e) (ModelCore []), Cmd.none )
+            ( Model 0 "Cannot load model from local storage. Starting afresh!" (ModelCore []), Cmd.none )
 
 
 view : Model -> Html Msg
@@ -82,7 +82,7 @@ view model =
         , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
-        , text model.log
+        , div [] [ text model.log ]
         ]
 
 
@@ -151,7 +151,7 @@ update msg modelOriginal =
 
 addNewTask : Model -> ModelCore
 addNewTask model =
-    ModelCore (List.append model.persistentCore.tasks [ "hello" ++ String.fromInt model.data ])
+    ModelCore (List.append model.persistentCore.tasks [ "hello-" ++ String.fromInt model.data ])
 
 
 subscriptions : Model -> Sub Msg
