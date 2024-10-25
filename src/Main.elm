@@ -13,7 +13,8 @@ import Task
 
 
 type alias ModelCore =
-    { tasks : List String
+    { timestamp : Int
+    , tasks : List String
     }
 
 
@@ -46,15 +47,17 @@ main =
 
 modelCoreDecoder : D.Decoder ModelCore
 modelCoreDecoder =
-    D.map
+    D.map2
         ModelCore
+        (D.field "timestamp" D.int)
         (D.field "tasks" (D.list D.string))
 
 
 encodeModelCore : ModelCore -> E.Value
 encodeModelCore modelCore =
     E.object
-        [ ( "tasks", E.list E.string modelCore.tasks )
+        [ ( "timestamp", E.int modelCore.timestamp )
+        , ( "tasks", E.list E.string modelCore.tasks )
         ]
 
 
@@ -69,7 +72,11 @@ init flag =
             ( Model "" modelCore, Cmd.none )
 
         Err _ ->
-            ( Model "Cannot load model from local storage. Starting afresh!" (ModelCore []), Cmd.none )
+            ( Model
+                "Cannot load model from local storage. Starting afresh!"
+                (ModelCore 0 [])
+            , Cmd.none
+            )
 
 
 view : Model -> Html Msg
@@ -79,6 +86,7 @@ view model =
         , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
+        , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
@@ -109,11 +117,17 @@ update msg modelOriginal =
         model =
             { modelOriginal
                 | log = ""
+                , persistentCore = stepTimestamp modelOriginal
             }
     in
     case msg of
         Download ->
-            ( model, Download.string "akos.json" "text/json" (E.encode 4 (encodeModelCore model.persistentCore)) )
+            ( model
+            , Download.string
+                "akos.json"
+                "text/json"
+                (E.encode 4 (encodeModelCore model.persistentCore))
+            )
 
         FileRequested ->
             ( model, Select.file [ "text/json" ] FileSelected )
@@ -143,7 +157,19 @@ update msg modelOriginal =
 
 addNewTask : Model -> ModelCore
 addNewTask model =
-    ModelCore (List.append model.persistentCore.tasks [ "hello-" ])
+    ModelCore
+        model.persistentCore.timestamp
+        (List.append
+            model.persistentCore.tasks
+            [ "hello-" ++ String.fromInt model.persistentCore.timestamp ]
+        )
+
+
+stepTimestamp : Model -> ModelCore
+stepTimestamp model =
+    ModelCore
+        (model.persistentCore.timestamp + 1)
+        model.persistentCore.tasks
 
 
 subscriptions : Model -> Sub Msg
