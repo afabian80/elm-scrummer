@@ -13,9 +13,13 @@
 </body>
 
 <script type="text/javascript">
+    var model = {
+        age: 43
+    };
+
     var app = Elm.Main.init({
         node: document.getElementById("app"),
-        flags: 44
+        flags: JSON.stringify(model, null)
     });
 </script>
 
