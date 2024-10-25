@@ -1,6 +1,7 @@
 port module Main exposing (..)
 
 import Browser
+import File.Download as Download
 import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
 import Json.Decode as D
@@ -13,6 +14,7 @@ type alias Model =
 
 type Msg
     = Increment
+    | Download
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -33,8 +35,8 @@ modelDecoder =
     D.field "age" D.int
 
 
-encode : Model -> E.Value
-encode model =
+encodeModel : Model -> E.Value
+encodeModel model =
     E.object [ ( "age", E.int model ) ]
 
 
@@ -57,6 +59,7 @@ view model =
     div []
         [ text (String.fromInt model)
         , button [ onClick Increment ] [ text "Increment" ]
+        , button [ onClick Download ] [ text "Download" ]
         ]
 
 
@@ -66,7 +69,7 @@ updateWithStorage msg model =
         ( newModel, cmds ) =
             update msg model
     in
-    ( newModel, Cmd.batch [ saveToLocalStorage (encode newModel), cmds ] )
+    ( newModel, Cmd.batch [ saveToLocalStorage (encodeModel newModel), cmds ] )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -74,6 +77,9 @@ update msg model =
     case msg of
         Increment ->
             ( model + 1, Cmd.none )
+
+        Download ->
+            ( model, Download.string "akos.json" "text/json" (E.encode 4 (encodeModel model)) )
 
 
 subscriptions : Model -> Sub Msg
