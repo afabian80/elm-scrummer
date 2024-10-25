@@ -1,7 +1,8 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, text)
+import Html exposing (Html, button, div, text)
+import Html.Events exposing (onClick)
 import Json.Decode as D
 
 
@@ -10,7 +11,7 @@ type alias Model =
 
 
 type Msg
-    = Nop
+    = Increment
 
 
 main : Program String Model Msg
@@ -44,14 +45,17 @@ init flag =
 
 view : Model -> Html Msg
 view model =
-    div [] [ text (String.fromInt model) ]
+    div []
+        [ text (String.fromInt model)
+        , button [ onClick Increment ] [ text "Increment" ]
+        ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Nop ->
-            ( model, Cmd.none )
+        Increment ->
+            ( model + 1, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
