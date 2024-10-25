@@ -151,7 +151,12 @@ updateWithStorage msg model =
         ( newModel, cmds ) =
             update msg model
     in
-    ( newModel, Cmd.batch [ saveToLocalStorage (encodeModelCore newModel.persistentCore), cmds ] )
+    ( newModel
+    , Cmd.batch
+        [ saveToLocalStorage (encodeModelCore newModel.persistentCore)
+        , cmds
+        ]
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
