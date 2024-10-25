@@ -12,9 +12,14 @@ import Json.Encode as E
 import Task
 
 
+type alias Task =
+    { title : String
+    }
+
+
 type alias ModelCore =
     { timestamp : Int
-    , tasks : List String
+    , tasks : List Task
     }
 
 
@@ -50,14 +55,26 @@ modelCoreDecoder =
     D.map2
         ModelCore
         (D.field "timestamp" D.int)
-        (D.field "tasks" (D.list D.string))
+        (D.field "tasks" (D.list taskDecoder))
+
+
+taskDecoder : D.Decoder Task
+taskDecoder =
+    D.map Task (D.field "title" D.string)
 
 
 encodeModelCore : ModelCore -> E.Value
 encodeModelCore modelCore =
     E.object
         [ ( "timestamp", E.int modelCore.timestamp )
-        , ( "tasks", E.list E.string modelCore.tasks )
+        , ( "tasks", E.list encodeTask modelCore.tasks )
+        ]
+
+
+encodeTask : Task -> E.Value
+encodeTask task =
+    E.object
+        [ ( "title", E.string task.title )
         ]
 
 
@@ -91,14 +108,14 @@ view model =
         ]
 
 
-renderTasks : List String -> List (Html Msg)
+renderTasks : List Task -> List (Html Msg)
 renderTasks tasks =
     List.map renderTask tasks
 
 
-renderTask : String -> Html Msg
+renderTask : Task -> Html Msg
 renderTask task =
-    li [] [ text task ]
+    li [] [ text task.title ]
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
@@ -161,7 +178,7 @@ addNewTask model =
         model.persistentCore.timestamp
         (List.append
             model.persistentCore.tasks
-            [ "hello-" ++ String.fromInt model.persistentCore.timestamp ]
+            [ Task ("hello-" ++ String.fromInt model.persistentCore.timestamp) ]
         )
 
 
