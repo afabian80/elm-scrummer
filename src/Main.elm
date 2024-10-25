@@ -12,7 +12,7 @@ type Msg
     = Nop
 
 
-main : Program () Model Msg
+main : Program Int Model Msg
 main =
     Browser.element
         { init = init
@@ -22,9 +22,9 @@ main =
         }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( 0, Cmd.none )
+init : Int -> ( Model, Cmd Msg )
+init flag =
+    ( flag, Cmd.none )
 
 
 view : Model -> Html Msg
