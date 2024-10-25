@@ -25,6 +25,10 @@
         // flags: JSON.stringify(model, null)
         flags: storageValue
     });
+
+    app.ports.saveToLocalStorage.subscribe(function (message) {
+        localStorage.setItem(storageKey, message)
+    });
 </script>
 
 </html>
