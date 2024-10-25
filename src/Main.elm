@@ -5,6 +5,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Html, button, div, li, text, ul)
+import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
@@ -78,7 +79,7 @@ view model =
         , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
-        , div [] [ text model.log ]
+        , div [ style "color" "red" ] [ text model.log ]
         ]
 
 
