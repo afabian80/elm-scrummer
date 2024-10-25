@@ -4,7 +4,7 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, button, div, li, text, ul)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
@@ -12,7 +12,7 @@ import Task
 
 
 type alias ModelCore =
-    { pdata : String
+    { tasks : List String
     }
 
 
@@ -48,13 +48,13 @@ modelCoreDecoder : D.Decoder ModelCore
 modelCoreDecoder =
     D.map
         ModelCore
-        (D.field "pdata" D.string)
+        (D.field "tasks" (D.list D.string))
 
 
 encodeModelCore : ModelCore -> E.Value
 encodeModelCore modelCore =
     E.object
-        [ ( "pdata", E.string modelCore.pdata )
+        [ ( "tasks", E.list E.string modelCore.tasks )
         ]
 
 
@@ -69,19 +69,29 @@ init flag =
             ( Model 0 "" modelCore, Cmd.none )
 
         Err e ->
-            ( Model 0 (D.errorToString e) (ModelCore ""), Cmd.none )
+            ( Model 0 (D.errorToString e) (ModelCore []), Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ text ("Data: " ++ String.fromInt model.data)
-        , text ("Persistent data: " ++ model.persistentCore.pdata)
+        , ul [] (renderTasks model.persistentCore.tasks)
         , button [ onClick Increment ] [ text "Increment" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
         , text model.log
         ]
+
+
+renderTasks : List String -> List (Html Msg)
+renderTasks tasks =
+    List.map renderTask tasks
+
+
+renderTask : String -> Html Msg
+renderTask task =
+    li [] [ text task ]
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
@@ -104,7 +114,7 @@ update msg modelOriginal =
         Increment ->
             ( { model
                 | data = model.data + 1
-                , persistentCore = ModelCore ("--- " ++ String.fromInt (model.data + 1))
+                , persistentCore = addNewTask model
               }
             , Cmd.none
             )
@@ -129,6 +139,11 @@ update msg modelOriginal =
 
                 Err e ->
                     ( { model | log = D.errorToString e }, Cmd.none )
+
+
+addNewTask : Model -> ModelCore
+addNewTask model =
+    ModelCore (List.append model.persistentCore.tasks [ "hello" ++ String.fromInt model.data ])
 
 
 subscriptions : Model -> Sub Msg
