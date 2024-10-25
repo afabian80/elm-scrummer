@@ -11,9 +11,15 @@ import Json.Encode as E
 import Task
 
 
+type alias ModelCore =
+    { pdata : String
+    }
+
+
 type alias Model =
     { data : Int
     , log : String
+    , persistentCore : ModelCore
     }
 
 
@@ -38,12 +44,20 @@ main =
         }
 
 
+modelCoreDecoder : D.Decoder ModelCore
+modelCoreDecoder =
+    D.map
+        ModelCore
+        (D.field "pdata" D.string)
+
+
 modelDecoder : D.Decoder Model
 modelDecoder =
-    D.map2
+    D.map3
         Model
         (D.field "data" D.int)
         (D.field "log" D.string)
+        (D.field "persistent_core" modelCoreDecoder)
 
 
 encodeModel : Model -> E.Value
@@ -51,6 +65,14 @@ encodeModel model =
     E.object
         [ ( "data", E.int model.data )
         , ( "log", E.string model.log )
+        , ( "persistent_core", encodeModelCore model.persistentCore )
+        ]
+
+
+encodeModelCore : ModelCore -> E.Value
+encodeModelCore modelCore =
+    E.object
+        [ ( "pdata", E.string modelCore.pdata )
         ]
 
 
@@ -65,13 +87,14 @@ init flag =
             ( model, Cmd.none )
 
         Err e ->
-            ( Model 0 (D.errorToString e), Cmd.none )
+            ( Model 0 (D.errorToString e) (ModelCore ""), Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ text (String.fromInt model.data)
+        [ text ("Data: " ++ String.fromInt model.data)
+        , text ("Persistent data: " ++ model.persistentCore.pdata)
         , button [ onClick Increment ] [ text "Increment" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
@@ -97,7 +120,12 @@ update msg modelOriginal =
     in
     case msg of
         Increment ->
-            ( { model | data = model.data + 1 }, Cmd.none )
+            ( { model
+                | data = model.data + 1
+                , persistentCore = ModelCore ("--- " ++ String.fromInt (model.data + 1))
+              }
+            , Cmd.none
+            )
 
         Download ->
             ( model, Download.string "akos.json" "text/json" (E.encode 4 (encodeModel model)) )
