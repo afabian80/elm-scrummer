@@ -14,6 +14,7 @@ import Task
 
 type alias Task =
     { title : String
+    , modificationTime : Int
     }
 
 
@@ -60,7 +61,10 @@ modelCoreDecoder =
 
 taskDecoder : D.Decoder Task
 taskDecoder =
-    D.map Task (D.field "title" D.string)
+    D.map2
+        Task
+        (D.field "title" D.string)
+        (D.field "modified" D.int)
 
 
 encodeModelCore : ModelCore -> E.Value
@@ -75,6 +79,7 @@ encodeTask : Task -> E.Value
 encodeTask task =
     E.object
         [ ( "title", E.string task.title )
+        , ( "modified", E.int task.modificationTime )
         ]
 
 
@@ -115,7 +120,14 @@ renderTasks tasks =
 
 renderTask : Task -> Html Msg
 renderTask task =
-    li [] [ text task.title ]
+    li []
+        [ text
+            (task.title
+                ++ " ("
+                ++ String.fromInt task.modificationTime
+                ++ ")"
+            )
+        ]
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
@@ -178,7 +190,7 @@ addNewTask model =
         model.persistentCore.timestamp
         (List.append
             model.persistentCore.tasks
-            [ Task ("hello-" ++ String.fromInt model.persistentCore.timestamp) ]
+            [ Task "hello" model.persistentCore.timestamp ]
         )
 
 
