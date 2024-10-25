@@ -17,15 +17,13 @@ type alias ModelCore =
 
 
 type alias Model =
-    { data : Int
-    , log : String
+    { log : String
     , persistentCore : ModelCore
     }
 
 
 type Msg
-    = Increment
-    | Download
+    = Download
     | FileRequested
     | FileSelected File.File
     | FileLoaded String
@@ -67,18 +65,16 @@ init flag =
     in
     case core of
         Ok modelCore ->
-            ( Model 0 "" modelCore, Cmd.none )
+            ( Model "" modelCore, Cmd.none )
 
-        Err e ->
-            ( Model 0 "Cannot load model from local storage. Starting afresh!" (ModelCore []), Cmd.none )
+        Err _ ->
+            ( Model "Cannot load model from local storage. Starting afresh!" (ModelCore []), Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ text ("Data: " ++ String.fromInt model.data)
-        , ul [] (renderTasks model.persistentCore.tasks)
-        , button [ onClick Increment ] [ text "Increment" ]
+        [ ul [] (renderTasks model.persistentCore.tasks)
         , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
@@ -110,16 +106,11 @@ update msg modelOriginal =
     let
         --clear model log
         model =
-            { modelOriginal | log = "" }
+            { modelOriginal
+                | log = ""
+            }
     in
     case msg of
-        Increment ->
-            ( { model
-                | data = model.data + 1
-              }
-            , Cmd.none
-            )
-
         Download ->
             ( model, Download.string "akos.json" "text/json" (E.encode 4 (encodeModelCore model.persistentCore)) )
 
@@ -151,7 +142,7 @@ update msg modelOriginal =
 
 addNewTask : Model -> ModelCore
 addNewTask model =
-    ModelCore (List.append model.persistentCore.tasks [ "hello-" ++ String.fromInt model.data ])
+    ModelCore (List.append model.persistentCore.tasks [ "hello-" ])
 
 
 subscriptions : Model -> Sub Msg
