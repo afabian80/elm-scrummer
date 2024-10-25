@@ -13,13 +13,17 @@
 </body>
 
 <script type="text/javascript">
-    var model = {
-        age: 43
-    };
+    // var model = {
+    //     age: 43
+    // };
+    var storageKey = "mykey"
+    var storageValueNull = localStorage.getItem(storageKey)
+    var storageValue = storageValueNull ? storageValueNull : ""
 
     var app = Elm.Main.init({
         node: document.getElementById("app"),
-        flags: JSON.stringify(model, null)
+        // flags: JSON.stringify(model, null)
+        flags: storageValue
     });
 </script>
 
