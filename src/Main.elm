@@ -57,8 +57,6 @@ view model =
     div []
         [ text (String.fromInt model)
         , button [ onClick Increment ] [ text "Increment" ]
-
-        -- , button [ onClick saveToLocalStorage ] [ text "Save" ]
         ]
 
 
@@ -68,7 +66,7 @@ updateWithStorage msg model =
         ( newModel, cmds ) =
             update msg model
     in
-    ( newModel, Cmd.batch [ saveToLocalStorage (encode model), cmds ] )
+    ( newModel, Cmd.batch [ saveToLocalStorage (encode newModel), cmds ] )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
