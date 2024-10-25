@@ -21,6 +21,7 @@ type alias Task =
 type alias ModelCore =
     { timestamp : Int
     , tasks : List Task
+    , checkpoint : Int
     }
 
 
@@ -36,6 +37,7 @@ type Msg
     | FileSelected File.File
     | FileLoaded String
     | AddAutoTask
+    | SetCheckpoint
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -53,10 +55,11 @@ main =
 
 modelCoreDecoder : D.Decoder ModelCore
 modelCoreDecoder =
-    D.map2
+    D.map3
         ModelCore
         (D.field "timestamp" D.int)
         (D.field "tasks" (D.list taskDecoder))
+        (D.field "checkpoint" D.int)
 
 
 taskDecoder : D.Decoder Task
@@ -72,6 +75,7 @@ encodeModelCore modelCore =
     E.object
         [ ( "timestamp", E.int modelCore.timestamp )
         , ( "tasks", E.list encodeTask modelCore.tasks )
+        , ( "checkpoint", E.int modelCore.checkpoint )
         ]
 
 
@@ -96,7 +100,7 @@ init flag =
         Err _ ->
             ( Model
                 "Cannot load model from local storage. Starting afresh!"
-                (ModelCore 0 [])
+                (ModelCore 0 [] 0)
             , Cmd.none
             )
 
@@ -106,9 +110,11 @@ view model =
     div []
         [ ul [] (renderTasks model.persistentCore.tasks)
         , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
+        , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
+        , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
@@ -183,6 +189,9 @@ update msg modelOriginal =
             , Cmd.none
             )
 
+        SetCheckpoint ->
+            ( { model | persistentCore = setCheckpoint model }, Cmd.none )
+
 
 addNewTask : Model -> ModelCore
 addNewTask model =
@@ -192,6 +201,7 @@ addNewTask model =
             model.persistentCore.tasks
             [ Task "hello" model.persistentCore.timestamp ]
         )
+        model.persistentCore.checkpoint
 
 
 stepTimestamp : Model -> ModelCore
@@ -199,6 +209,15 @@ stepTimestamp model =
     ModelCore
         (model.persistentCore.timestamp + 1)
         model.persistentCore.tasks
+        model.persistentCore.checkpoint
+
+
+setCheckpoint : Model -> ModelCore
+setCheckpoint model =
+    ModelCore
+        model.persistentCore.timestamp
+        model.persistentCore.tasks
+        model.persistentCore.timestamp
 
 
 subscriptions : Model -> Sub Msg
