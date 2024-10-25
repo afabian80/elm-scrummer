@@ -4,7 +4,7 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Html, button, div, li, text, ul)
+import Html exposing (Attribute, Html, button, div, li, text, ul)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Json.Decode as D
@@ -108,7 +108,7 @@ init flag =
 view : Model -> Html Msg
 view model =
     div []
-        [ ul [] (renderTasks model.persistentCore.tasks)
+        [ ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
         , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
@@ -119,14 +119,14 @@ view model =
         ]
 
 
-renderTasks : List Task -> List (Html Msg)
-renderTasks tasks =
-    List.map renderTask tasks
+renderTasks : List Task -> Int -> List (Html Msg)
+renderTasks tasks cp =
+    List.map (renderTask cp) tasks
 
 
-renderTask : Task -> Html Msg
-renderTask task =
-    li []
+renderTask : Int -> Task -> Html Msg
+renderTask cp task =
+    li [ markTaskNew cp task.modificationTime ]
         [ text
             (task.title
                 ++ " ("
@@ -134,6 +134,15 @@ renderTask task =
                 ++ ")"
             )
         ]
+
+
+markTaskNew : Int -> Int -> Attribute Msg
+markTaskNew cp time =
+    if time >= cp then
+        style "background" "lightgreen"
+
+    else
+        style "" ""
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
