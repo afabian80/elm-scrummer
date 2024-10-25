@@ -13,6 +13,7 @@ import Task
 
 type alias Model =
     { data : Int
+    , log : String
     }
 
 
@@ -39,12 +40,18 @@ main =
 
 modelDecoder : D.Decoder Model
 modelDecoder =
-    D.map Model (D.field "data" D.int)
+    D.map2
+        Model
+        (D.field "data" D.int)
+        (D.field "log" D.string)
 
 
 encodeModel : Model -> E.Value
 encodeModel model =
-    E.object [ ( "data", E.int model.data ) ]
+    E.object
+        [ ( "data", E.int model.data )
+        , ( "log", E.string model.log )
+        ]
 
 
 init : E.Value -> ( Model, Cmd Msg )
@@ -57,8 +64,8 @@ init flag =
         Ok model ->
             ( model, Cmd.none )
 
-        Err _ ->
-            ( Model 0, Cmd.none )
+        Err e ->
+            ( Model 0 (D.errorToString e), Cmd.none )
 
 
 view : Model -> Html Msg
@@ -68,6 +75,7 @@ view model =
         , button [ onClick Increment ] [ text "Increment" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
+        , text model.log
         ]
 
 
@@ -81,7 +89,12 @@ updateWithStorage msg model =
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+update msg modelOriginal =
+    let
+        --clear model log
+        model =
+            { modelOriginal | log = "" }
+    in
     case msg of
         Increment ->
             ( { model | data = model.data + 1 }, Cmd.none )
@@ -104,8 +117,8 @@ update msg model =
                 Ok m ->
                     ( m, Cmd.none )
 
-                Err _ ->
-                    ( model, Cmd.none )
+                Err e ->
+                    ( { model | log = D.errorToString e }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
