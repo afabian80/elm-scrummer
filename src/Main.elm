@@ -51,24 +51,6 @@ modelCoreDecoder =
         (D.field "pdata" D.string)
 
 
-modelDecoder : D.Decoder Model
-modelDecoder =
-    D.map3
-        Model
-        (D.field "data" D.int)
-        (D.field "log" D.string)
-        (D.field "persistent_core" modelCoreDecoder)
-
-
-encodeModel : Model -> E.Value
-encodeModel model =
-    E.object
-        [ ( "data", E.int model.data )
-        , ( "log", E.string model.log )
-        , ( "persistent_core", encodeModelCore model.persistentCore )
-        ]
-
-
 encodeModelCore : ModelCore -> E.Value
 encodeModelCore modelCore =
     E.object
@@ -79,12 +61,12 @@ encodeModelCore modelCore =
 init : E.Value -> ( Model, Cmd Msg )
 init flag =
     let
-        f =
-            D.decodeValue modelDecoder flag
+        core =
+            D.decodeValue modelCoreDecoder flag
     in
-    case f of
-        Ok model ->
-            ( model, Cmd.none )
+    case core of
+        Ok modelCore ->
+            ( Model 0 "" modelCore, Cmd.none )
 
         Err e ->
             ( Model 0 (D.errorToString e) (ModelCore ""), Cmd.none )
@@ -108,7 +90,7 @@ updateWithStorage msg model =
         ( newModel, cmds ) =
             update msg model
     in
-    ( newModel, Cmd.batch [ saveToLocalStorage (encodeModel newModel), cmds ] )
+    ( newModel, Cmd.batch [ saveToLocalStorage (encodeModelCore newModel.persistentCore), cmds ] )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -128,7 +110,7 @@ update msg modelOriginal =
             )
 
         Download ->
-            ( model, Download.string "akos.json" "text/json" (E.encode 4 (encodeModel model)) )
+            ( model, Download.string "akos.json" "text/json" (E.encode 4 (encodeModelCore model.persistentCore)) )
 
         FileRequested ->
             ( model, Select.file [ "text/json" ] FileSelected )
@@ -138,12 +120,12 @@ update msg modelOriginal =
 
         FileLoaded text ->
             let
-                modelResult =
-                    D.decodeString modelDecoder text
+                modelCoreResult =
+                    D.decodeString modelCoreDecoder text
             in
-            case modelResult of
-                Ok m ->
-                    ( m, Cmd.none )
+            case modelCoreResult of
+                Ok core ->
+                    ( { model | persistentCore = core }, Cmd.none )
 
                 Err e ->
                     ( { model | log = D.errorToString e }, Cmd.none )
