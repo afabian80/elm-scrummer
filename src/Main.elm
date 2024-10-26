@@ -144,7 +144,11 @@ view model =
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
-        , button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
+        , button
+            [ onClick Undo
+            , disabled (undoStackSize == 0)
+            ]
+            [ text undoButtonText ]
         , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
