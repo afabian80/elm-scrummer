@@ -219,13 +219,6 @@ renderTask cp buffer task =
             [ span [ onClick (Edit task) ]
                 [ text task.title
                 , text (" (" ++ String.fromInt task.modificationTime ++ ")")
-                , text
-                    (if task.isEditing then
-                        " EDITING"
-
-                     else
-                        ""
-                    )
                 ]
             , button [ onClick (DeleteTask task) ] [ text "Delete" ]
             ]
