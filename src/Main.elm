@@ -14,7 +14,6 @@ import Task
 
 
 
--- TODO click to edit task
 -- TODO render links in task title
 -- TODO use bootstrap design
 -- TODO add task state (todo, doing, done)
@@ -370,6 +369,8 @@ update msg modelOriginal =
             ( { model
                 | persistentCore = saveEditedTask model task
                 , editBuffer = task.title
+                , undoStack = Stack.push model.persistentCore model.undoStack
+                , redoStack = Stack.initialise
               }
             , Cmd.none
             )
