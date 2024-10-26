@@ -5,7 +5,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, button, div, input, li, text, ul)
-import Html.Attributes exposing (autofocus, placeholder, style, value)
+import Html.Attributes exposing (autofocus, disabled, placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
 import Json.Encode as E
@@ -123,10 +123,13 @@ view : Model -> Html Msg
 view model =
     let
         undoStackSize =
-            String.fromInt (List.length (Stack.toList model.undoStack))
+            List.length (Stack.toList model.undoStack)
+
+        undoStackSizeStr =
+            String.fromInt undoStackSize
 
         undoButtonText =
-            "Undo (" ++ undoStackSize ++ ")"
+            "Undo (" ++ undoStackSizeStr ++ ")"
     in
     div []
         [ -- Cannot handle Enter directly, use something like [ input [ onInput InputChanged, onKeyDown (\e -> if e.keyCode == 13 then SubmitForm else InputChanged e.targetValue) ] []
@@ -141,12 +144,12 @@ view model =
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
-        , button [ onClick Undo ] [ text undoButtonText ]
+        , button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
         , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
         , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
-        , div [] [ text ("Undo stack size: " ++ undoStackSize) ]
+        , div [] [ text ("Undo stack size: " ++ undoStackSizeStr) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
