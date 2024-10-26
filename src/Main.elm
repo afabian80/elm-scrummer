@@ -9,8 +9,11 @@ import Html.Attributes exposing (autofocus, disabled, placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
 import Json.Encode as E
+import ModelCore exposing (..)
 import Stack
 import Task
+import TodoItem exposing (..)
+import TodoState exposing (..)
 
 
 
@@ -18,60 +21,6 @@ import Task
 -- TODO render links in task title
 -- TODO use bootstrap design
 -- TODO add filters for state
-
-
-type TodoState
-    = Todo
-    | Doing
-    | Done
-
-
-encodeTodoState : TodoState -> E.Value
-encodeTodoState state =
-    case state of
-        Todo ->
-            E.string "Todo"
-
-        Doing ->
-            E.string "Doing"
-
-        Done ->
-            E.string "Done"
-
-
-decodeTodoState : D.Decoder TodoState
-decodeTodoState =
-    D.string
-        |> D.andThen
-            (\s ->
-                case s of
-                    "Todo" ->
-                        D.succeed Todo
-
-                    "Doing" ->
-                        D.succeed Doing
-
-                    "Done" ->
-                        D.succeed Done
-
-                    _ ->
-                        D.fail "Invalid TodoState"
-            )
-
-
-type alias TodoItem =
-    { title : String
-    , modificationTime : Int
-    , isEditing : Bool
-    , state : TodoState
-    }
-
-
-type alias ModelCore =
-    { timestamp : Int
-    , todoItems : List TodoItem
-    , checkpoint : Int
-    }
 
 
 type alias Model =
@@ -112,44 +61,6 @@ main =
         , update = updateWithStorage
         , subscriptions = subscriptions
         }
-
-
-modelCoreDecoder : D.Decoder ModelCore
-modelCoreDecoder =
-    D.map3
-        ModelCore
-        (D.field "timestamp" D.int)
-        (D.field "todos" (D.list todoItemDecoder))
-        (D.field "checkpoint" D.int)
-
-
-todoItemDecoder : D.Decoder TodoItem
-todoItemDecoder =
-    D.map4
-        TodoItem
-        (D.field "title" D.string)
-        (D.field "modified" D.int)
-        (D.field "is_editing" D.bool)
-        (D.field "state" decodeTodoState)
-
-
-encodeModelCore : ModelCore -> E.Value
-encodeModelCore modelCore =
-    E.object
-        [ ( "timestamp", E.int modelCore.timestamp )
-        , ( "todos", E.list encodeTodoItem modelCore.todoItems )
-        , ( "checkpoint", E.int modelCore.checkpoint )
-        ]
-
-
-encodeTodoItem : TodoItem -> E.Value
-encodeTodoItem todoItem =
-    E.object
-        [ ( "title", E.string todoItem.title )
-        , ( "modified", E.int todoItem.modificationTime )
-        , ( "is_editing", E.bool todoItem.isEditing )
-        , ( "state", encodeTodoState todoItem.state )
-        ]
 
 
 init : E.Value -> ( Model, Cmd Msg )
