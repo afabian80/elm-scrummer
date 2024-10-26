@@ -44,10 +44,10 @@ type Msg
     | FileRequested
     | FileSelected File.File
     | FileLoaded String
-    | AddAutoTask
     | SetCheckpoint
     | DeleteTask Task
     | InputBufferChange String
+    | AddTask
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -120,7 +120,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ input [ placeholder "New task title", value model.inputBuffer, onInput InputBufferChange ] []
-        , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
+        , button [ onClick AddTask ] [ text "Add Task" ]
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
@@ -210,9 +210,10 @@ update msg modelOriginal =
                 Err e ->
                     ( { model | log = D.errorToString e }, Cmd.none )
 
-        AddAutoTask ->
+        AddTask ->
             ( { model
                 | persistentCore = addNewTask model
+                , inputBuffer = ""
               }
             , Cmd.none
             )
@@ -237,12 +238,19 @@ deleteTask model task =
 
 addNewTask : Model -> ModelCore
 addNewTask model =
+    let
+        newTasks =
+            if String.isEmpty model.inputBuffer then
+                model.persistentCore.tasks
+
+            else
+                List.append
+                    model.persistentCore.tasks
+                    [ Task model.inputBuffer model.persistentCore.timestamp ]
+    in
     ModelCore
         model.persistentCore.timestamp
-        (List.append
-            model.persistentCore.tasks
-            [ Task "hello" model.persistentCore.timestamp ]
-        )
+        newTasks
         model.persistentCore.checkpoint
 
 
