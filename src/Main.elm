@@ -20,14 +20,14 @@ import Task
 -- TODO add filters for state
 
 
-type TaskState
+type TodoState
     = Todo
     | Doing
     | Done
 
 
-encodeTaskState : TaskState -> E.Value
-encodeTaskState state =
+encodeTodoState : TodoState -> E.Value
+encodeTodoState state =
     case state of
         Todo ->
             E.string "Todo"
@@ -39,8 +39,8 @@ encodeTaskState state =
             E.string "Done"
 
 
-decodeTaskState : D.Decoder TaskState
-decodeTaskState =
+decodeTodoState : D.Decoder TodoState
+decodeTodoState =
     D.string
         |> D.andThen
             (\s ->
@@ -55,21 +55,21 @@ decodeTaskState =
                         D.succeed Done
 
                     _ ->
-                        D.fail "Invalid TaskState"
+                        D.fail "Invalid TodoState"
             )
 
 
-type alias Task =
+type alias TodoItem =
     { title : String
     , modificationTime : Int
     , isEditing : Bool
-    , state : TaskState
+    , state : TodoState
     }
 
 
 type alias ModelCore =
     { timestamp : Int
-    , tasks : List Task
+    , todoItems : List TodoItem
     , checkpoint : Int
     }
 
@@ -90,14 +90,14 @@ type Msg
     | FileSelected File.File
     | FileLoaded String
     | SetCheckpoint
-    | DeleteTask Task
+    | DeleteTodoItem TodoItem
     | InputBufferChange String
-    | AddTask
+    | AddTodoItem
     | Undo
     | Redo
-    | Edit Task
-    | CancelEdit Task
-    | SaveEdit Task
+    | Edit TodoItem
+    | CancelEdit TodoItem
+    | SaveEdit TodoItem
     | EditBufferChange String
 
 
@@ -119,36 +119,36 @@ modelCoreDecoder =
     D.map3
         ModelCore
         (D.field "timestamp" D.int)
-        (D.field "tasks" (D.list taskDecoder))
+        (D.field "todos" (D.list todoItemDecoder))
         (D.field "checkpoint" D.int)
 
 
-taskDecoder : D.Decoder Task
-taskDecoder =
+todoItemDecoder : D.Decoder TodoItem
+todoItemDecoder =
     D.map4
-        Task
+        TodoItem
         (D.field "title" D.string)
         (D.field "modified" D.int)
         (D.field "is_editing" D.bool)
-        (D.field "state" decodeTaskState)
+        (D.field "state" decodeTodoState)
 
 
 encodeModelCore : ModelCore -> E.Value
 encodeModelCore modelCore =
     E.object
         [ ( "timestamp", E.int modelCore.timestamp )
-        , ( "tasks", E.list encodeTask modelCore.tasks )
+        , ( "todos", E.list encodeTodoItem modelCore.todoItems )
         , ( "checkpoint", E.int modelCore.checkpoint )
         ]
 
 
-encodeTask : Task -> E.Value
-encodeTask task =
+encodeTodoItem : TodoItem -> E.Value
+encodeTodoItem todoItem =
     E.object
-        [ ( "title", E.string task.title )
-        , ( "modified", E.int task.modificationTime )
-        , ( "is_editing", E.bool task.isEditing )
-        , ( "state", encodeTaskState task.state )
+        [ ( "title", E.string todoItem.title )
+        , ( "modified", E.int todoItem.modificationTime )
+        , ( "is_editing", E.bool todoItem.isEditing )
+        , ( "state", encodeTodoState todoItem.state )
         ]
 
 
@@ -206,17 +206,17 @@ view model =
     div []
         [ -- Cannot handle Enter directly, use something like [ input [ onInput InputChanged, onKeyDown (\e -> if e.keyCode == 13 then SubmitForm else InputChanged e.targetValue) ] []
           input
-            [ placeholder "New task title"
+            [ placeholder "New todo title"
             , value model.inputBuffer
             , onInput InputBufferChange
             , autofocus True
             ]
             []
         , button
-            [ onClick AddTask
+            [ onClick AddTodoItem
             , disabled (model.inputBuffer == "")
             ]
-            [ text "Add Task" ]
+            [ text "Add Todo" ]
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
@@ -230,7 +230,7 @@ view model =
             , disabled (redoStackSize == 0)
             ]
             [ text redoButtonText ]
-        , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint model.editBuffer)
+        , ul [] (renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer)
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
         , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
@@ -239,35 +239,35 @@ view model =
         ]
 
 
-renderTasks : List Task -> Int -> String -> List (Html Msg)
-renderTasks tasks cp buffer =
-    List.map (renderTask cp buffer) tasks
+renderTodoItems : List TodoItem -> Int -> String -> List (Html Msg)
+renderTodoItems todoItem cp buffer =
+    List.map (renderTodoItem cp buffer) todoItem
 
 
-renderTask : Int -> String -> Task -> Html Msg
-renderTask cp buffer task =
-    if task.isEditing then
+renderTodoItem : Int -> String -> TodoItem -> Html Msg
+renderTodoItem cp buffer todoItem =
+    if todoItem.isEditing then
         li []
             [ span []
                 [ input [ value buffer, onInput EditBufferChange ] []
-                , button [ onClick (SaveEdit task) ] [ text "Save" ]
-                , button [ onClick (CancelEdit task) ] [ text "Cancel" ]
+                , button [ onClick (SaveEdit todoItem) ] [ text "Save" ]
+                , button [ onClick (CancelEdit todoItem) ] [ text "Cancel" ]
                 ]
             ]
 
     else
-        li [ markTaskNew cp task.modificationTime ]
-            [ span [ onClick (Edit task) ]
-                [ text task.title
-                , text (" (" ++ String.fromInt task.modificationTime ++ ")")
-                , text (E.encode 0 (encodeTaskState task.state))
+        li [ markTodoItemNew cp todoItem.modificationTime ]
+            [ span [ onClick (Edit todoItem) ]
+                [ text todoItem.title
+                , text (" (" ++ String.fromInt todoItem.modificationTime ++ ")")
+                , text (E.encode 0 (encodeTodoState todoItem.state))
                 ]
-            , button [ onClick (DeleteTask task) ] [ text "Delete" ]
+            , button [ onClick (DeleteTodoItem todoItem) ] [ text "Delete" ]
             ]
 
 
-markTaskNew : Int -> Int -> Attribute Msg
-markTaskNew cp time =
+markTodoItemNew : Int -> Int -> Attribute Msg
+markTodoItemNew cp time =
     if time >= cp then
         style "background" "lightgreen"
 
@@ -326,9 +326,9 @@ update msg modelOriginal =
                 Err e ->
                     ( { model | log = D.errorToString e }, Cmd.none )
 
-        AddTask ->
+        AddTodoItem ->
             ( { model
-                | persistentCore = addNewTask model
+                | persistentCore = addNewTodoItem model
                 , inputBuffer = ""
                 , undoStack = Stack.push model.persistentCore model.undoStack
                 , redoStack = Stack.initialise
@@ -344,9 +344,9 @@ update msg modelOriginal =
             , Cmd.none
             )
 
-        DeleteTask task ->
+        DeleteTodoItem todoItem ->
             ( { model
-                | persistentCore = deleteTask model task
+                | persistentCore = deleteTodoItem model todoItem
                 , undoStack = Stack.push model.persistentCore model.undoStack
                 , redoStack = Stack.initialise
               }
@@ -392,26 +392,26 @@ update msg modelOriginal =
                 Nothing ->
                     ( model, Cmd.none )
 
-        Edit task ->
+        Edit todoItem ->
             ( { model
-                | persistentCore = setTaskEditing model task True
-                , editBuffer = task.title
+                | persistentCore = setTodoItemEditing model todoItem True
+                , editBuffer = todoItem.title
               }
             , Cmd.none
             )
 
-        CancelEdit task ->
+        CancelEdit todoItem ->
             ( { model
-                | persistentCore = setTaskEditing model task False
-                , editBuffer = task.title
+                | persistentCore = setTodoItemEditing model todoItem False
+                , editBuffer = todoItem.title
               }
             , Cmd.none
             )
 
-        SaveEdit task ->
+        SaveEdit todoItem ->
             ( { model
-                | persistentCore = saveEditedTask model task
-                , editBuffer = task.title
+                | persistentCore = saveEditedTodoItem model todoItem
+                , editBuffer = todoItem.title
                 , undoStack = Stack.push model.persistentCore model.undoStack
                 , redoStack = Stack.initialise
               }
@@ -422,80 +422,80 @@ update msg modelOriginal =
             ( { model | editBuffer = buf }, Cmd.none )
 
 
-saveEditedTask : Model -> Task -> ModelCore
-saveEditedTask model task =
+saveEditedTodoItem : Model -> TodoItem -> ModelCore
+saveEditedTodoItem model todoItem =
     let
-        newTasks =
-            updateTasks model.persistentCore.tasks task model.editBuffer model.persistentCore.timestamp
+        newTodoItems =
+            updateTodoItems model.persistentCore.todoItems todoItem model.editBuffer model.persistentCore.timestamp
     in
     ModelCore
         model.persistentCore.timestamp
-        newTasks
+        newTodoItems
         model.persistentCore.checkpoint
 
 
-updateTasks : List Task -> Task -> String -> Int -> List Task
-updateTasks tasks task title time =
-    List.map (updateTask task title time) tasks
+updateTodoItems : List TodoItem -> TodoItem -> String -> Int -> List TodoItem
+updateTodoItems todoItems todoItem title time =
+    List.map (updateTodoItem todoItem title time) todoItems
 
 
-updateTask : Task -> String -> Int -> Task -> Task
-updateTask theTask newTitle time aTask =
-    if aTask == theTask then
-        { theTask | title = newTitle, modificationTime = time, isEditing = False }
+updateTodoItem : TodoItem -> String -> Int -> TodoItem -> TodoItem
+updateTodoItem theTodoItem newTitle time aTodoItem =
+    if aTodoItem == theTodoItem then
+        { theTodoItem | title = newTitle, modificationTime = time, isEditing = False }
 
     else
-        aTask
+        aTodoItem
 
 
-setTaskEditing : Model -> Task -> Bool -> ModelCore
-setTaskEditing model task state =
+setTodoItemEditing : Model -> TodoItem -> Bool -> ModelCore
+setTodoItemEditing model todoItem state =
     let
-        newTasks =
-            editTask model.persistentCore.tasks task state
+        newTodoItems =
+            editTodoItem model.persistentCore.todoItems todoItem state
     in
     ModelCore
         model.persistentCore.timestamp
-        newTasks
+        newTodoItems
         model.persistentCore.checkpoint
 
 
-editTask : List Task -> Task -> Bool -> List Task
-editTask tasks task state =
+editTodoItem : List TodoItem -> TodoItem -> Bool -> List TodoItem
+editTodoItem todoItems todoItem state =
     List.map
         (\t ->
-            if t == task then
+            if t == todoItem then
                 { t | isEditing = state }
 
             else
                 { t | isEditing = False }
         )
-        tasks
+        todoItems
 
 
-deleteTask : Model -> Task -> ModelCore
-deleteTask model task =
+deleteTodoItem : Model -> TodoItem -> ModelCore
+deleteTodoItem model todoItem =
     ModelCore
         model.persistentCore.timestamp
-        (List.filter (\t -> t /= task) model.persistentCore.tasks)
+        (List.filter (\t -> t /= todoItem) model.persistentCore.todoItems)
         model.persistentCore.checkpoint
 
 
-addNewTask : Model -> ModelCore
-addNewTask model =
+addNewTodoItem : Model -> ModelCore
+addNewTodoItem model =
     let
-        newTasks =
+        newTodoItems =
             if String.isEmpty model.inputBuffer then
-                model.persistentCore.tasks
+                model.persistentCore.todoItems
 
             else
                 List.append
-                    model.persistentCore.tasks
-                    [ Task model.inputBuffer model.persistentCore.timestamp False Todo ]
+                    model.persistentCore.todoItems
+                    [ TodoItem model.inputBuffer model.persistentCore.timestamp False Todo ]
     in
     ModelCore
         model.persistentCore.timestamp
-        newTasks
+        newTodoItems
         model.persistentCore.checkpoint
 
 
@@ -503,7 +503,7 @@ stepTimestamp : Model -> ModelCore
 stepTimestamp model =
     ModelCore
         (model.persistentCore.timestamp + 1)
-        model.persistentCore.tasks
+        model.persistentCore.todoItems
         model.persistentCore.checkpoint
 
 
@@ -511,7 +511,7 @@ setCheckpoint : Model -> ModelCore
 setCheckpoint model =
     ModelCore
         model.persistentCore.timestamp
-        model.persistentCore.tasks
+        model.persistentCore.todoItems
         model.persistentCore.timestamp
 
 
