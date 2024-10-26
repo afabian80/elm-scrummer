@@ -20,10 +20,50 @@ import Task
 -- TODO add filters for state
 
 
+type TaskState
+    = Todo
+    | Doing
+    | Done
+
+
+encodeTaskState : TaskState -> E.Value
+encodeTaskState state =
+    case state of
+        Todo ->
+            E.string "Todo"
+
+        Doing ->
+            E.string "Doing"
+
+        Done ->
+            E.string "Done"
+
+
+decodeTaskState : D.Decoder TaskState
+decodeTaskState =
+    D.string
+        |> D.andThen
+            (\s ->
+                case s of
+                    "Todo" ->
+                        D.succeed Todo
+
+                    "Doing" ->
+                        D.succeed Doing
+
+                    "Done" ->
+                        D.succeed Done
+
+                    _ ->
+                        D.fail "Invalid TaskState"
+            )
+
+
 type alias Task =
     { title : String
     , modificationTime : Int
     , isEditing : Bool
+    , state : TaskState
     }
 
 
@@ -85,11 +125,12 @@ modelCoreDecoder =
 
 taskDecoder : D.Decoder Task
 taskDecoder =
-    D.map3
+    D.map4
         Task
         (D.field "title" D.string)
         (D.field "modified" D.int)
         (D.field "is_editing" D.bool)
+        (D.field "state" decodeTaskState)
 
 
 encodeModelCore : ModelCore -> E.Value
@@ -107,6 +148,7 @@ encodeTask task =
         [ ( "title", E.string task.title )
         , ( "modified", E.int task.modificationTime )
         , ( "is_editing", E.bool task.isEditing )
+        , ( "state", encodeTaskState task.state )
         ]
 
 
@@ -448,7 +490,7 @@ addNewTask model =
             else
                 List.append
                     model.persistentCore.tasks
-                    [ Task model.inputBuffer model.persistentCore.timestamp False ]
+                    [ Task model.inputBuffer model.persistentCore.timestamp False Todo ]
     in
     ModelCore
         model.persistentCore.timestamp
