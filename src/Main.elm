@@ -5,7 +5,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, button, div, input, li, text, ul)
-import Html.Attributes exposing (placeholder, style, value)
+import Html.Attributes exposing (autofocus, placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
 import Json.Encode as E
@@ -13,7 +13,6 @@ import Task
 
 
 
--- TODO use custom text in new task title
 -- TODO click to edit task
 -- TODO add undo/redo
 -- TODO render links in task title
@@ -119,7 +118,14 @@ init flag =
 view : Model -> Html Msg
 view model =
     div []
-        [ input [ placeholder "New task title", value model.inputBuffer, onInput InputBufferChange ] []
+        [ -- Cannot handle Enter directly, use something like [ input [ onInput InputChanged, onKeyDown (\e -> if e.keyCode == 13 then SubmitForm else InputChanged e.targetValue) ] []
+          input
+            [ placeholder "New task title"
+            , value model.inputBuffer
+            , onInput InputBufferChange
+            , autofocus True
+            ]
+            []
         , button [ onClick AddTask ] [ text "Add Task" ]
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
