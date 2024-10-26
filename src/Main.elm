@@ -200,15 +200,11 @@ renderTask : Int -> Task -> Html Msg
 renderTask cp task =
     li [ markTaskNew cp task.modificationTime ]
         [ span [ onClick (Edit task) ]
-            [ text
-                (task.title
-                    ++ " ("
-                    ++ String.fromInt task.modificationTime
-                    ++ ")"
-                )
+            [ text task.title
+            , text (" (" ++ String.fromInt task.modificationTime ++ ")")
             , text
                 (if task.isEditing then
-                    "EDITING"
+                    " EDITING"
 
                  else
                     ""
