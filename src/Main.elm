@@ -24,6 +24,7 @@ import Task
 type alias Task =
     { title : String
     , modificationTime : Int
+    , isEditing : Bool
     }
 
 
@@ -80,10 +81,11 @@ modelCoreDecoder =
 
 taskDecoder : D.Decoder Task
 taskDecoder =
-    D.map2
+    D.map3
         Task
         (D.field "title" D.string)
         (D.field "modified" D.int)
+        (D.field "is_editing" D.bool)
 
 
 encodeModelCore : ModelCore -> E.Value
@@ -100,6 +102,7 @@ encodeTask task =
     E.object
         [ ( "title", E.string task.title )
         , ( "modified", E.int task.modificationTime )
+        , ( "is_editing", E.bool task.isEditing )
         ]
 
 
@@ -350,7 +353,7 @@ addNewTask model =
             else
                 List.append
                     model.persistentCore.tasks
-                    [ Task model.inputBuffer model.persistentCore.timestamp ]
+                    [ Task model.inputBuffer model.persistentCore.timestamp False ]
     in
     ModelCore
         model.persistentCore.timestamp
