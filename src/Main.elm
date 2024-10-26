@@ -4,9 +4,9 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, button, div, li, text, ul)
-import Html.Attributes exposing (style)
-import Html.Events exposing (onClick)
+import Html exposing (Attribute, Html, button, div, input, li, text, ul)
+import Html.Attributes exposing (placeholder, style, value)
+import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
 import Json.Encode as E
 import Task
@@ -15,7 +15,6 @@ import Task
 
 -- TODO use custom text in new task title
 -- TODO click to edit task
--- TODO add delete button after task
 -- TODO add undo/redo
 -- TODO render links in task title
 
@@ -36,6 +35,7 @@ type alias ModelCore =
 type alias Model =
     { log : String
     , persistentCore : ModelCore
+    , inputBuffer : String
     }
 
 
@@ -47,6 +47,7 @@ type Msg
     | AddAutoTask
     | SetCheckpoint
     | DeleteTask Task
+    | InputBufferChange String
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -104,12 +105,13 @@ init flag =
     in
     case core of
         Ok modelCore ->
-            ( Model "" modelCore, Cmd.none )
+            ( Model "" modelCore "", Cmd.none )
 
         Err _ ->
             ( Model
                 "Cannot load model from local storage. Starting afresh!"
                 (ModelCore 0 [] 0)
+                ""
             , Cmd.none
             )
 
@@ -117,13 +119,15 @@ init flag =
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
+        [ input [ placeholder "New task title", value model.inputBuffer, onInput InputBufferChange ] []
+        , button [ onClick AddAutoTask ] [ text "Add Auto Task" ]
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
         , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
+        , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
@@ -218,6 +222,9 @@ update msg modelOriginal =
 
         DeleteTask task ->
             ( { model | persistentCore = deleteTask model task }, Cmd.none )
+
+        InputBufferChange buf ->
+            ( { model | inputBuffer = buf }, Cmd.none )
 
 
 deleteTask : Model -> Task -> ModelCore
