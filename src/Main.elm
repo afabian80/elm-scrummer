@@ -140,7 +140,11 @@ view model =
             , autofocus True
             ]
             []
-        , button [ onClick AddTask ] [ text "Add Task" ]
+        , button
+            [ onClick AddTask
+            , disabled (model.inputBuffer == "")
+            ]
+            [ text "Add Task" ]
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
