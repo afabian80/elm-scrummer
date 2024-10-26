@@ -4,7 +4,7 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, button, div, input, li, span, text, ul)
+import Html exposing (Attribute, Html, button, div, h3, input, li, p, span, text, ul)
 import Html.Attributes exposing (autofocus, disabled, placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
@@ -115,8 +115,10 @@ view model =
             "Redo (" ++ redoStackSizeStr ++ ")"
     in
     div []
-        [ -- Cannot handle Enter directly, use something like [ input [ onInput InputChanged, onKeyDown (\e -> if e.keyCode == 13 then SubmitForm else InputChanged e.targetValue) ] []
-          input
+        [ p [] [ text "Database is saved to your Browser's local storage to persist on this machine." ]
+
+        -- Cannot handle Enter directly, use something like [ input [ onInput InputChanged, onKeyDown (\e -> if e.keyCode == 13 then SubmitForm else InputChanged e.targetValue) ] []
+        , input
             [ placeholder "New todo title"
             , value model.inputBuffer
             , onInput InputBufferChange
@@ -141,7 +143,11 @@ view model =
             , disabled (redoStackSize == 0)
             ]
             [ text redoButtonText ]
-        , ul [] (renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer)
+        , div []
+            [ h3 [] [ text "Todos:" ]
+            , ul [] (renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer)
+            ]
+        , p [] [ text "Click Todos to edit." ]
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
         , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
