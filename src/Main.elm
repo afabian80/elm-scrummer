@@ -14,9 +14,9 @@ import Task
 
 
 
+-- Add Promote and Demote button to change task state
 -- TODO render links in task title
 -- TODO use bootstrap design
--- TODO add task state (todo, doing, done)
 -- TODO add filters for state
 
 
