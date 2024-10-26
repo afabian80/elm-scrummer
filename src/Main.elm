@@ -180,7 +180,6 @@ view model =
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
         , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
-        , div [] [ text ("Undo stack size: " ++ undoStackSizeStr) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
