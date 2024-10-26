@@ -46,6 +46,7 @@ type Msg
     | FileLoaded String
     | AddAutoTask
     | SetCheckpoint
+    | DeleteTask Task
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -141,6 +142,7 @@ renderTask cp task =
                 ++ String.fromInt task.modificationTime
                 ++ ")"
             )
+        , button [ onClick (DeleteTask task) ] [ text "Delete" ]
         ]
 
 
@@ -213,6 +215,17 @@ update msg modelOriginal =
 
         SetCheckpoint ->
             ( { model | persistentCore = setCheckpoint model }, Cmd.none )
+
+        DeleteTask task ->
+            ( { model | persistentCore = deleteTask model task }, Cmd.none )
+
+
+deleteTask : Model -> Task -> ModelCore
+deleteTask model task =
+    ModelCore
+        model.persistentCore.timestamp
+        (List.filter (\t -> t /= task) model.persistentCore.tasks)
+        model.persistentCore.checkpoint
 
 
 addNewTask : Model -> ModelCore
