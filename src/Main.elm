@@ -121,6 +121,13 @@ init flag =
 
 view : Model -> Html Msg
 view model =
+    let
+        undoStackSize =
+            String.fromInt (List.length (Stack.toList model.undoStack))
+
+        undoButtonText =
+            "Undo (" ++ undoStackSize ++ ")"
+    in
     div []
         [ -- Cannot handle Enter directly, use something like [ input [ onInput InputChanged, onKeyDown (\e -> if e.keyCode == 13 then SubmitForm else InputChanged e.targetValue) ] []
           input
@@ -134,12 +141,12 @@ view model =
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
-        , button [ onClick Undo ] [ text "Undo" ]
+        , button [ onClick Undo ] [ text undoButtonText ]
         , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
         , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
-        , div [] [ text ("Undo stack size: " ++ String.fromInt (List.length (Stack.toList model.undoStack))) ]
+        , div [] [ text ("Undo stack size: " ++ undoStackSize) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
