@@ -16,6 +16,9 @@ import Task
 
 -- TODO click to edit task
 -- TODO render links in task title
+-- TODO use bootstrap design
+-- TODO add task state (todo, doing, done)
+-- TODO add filters for state
 
 
 type alias Task =
