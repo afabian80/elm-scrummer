@@ -9,6 +9,7 @@ import Html.Attributes exposing (autofocus, placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
 import Json.Encode as E
+import Stack
 import Task
 
 
@@ -35,6 +36,7 @@ type alias Model =
     { log : String
     , persistentCore : ModelCore
     , inputBuffer : String
+    , undoStack : Stack.Stack ModelCore
     }
 
 
@@ -47,6 +49,7 @@ type Msg
     | DeleteTask Task
     | InputBufferChange String
     | AddTask
+    | Undo
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -104,13 +107,14 @@ init flag =
     in
     case core of
         Ok modelCore ->
-            ( Model "" modelCore "", Cmd.none )
+            ( Model "" modelCore "" Stack.initialise, Cmd.none )
 
         Err _ ->
             ( Model
                 "Cannot load model from local storage. Starting afresh!"
                 (ModelCore 0 [] 0)
                 ""
+                Stack.initialise
             , Cmd.none
             )
 
@@ -130,10 +134,12 @@ view model =
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
         , button [ onClick FileRequested ] [ text "Upload" ]
+        , button [ onClick Undo ] [ text "Undo" ]
         , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
         , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
+        , div [] [ text ("Undo stack size: " ++ String.fromInt (List.length (Stack.toList model.undoStack))) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
@@ -182,7 +188,7 @@ updateWithStorage msg model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg modelOriginal =
     let
-        --clear model log
+        --clear model log, and step timestamp
         model =
             { modelOriginal
                 | log = ""
@@ -220,18 +226,46 @@ update msg modelOriginal =
             ( { model
                 | persistentCore = addNewTask model
                 , inputBuffer = ""
+                , undoStack = Stack.push model.persistentCore model.undoStack
               }
             , Cmd.none
             )
 
         SetCheckpoint ->
-            ( { model | persistentCore = setCheckpoint model }, Cmd.none )
+            ( { model
+                | persistentCore = setCheckpoint model
+                , undoStack = Stack.push model.persistentCore model.undoStack
+              }
+            , Cmd.none
+            )
 
         DeleteTask task ->
-            ( { model | persistentCore = deleteTask model task }, Cmd.none )
+            ( { model
+                | persistentCore = deleteTask model task
+                , undoStack = Stack.push model.persistentCore model.undoStack
+              }
+            , Cmd.none
+            )
 
         InputBufferChange buf ->
             ( { model | inputBuffer = buf }, Cmd.none )
+
+        Undo ->
+            let
+                ( mCore, newStack ) =
+                    Stack.pop model.undoStack
+            in
+            case mCore of
+                Just core ->
+                    ( { model
+                        | persistentCore = core
+                        , undoStack = newStack
+                      }
+                    , Cmd.none
+                    )
+
+                Nothing ->
+                    ( model, Cmd.none )
 
 
 deleteTask : Model -> Task -> ModelCore
