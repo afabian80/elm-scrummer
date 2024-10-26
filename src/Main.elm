@@ -15,7 +15,6 @@ import Task
 
 
 -- TODO click to edit task
--- TODO add undo/redo
 -- TODO render links in task title
 
 
@@ -37,6 +36,7 @@ type alias Model =
     , persistentCore : ModelCore
     , inputBuffer : String
     , undoStack : Stack.Stack ModelCore
+    , redoStack : Stack.Stack ModelCore
     }
 
 
@@ -50,6 +50,7 @@ type Msg
     | InputBufferChange String
     | AddTask
     | Undo
+    | Redo
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -107,13 +108,21 @@ init flag =
     in
     case core of
         Ok modelCore ->
-            ( Model "" modelCore "" Stack.initialise, Cmd.none )
+            ( Model
+                ""
+                modelCore
+                ""
+                Stack.initialise
+                Stack.initialise
+            , Cmd.none
+            )
 
         Err _ ->
             ( Model
                 "Cannot load model from local storage. Starting afresh!"
                 (ModelCore 0 [] 0)
                 ""
+                Stack.initialise
                 Stack.initialise
             , Cmd.none
             )
@@ -130,6 +139,15 @@ view model =
 
         undoButtonText =
             "Undo (" ++ undoStackSizeStr ++ ")"
+
+        redoStackSize =
+            List.length (Stack.toList model.redoStack)
+
+        redoStackSizeStr =
+            String.fromInt redoStackSize
+
+        redoButtonText =
+            "Redo (" ++ redoStackSizeStr ++ ")"
     in
     div []
         [ -- Cannot handle Enter directly, use something like [ input [ onInput InputChanged, onKeyDown (\e -> if e.keyCode == 13 then SubmitForm else InputChanged e.targetValue) ] []
@@ -153,6 +171,11 @@ view model =
             , disabled (undoStackSize == 0)
             ]
             [ text undoButtonText ]
+        , button
+            [ onClick Redo
+            , disabled (redoStackSize == 0)
+            ]
+            [ text redoButtonText ]
         , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
@@ -245,6 +268,7 @@ update msg modelOriginal =
                 | persistentCore = addNewTask model
                 , inputBuffer = ""
                 , undoStack = Stack.push model.persistentCore model.undoStack
+                , redoStack = Stack.initialise
               }
             , Cmd.none
             )
@@ -261,6 +285,7 @@ update msg modelOriginal =
             ( { model
                 | persistentCore = deleteTask model task
                 , undoStack = Stack.push model.persistentCore model.undoStack
+                , redoStack = Stack.initialise
               }
             , Cmd.none
             )
@@ -278,6 +303,25 @@ update msg modelOriginal =
                     ( { model
                         | persistentCore = core
                         , undoStack = newStack
+                        , redoStack = Stack.push model.persistentCore model.redoStack
+                      }
+                    , Cmd.none
+                    )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+        Redo ->
+            let
+                ( mCore, newStack ) =
+                    Stack.pop model.redoStack
+            in
+            case mCore of
+                Just core ->
+                    ( { model
+                        | persistentCore = core
+                        , redoStack = newStack
+                        , undoStack = Stack.push model.persistentCore model.undoStack
                       }
                     , Cmd.none
                     )
