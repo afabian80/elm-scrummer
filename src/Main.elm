@@ -39,6 +39,7 @@ type alias Model =
     { log : String
     , persistentCore : ModelCore
     , inputBuffer : String
+    , editBuffer : String
     , undoStack : Stack.Stack ModelCore
     , redoStack : Stack.Stack ModelCore
     }
@@ -56,6 +57,9 @@ type Msg
     | Undo
     | Redo
     | Edit Task
+    | CancelEdit Task
+    | SaveEdit Task
+    | EditBufferChange String
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -119,6 +123,7 @@ init flag =
                 ""
                 modelCore
                 ""
+                ""
                 Stack.initialise
                 Stack.initialise
             , Cmd.none
@@ -128,6 +133,7 @@ init flag =
             ( Model
                 "Cannot load model from local storage. Starting afresh!"
                 (ModelCore 0 [] 0)
+                ""
                 ""
                 Stack.initialise
                 Stack.initialise
@@ -183,35 +189,46 @@ view model =
             , disabled (redoStackSize == 0)
             ]
             [ text redoButtonText ]
-        , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint)
+        , ul [] (renderTasks model.persistentCore.tasks model.persistentCore.checkpoint model.editBuffer)
         , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
         , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
         , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
+        , div [] [ text ("Edit buffer: " ++ model.editBuffer) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
 
-renderTasks : List Task -> Int -> List (Html Msg)
-renderTasks tasks cp =
-    List.map (renderTask cp) tasks
+renderTasks : List Task -> Int -> String -> List (Html Msg)
+renderTasks tasks cp buffer =
+    List.map (renderTask cp buffer) tasks
 
 
-renderTask : Int -> Task -> Html Msg
-renderTask cp task =
-    li [ markTaskNew cp task.modificationTime ]
-        [ span [ onClick (Edit task) ]
-            [ text task.title
-            , text (" (" ++ String.fromInt task.modificationTime ++ ")")
-            , text
-                (if task.isEditing then
-                    " EDITING"
-
-                 else
-                    ""
-                )
+renderTask : Int -> String -> Task -> Html Msg
+renderTask cp buffer task =
+    if task.isEditing then
+        li []
+            [ span []
+                [ input [ value buffer, onInput EditBufferChange ] []
+                , button [ onClick (SaveEdit task) ] [ text "Save" ]
+                , button [ onClick (CancelEdit task) ] [ text "Cancel" ]
+                ]
             ]
-        , button [ onClick (DeleteTask task) ] [ text "Delete" ]
-        ]
+
+    else
+        li [ markTaskNew cp task.modificationTime ]
+            [ span [ onClick (Edit task) ]
+                [ text task.title
+                , text (" (" ++ String.fromInt task.modificationTime ++ ")")
+                , text
+                    (if task.isEditing then
+                        " EDITING"
+
+                     else
+                        ""
+                    )
+                ]
+            , button [ onClick (DeleteTask task) ] [ text "Delete" ]
+            ]
 
 
 markTaskNew : Int -> Int -> Attribute Msg
@@ -341,14 +358,38 @@ update msg modelOriginal =
                     ( model, Cmd.none )
 
         Edit task ->
-            ( { model | persistentCore = startTaskEditing model task }, Cmd.none )
+            ( { model
+                | persistentCore = setTaskEditing model task True
+                , editBuffer = task.title
+              }
+            , Cmd.none
+            )
+
+        CancelEdit task ->
+            ( { model
+                | persistentCore = setTaskEditing model task False
+                , editBuffer = task.title
+              }
+            , Cmd.none
+            )
+
+        SaveEdit task ->
+            ( { model
+                | persistentCore = saveEditedTask model task
+                , editBuffer = task.title
+              }
+            , Cmd.none
+            )
+
+        EditBufferChange buf ->
+            ( { model | editBuffer = buf }, Cmd.none )
 
 
-startTaskEditing : Model -> Task -> ModelCore
-startTaskEditing model task =
+saveEditedTask : Model -> Task -> ModelCore
+saveEditedTask model task =
     let
         newTasks =
-            editTask model.persistentCore.tasks task
+            updateTasks model.persistentCore.tasks task model.editBuffer model.persistentCore.timestamp
     in
     ModelCore
         model.persistentCore.timestamp
@@ -356,15 +397,41 @@ startTaskEditing model task =
         model.persistentCore.checkpoint
 
 
-editTask : List Task -> Task -> List Task
-editTask tasks task =
+updateTasks : List Task -> Task -> String -> Int -> List Task
+updateTasks tasks task title time =
+    List.map (updateTask task title time) tasks
+
+
+updateTask : Task -> String -> Int -> Task -> Task
+updateTask theTask newTitle time aTask =
+    if aTask == theTask then
+        { theTask | title = newTitle, modificationTime = time, isEditing = False }
+
+    else
+        aTask
+
+
+setTaskEditing : Model -> Task -> Bool -> ModelCore
+setTaskEditing model task state =
+    let
+        newTasks =
+            editTask model.persistentCore.tasks task state
+    in
+    ModelCore
+        model.persistentCore.timestamp
+        newTasks
+        model.persistentCore.checkpoint
+
+
+editTask : List Task -> Task -> Bool -> List Task
+editTask tasks task state =
     List.map
         (\t ->
             if t == task then
-                { t | isEditing = not t.isEditing }
+                { t | isEditing = state }
 
             else
-                t
+                { t | isEditing = False }
         )
         tasks
 
