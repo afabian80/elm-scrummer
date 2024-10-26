@@ -4,7 +4,7 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, button, div, input, li, text, ul)
+import Html exposing (Attribute, Html, button, div, input, li, span, text, ul)
 import Html.Attributes exposing (autofocus, disabled, placeholder, style, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
@@ -55,6 +55,7 @@ type Msg
     | AddTask
     | Undo
     | Redo
+    | Edit Task
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -198,12 +199,21 @@ renderTasks tasks cp =
 renderTask : Int -> Task -> Html Msg
 renderTask cp task =
     li [ markTaskNew cp task.modificationTime ]
-        [ text
-            (task.title
-                ++ " ("
-                ++ String.fromInt task.modificationTime
-                ++ ")"
-            )
+        [ span [ onClick (Edit task) ]
+            [ text
+                (task.title
+                    ++ " ("
+                    ++ String.fromInt task.modificationTime
+                    ++ ")"
+                )
+            , text
+                (if task.isEditing then
+                    "EDITING"
+
+                 else
+                    ""
+                )
+            ]
         , button [ onClick (DeleteTask task) ] [ text "Delete" ]
         ]
 
@@ -333,6 +343,34 @@ update msg modelOriginal =
 
                 Nothing ->
                     ( model, Cmd.none )
+
+        Edit task ->
+            ( { model | persistentCore = startTaskEditing model task }, Cmd.none )
+
+
+startTaskEditing : Model -> Task -> ModelCore
+startTaskEditing model task =
+    let
+        newTasks =
+            editTask model.persistentCore.tasks task
+    in
+    ModelCore
+        model.persistentCore.timestamp
+        newTasks
+        model.persistentCore.checkpoint
+
+
+editTask : List Task -> Task -> List Task
+editTask tasks task =
+    List.map
+        (\t ->
+            if t == task then
+                { t | isEditing = not t.isEditing }
+
+            else
+                t
+        )
+        tasks
 
 
 deleteTask : Model -> Task -> ModelCore
