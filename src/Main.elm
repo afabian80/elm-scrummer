@@ -5,7 +5,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, button, div, input, p, span, table, td, text, th, tr)
-import Html.Attributes exposing (autofocus, colspan, disabled, placeholder, style, value, width)
+import Html.Attributes exposing (autofocus, class, colspan, disabled, placeholder, style, value, width)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
 import Json.Encode as E
@@ -115,7 +115,7 @@ view model =
         redoButtonText =
             "Redo (" ++ redoStackSizeStr ++ ")"
     in
-    div []
+    div [ class "table-container" ]
         [ p [] [ text "Database is saved to your Browser's local storage to persist on this machine." ]
         , table []
             ([ tr []
