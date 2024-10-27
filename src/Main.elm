@@ -138,9 +138,7 @@ view model =
                 , td [] [ button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ] ]
                 ]
              , tr []
-                [ td [] [ button [ onClick Download ] [ text "Download" ] ]
-                , td [] [ button [ onClick FileRequested, style "background-color" "lightpink" ] [ text "Upload" ] ]
-                , td []
+                [ td []
                     [ button
                         [ onClick Undo
                         , disabled (undoStackSize == 0)
@@ -165,8 +163,12 @@ view model =
              ]
                 ++ renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer
             )
-        , p [] [ text "Click Todos to edit." ]
-        , p [] [ text "Database is persisten in this browser only!" ]
+        , div [ style "margin-top" "1em" ] [ text "Click Todos to edit." ]
+        , div [] [ text "Database is persisted in this browser only!" ]
+        , span []
+            [ button [ onClick Download, style "margin-right" "1em" ] [ text "Download model" ]
+            , button [ onClick FileRequested ] [ text "Upload model" ]
+            ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
