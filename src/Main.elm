@@ -344,7 +344,7 @@ update msg modelOriginal =
 
         Promote todoItem ->
             ( { model
-                | persistentCore = promoteTodoItemInModel model todoItem promoteState
+                | persistentCore = changeTodoItemStateInModel model todoItem promoteState
                 , undoStack = Stack.push model.persistentCore model.undoStack
                 , redoStack = Stack.initialise
               }
@@ -353,7 +353,7 @@ update msg modelOriginal =
 
         Demote todoItem ->
             ( { model
-                | persistentCore = promoteTodoItemInModel model todoItem demoteState
+                | persistentCore = changeTodoItemStateInModel model todoItem demoteState
                 , undoStack = Stack.push model.persistentCore model.undoStack
                 , redoStack = Stack.initialise
               }
@@ -361,11 +361,11 @@ update msg modelOriginal =
             )
 
 
-promoteTodoItemInModel : Model -> TodoItem -> (TodoState -> TodoState) -> ModelCore
-promoteTodoItemInModel model todoItem stateFun =
+changeTodoItemStateInModel : Model -> TodoItem -> TodoStateFunction -> ModelCore
+changeTodoItemStateInModel model todoItem stateFun =
     let
         newTodoItems =
-            promoteTodoItems model.persistentCore.todoItems todoItem stateFun model.persistentCore.timestamp
+            changeTodoItemsState model.persistentCore.todoItems todoItem stateFun model.persistentCore.timestamp
     in
     ModelCore
         model.persistentCore.timestamp
@@ -373,13 +373,13 @@ promoteTodoItemInModel model todoItem stateFun =
         model.persistentCore.checkpoint
 
 
-promoteTodoItems : List TodoItem -> TodoItem -> (TodoState -> TodoState) -> Int -> List TodoItem
-promoteTodoItems todoItems todoItem stateFun time =
-    List.map (promoteTodoItem todoItem stateFun time) todoItems
+changeTodoItemsState : List TodoItem -> TodoItem -> TodoStateFunction -> Int -> List TodoItem
+changeTodoItemsState todoItems todoItem stateFun time =
+    List.map (changeTodoItemState todoItem stateFun time) todoItems
 
 
-promoteTodoItem : TodoItem -> (TodoState -> TodoState) -> Int -> TodoItem -> TodoItem
-promoteTodoItem theTodoItem stateFun time aTodoItem =
+changeTodoItemState : TodoItem -> TodoStateFunction -> Int -> TodoItem -> TodoItem
+changeTodoItemState theTodoItem stateFun time aTodoItem =
     if aTodoItem == theTodoItem then
         { theTodoItem
             | state = stateFun theTodoItem.state

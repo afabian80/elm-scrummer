@@ -10,7 +10,11 @@ type TodoState
     | Done
 
 
-promoteState : TodoState -> TodoState
+type alias TodoStateFunction =
+    TodoState -> TodoState
+
+
+promoteState : TodoStateFunction
 promoteState state =
     case state of
         Todo ->
@@ -23,7 +27,7 @@ promoteState state =
             Done
 
 
-demoteState : TodoState -> TodoState
+demoteState : TodoStateFunction
 demoteState state =
     case state of
         Todo ->
