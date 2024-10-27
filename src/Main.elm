@@ -192,9 +192,9 @@ renderTodoItem cp buffer todoItem =
             ]
 
     else
-        tr [ markTodoItemNew cp todoItem.modificationTime ]
+        tr []
             [ td [] [ renderTodoState todoItem.state ]
-            , td [] [ span [ onClick (Edit todoItem) ] [ text todoItem.title ] ]
+            , td [ markTodoItemNew cp todoItem.modificationTime ] [ span [ onClick (Edit todoItem) ] [ text todoItem.title ] ]
             , td [] [ button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ] ]
             , td [] [ button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ] ]
             , td [] [ button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ] ]
