@@ -4,7 +4,7 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, button, div, h3, input, li, p, span, table, td, text, th, tr, ul)
+import Html exposing (Attribute, Html, button, div, input, p, span, table, td, text, th, tr)
 import Html.Attributes exposing (autofocus, colspan, disabled, placeholder, style, value, width)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
@@ -118,14 +118,14 @@ view model =
     div []
         [ p [] [ text "Database is saved to your Browser's local storage to persist on this machine." ]
         , table []
-            [ tr []
+            ([ tr []
                 [ th [] [ text "header 1" ]
                 , th [] [ text "header 2" ]
                 , th [] [ text "header 3" ]
                 , th [] [ text "header 4" ]
                 , th [] [ text "header 5" ]
                 ]
-            , tr []
+             , tr []
                 [ td [ colspan 3 ]
                     [ input
                         [ placeholder "New todo title"
@@ -145,7 +145,7 @@ view model =
                     ]
                 , td [] [ button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ] ]
                 ]
-            , tr []
+             , tr []
                 [ td [] [ button [ onClick Download ] [ text "Download" ] ]
                 , td [] [ button [ onClick FileRequested, style "background-color" "lightpink" ] [ text "Upload" ] ]
                 , td []
@@ -163,33 +163,10 @@ view model =
                         [ text redoButtonText ]
                     ]
                 ]
-            , tr []
-                [ td [] [ text "data 1" ]
-                , td [] [ text "data 2" ]
-                , td [] [ text "data 3" ]
-                , td [] [ text "data 4" ]
-                , td [] [ text "data 5" ]
-                ]
-            , tr []
-                [ td [] [ text "data 1" ]
-                , td [] [ text "data 2" ]
-                , td [] [ text "data 3" ]
-                , td [] [ text "data 4" ]
-                , td [] [ text "data 5" ]
-                ]
-            ]
-
-        -- Cannot handle Enter directly, use something like [ input [ onInput InputChanged, onKeyDown (\e -> if e.keyCode == 13 then SubmitForm else InputChanged e.targetValue) ] []
-        , div []
-            [ h3 [] [ text "Todos:" ]
-            , ul [] (renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer)
-            ]
+             ]
+                ++ renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer
+            )
         , p [] [ text "Click Todos to edit." ]
-
-        -- , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
-        -- , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
-        -- , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
-        -- , div [] [ text ("Edit buffer: " ++ model.editBuffer) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
@@ -202,25 +179,33 @@ renderTodoItems todoItem cp buffer =
 renderTodoItem : Int -> String -> TodoItem -> Html Msg
 renderTodoItem cp buffer todoItem =
     if todoItem.isEditing then
-        li []
-            [ span []
-                [ input [ value buffer, onInput EditBufferChange ] []
-                , button [ onClick (SaveEdit todoItem) ] [ text "Save" ]
-                , button [ onClick (CancelEdit todoItem) ] [ text "Cancel" ]
-                ]
+        tr []
+            [ td [] [ input [ value buffer, onInput EditBufferChange ] [] ]
+            , td [] [ button [ onClick (SaveEdit todoItem) ] [ text "Save" ] ]
+            , td [] [ button [ onClick (CancelEdit todoItem) ] [ text "Cancel" ] ]
             ]
 
     else
-        li [ markTodoItemNew cp todoItem.modificationTime ]
-            [ span [ onClick (Edit todoItem) ]
-                [ renderTodoState todoItem.state
-                , text todoItem.title
-                , text (" (" ++ String.fromInt todoItem.modificationTime ++ ")")
-                ]
-            , button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ]
-            , button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ]
-            , button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ]
+        tr [ markTodoItemNew cp todoItem.modificationTime ]
+            [ td [] [ renderTodoState todoItem.state ]
+            , td [] [ span [ onClick (Edit todoItem) ] [ text todoItem.title ] ]
+            , td [] [ button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ] ]
+            , td [] [ button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ] ]
+            , td [] [ button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ] ]
             ]
+
+
+
+-- li [ markTodoItemNew cp todoItem.modificationTime ]
+--     [ span [ onClick (Edit todoItem) ]
+--         [ renderTodoState todoItem.state
+--         , text todoItem.title
+--         , text (" (" ++ String.fromInt todoItem.modificationTime ++ ")")
+--         ]
+--     , button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ]
+--     , button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ]
+--     , button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ]
+--     ]
 
 
 renderTodoState : TodoState -> Html Msg
