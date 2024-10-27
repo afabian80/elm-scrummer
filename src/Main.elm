@@ -116,16 +116,8 @@ view model =
             "Redo (" ++ redoStackSizeStr ++ ")"
     in
     div [ class "table-container" ]
-        [ p [] [ text "Database is saved to your Browser's local storage to persist on this machine." ]
-        , table []
+        [ table []
             ([ tr []
-                [ th [] [ text "header 1" ]
-                , th [] [ text "header 2" ]
-                , th [] [ text "header 3" ]
-                , th [] [ text "header 4" ]
-                , th [] [ text "header 5" ]
-                ]
-             , tr []
                 [ td [ colspan 3 ]
                     [ input
                         [ placeholder "New todo title"
@@ -163,10 +155,18 @@ view model =
                         [ text redoButtonText ]
                     ]
                 ]
+             , tr []
+                [ th [] [ text "State" ]
+                , th [] [ text "Title" ]
+                , th [] [ text "State ++" ]
+                , th [] [ text "State --" ]
+                , th [] [ text "Action" ]
+                ]
              ]
                 ++ renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer
             )
         , p [] [ text "Click Todos to edit." ]
+        , p [] [ text "Database is persisten in this browser only!" ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
