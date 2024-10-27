@@ -48,6 +48,7 @@ type Msg
     | CancelEdit TodoItem
     | SaveEdit TodoItem
     | EditBufferChange String
+    | Promote TodoItem
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -179,6 +180,7 @@ renderTodoItem cp buffer todoItem =
                 , text (" (" ++ String.fromInt todoItem.modificationTime ++ ")")
                 , text (E.encode 0 (encodeTodoState todoItem.state))
                 ]
+            , button [ onClick (Promote todoItem) ] [ text "Promote" ]
             , button [ onClick (DeleteTodoItem todoItem) ] [ text "Delete" ]
             ]
 
@@ -337,6 +339,44 @@ update msg modelOriginal =
 
         EditBufferChange buf ->
             ( { model | editBuffer = buf }, Cmd.none )
+
+        Promote todoItem ->
+            ( { model
+                | persistentCore = promoteTodoItemInModel model todoItem
+                , undoStack = Stack.push model.persistentCore model.undoStack
+                , redoStack = Stack.initialise
+              }
+            , Cmd.none
+            )
+
+
+promoteTodoItemInModel : Model -> TodoItem -> ModelCore
+promoteTodoItemInModel model todoItem =
+    let
+        newTodoItems =
+            promoteTodoItems model.persistentCore.todoItems todoItem model.persistentCore.timestamp
+    in
+    ModelCore
+        model.persistentCore.timestamp
+        newTodoItems
+        model.persistentCore.checkpoint
+
+
+promoteTodoItems : List TodoItem -> TodoItem -> Int -> List TodoItem
+promoteTodoItems todoItems todoItem time =
+    List.map (promoteTodoItem todoItem time) todoItems
+
+
+promoteTodoItem : TodoItem -> Int -> TodoItem -> TodoItem
+promoteTodoItem theTodoItem time aTodoItem =
+    if aTodoItem == theTodoItem then
+        { theTodoItem
+            | state = promoteState theTodoItem.state
+            , modificationTime = time
+        }
+
+    else
+        aTodoItem
 
 
 saveEditedTodoItem : Model -> TodoItem -> ModelCore

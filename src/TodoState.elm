@@ -10,6 +10,19 @@ type TodoState
     | Done
 
 
+promoteState : TodoState -> TodoState
+promoteState state =
+    case state of
+        Todo ->
+            Doing
+
+        Doing ->
+            Done
+
+        Done ->
+            Done
+
+
 encodeTodoState : TodoState -> E.Value
 encodeTodoState state =
     case state of
