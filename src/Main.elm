@@ -49,6 +49,7 @@ type Msg
     | SaveEdit TodoItem
     | EditBufferChange String
     | Promote TodoItem
+    | Demote TodoItem
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -181,6 +182,7 @@ renderTodoItem cp buffer todoItem =
                 , text (E.encode 0 (encodeTodoState todoItem.state))
                 ]
             , button [ onClick (Promote todoItem) ] [ text "Promote" ]
+            , button [ onClick (Demote todoItem) ] [ text "Demote" ]
             , button [ onClick (DeleteTodoItem todoItem) ] [ text "Delete" ]
             ]
 
@@ -342,7 +344,16 @@ update msg modelOriginal =
 
         Promote todoItem ->
             ( { model
-                | persistentCore = promoteTodoItemInModel model todoItem
+                | persistentCore = promoteTodoItemInModel model todoItem promoteState
+                , undoStack = Stack.push model.persistentCore model.undoStack
+                , redoStack = Stack.initialise
+              }
+            , Cmd.none
+            )
+
+        Demote todoItem ->
+            ( { model
+                | persistentCore = promoteTodoItemInModel model todoItem demoteState
                 , undoStack = Stack.push model.persistentCore model.undoStack
                 , redoStack = Stack.initialise
               }
@@ -350,11 +361,11 @@ update msg modelOriginal =
             )
 
 
-promoteTodoItemInModel : Model -> TodoItem -> ModelCore
-promoteTodoItemInModel model todoItem =
+promoteTodoItemInModel : Model -> TodoItem -> (TodoState -> TodoState) -> ModelCore
+promoteTodoItemInModel model todoItem stateFun =
     let
         newTodoItems =
-            promoteTodoItems model.persistentCore.todoItems todoItem model.persistentCore.timestamp
+            promoteTodoItems model.persistentCore.todoItems todoItem stateFun model.persistentCore.timestamp
     in
     ModelCore
         model.persistentCore.timestamp
@@ -362,16 +373,16 @@ promoteTodoItemInModel model todoItem =
         model.persistentCore.checkpoint
 
 
-promoteTodoItems : List TodoItem -> TodoItem -> Int -> List TodoItem
-promoteTodoItems todoItems todoItem time =
-    List.map (promoteTodoItem todoItem time) todoItems
+promoteTodoItems : List TodoItem -> TodoItem -> (TodoState -> TodoState) -> Int -> List TodoItem
+promoteTodoItems todoItems todoItem stateFun time =
+    List.map (promoteTodoItem todoItem stateFun time) todoItems
 
 
-promoteTodoItem : TodoItem -> Int -> TodoItem -> TodoItem
-promoteTodoItem theTodoItem time aTodoItem =
+promoteTodoItem : TodoItem -> (TodoState -> TodoState) -> Int -> TodoItem -> TodoItem
+promoteTodoItem theTodoItem stateFun time aTodoItem =
     if aTodoItem == theTodoItem then
         { theTodoItem
-            | state = promoteState theTodoItem.state
+            | state = stateFun theTodoItem.state
             , modificationTime = time
         }
 

@@ -23,6 +23,19 @@ promoteState state =
             Done
 
 
+demoteState : TodoState -> TodoState
+demoteState state =
+    case state of
+        Todo ->
+            Todo
+
+        Doing ->
+            Todo
+
+        Done ->
+            Doing
+
+
 encodeTodoState : TodoState -> E.Value
 encodeTodoState state =
     case state of
