@@ -180,9 +180,15 @@ renderTodoItem : Int -> String -> TodoItem -> Html Msg
 renderTodoItem cp buffer todoItem =
     if todoItem.isEditing then
         tr []
-            [ td [] [ input [ value buffer, onInput EditBufferChange ] [] ]
-            , td [] [ button [ onClick (SaveEdit todoItem) ] [ text "Save" ] ]
-            , td [] [ button [ onClick (CancelEdit todoItem) ] [ text "Cancel" ] ]
+            [ td [] [ renderTodoState todoItem.state ]
+            , td []
+                [ input [ value buffer, onInput EditBufferChange ] []
+                , button [ onClick (SaveEdit todoItem) ] [ text "Save" ]
+                , button [ onClick (CancelEdit todoItem) ] [ text "Cancel" ]
+                ]
+            , td [] [ button [ onClick (Promote todoItem), disabled True ] [ text "Promote" ] ]
+            , td [] [ button [ onClick (Demote todoItem), disabled True ] [ text "Demote" ] ]
+            , td [] [ button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink", disabled True ] [ text "Delete" ] ]
             ]
 
     else
@@ -193,19 +199,6 @@ renderTodoItem cp buffer todoItem =
             , td [] [ button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ] ]
             , td [] [ button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ] ]
             ]
-
-
-
--- li [ markTodoItemNew cp todoItem.modificationTime ]
---     [ span [ onClick (Edit todoItem) ]
---         [ renderTodoState todoItem.state
---         , text todoItem.title
---         , text (" (" ++ String.fromInt todoItem.modificationTime ++ ")")
---         ]
---     , button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ]
---     , button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ]
---     , button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ]
---     ]
 
 
 renderTodoState : TodoState -> Html Msg
