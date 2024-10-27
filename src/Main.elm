@@ -152,7 +152,7 @@ view model =
             [ button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
             , button [ onClick Redo, disabled (redoStackSize == 0) ] [ text redoButtonText ]
             , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
-            , button [ onClick ClearOldDone ] [ text "Clear Old" ]
+            , button [ onClick ClearOldDone, disabled (noCleanbles model) ] [ text "Clear Old" ]
             ]
         , div [] [ text "Database is persisted in this browser only!" ]
         , span []
@@ -161,6 +161,13 @@ view model =
             ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
+
+
+noCleanbles : Model -> Bool
+noCleanbles model =
+    List.length
+        (List.filter (keeper model.persistentCore.checkpoint) model.persistentCore.todoItems)
+        == List.length model.persistentCore.todoItems
 
 
 renderTodoItems : List TodoItem -> Int -> String -> List (Html Msg)
