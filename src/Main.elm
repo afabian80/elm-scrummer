@@ -49,6 +49,7 @@ type Msg
     | EditBufferChange String
     | Promote TodoItem
     | Demote TodoItem
+    | ClearOldDone
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -150,6 +151,8 @@ view model =
         , span []
             [ button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
             , button [ onClick Redo, disabled (redoStackSize == 0) ] [ text redoButtonText ]
+            , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
+            , button [ onClick ClearOldDone ] [ text "Clear Old" ]
             ]
         , div [] [ text "Database is persisted in this browser only!" ]
         , span []
@@ -375,6 +378,37 @@ update msg modelOriginal =
               }
             , Cmd.none
             )
+
+        ClearOldDone ->
+            ( { model
+                | persistentCore = clearOldTodoItemsInModel model
+                , undoStack = Stack.push model.persistentCore model.undoStack
+                , redoStack = Stack.initialise
+              }
+            , Cmd.none
+            )
+
+
+clearOldTodoItemsInModel : Model -> ModelCore
+clearOldTodoItemsInModel model =
+    let
+        cleanTodoItems =
+            clearTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint
+    in
+    ModelCore
+        model.persistentCore.timestamp
+        cleanTodoItems
+        model.persistentCore.checkpoint
+
+
+clearTodoItems : List TodoItem -> Int -> List TodoItem
+clearTodoItems todoItems checkpoint =
+    List.filter (keeper checkpoint) todoItems
+
+
+keeper : Int -> TodoItem -> Bool
+keeper checkpoint todoItem =
+    not ((todoItem.state == Done) && (todoItem.modificationTime <= checkpoint))
 
 
 changeTodoItemStateInModel : Model -> TodoItem -> TodoStateFunction -> ModelCore
