@@ -176,14 +176,27 @@ renderTodoItem cp buffer todoItem =
     else
         li [ markTodoItemNew cp todoItem.modificationTime ]
             [ span [ onClick (Edit todoItem) ]
-                [ text todoItem.title
+                [ renderTodoState todoItem.state
+                , text todoItem.title
                 , text (" (" ++ String.fromInt todoItem.modificationTime ++ ")")
-                , text (E.encode 0 (encodeTodoState todoItem.state))
                 ]
             , button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ]
             , button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ]
             , button [ onClick (DeleteTodoItem todoItem) ] [ text "Delete" ]
             ]
+
+
+renderTodoState : TodoState -> Html Msg
+renderTodoState state =
+    case state of
+        Todo ->
+            text "[ ] "
+
+        Doing ->
+            text "[*] "
+
+        Done ->
+            text "[x] "
 
 
 markTodoItemNew : Int -> Int -> Attribute Msg
