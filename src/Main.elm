@@ -133,7 +133,7 @@ view model =
             [ text "Add Todo" ]
         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
         , button [ onClick Download ] [ text "Download" ]
-        , button [ onClick FileRequested ] [ text "Upload" ]
+        , button [ onClick FileRequested, style "background-color" "lightpink" ] [ text "Upload" ]
         , button
             [ onClick Undo
             , disabled (undoStackSize == 0)
@@ -182,7 +182,7 @@ renderTodoItem cp buffer todoItem =
                 ]
             , button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ]
             , button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ]
-            , button [ onClick (DeleteTodoItem todoItem) ] [ text "Delete" ]
+            , button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ]
             ]
 
 
