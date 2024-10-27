@@ -181,8 +181,8 @@ renderTodoItem cp buffer todoItem =
                 , text (" (" ++ String.fromInt todoItem.modificationTime ++ ")")
                 , text (E.encode 0 (encodeTodoState todoItem.state))
                 ]
-            , button [ onClick (Promote todoItem) ] [ text "Promote" ]
-            , button [ onClick (Demote todoItem) ] [ text "Demote" ]
+            , button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ]
+            , button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ]
             , button [ onClick (DeleteTodoItem todoItem) ] [ text "Delete" ]
             ]
 
