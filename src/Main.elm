@@ -4,8 +4,8 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, button, div, h3, input, li, p, span, text, ul)
-import Html.Attributes exposing (autofocus, disabled, placeholder, style, value)
+import Html exposing (Attribute, Html, button, div, h3, input, li, p, span, table, td, text, th, tr, ul)
+import Html.Attributes exposing (autofocus, colspan, disabled, placeholder, style, value, width)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
 import Json.Encode as E
@@ -117,42 +117,79 @@ view model =
     in
     div []
         [ p [] [ text "Database is saved to your Browser's local storage to persist on this machine." ]
+        , table []
+            [ tr []
+                [ th [] [ text "header 1" ]
+                , th [] [ text "header 2" ]
+                , th [] [ text "header 3" ]
+                , th [] [ text "header 4" ]
+                , th [] [ text "header 5" ]
+                ]
+            , tr []
+                [ td [ colspan 3 ]
+                    [ input
+                        [ placeholder "New todo title"
+                        , value model.inputBuffer
+                        , onInput InputBufferChange
+                        , autofocus True
+                        , width 200
+                        ]
+                        []
+                    ]
+                , td []
+                    [ button
+                        [ onClick AddTodoItem
+                        , disabled (model.inputBuffer == "")
+                        ]
+                        [ text "Add Todo" ]
+                    ]
+                , td [] [ button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ] ]
+                ]
+            , tr []
+                [ td [] [ button [ onClick Download ] [ text "Download" ] ]
+                , td [] [ button [ onClick FileRequested, style "background-color" "lightpink" ] [ text "Upload" ] ]
+                , td []
+                    [ button
+                        [ onClick Undo
+                        , disabled (undoStackSize == 0)
+                        ]
+                        [ text undoButtonText ]
+                    ]
+                , td []
+                    [ button
+                        [ onClick Redo
+                        , disabled (redoStackSize == 0)
+                        ]
+                        [ text redoButtonText ]
+                    ]
+                ]
+            , tr []
+                [ td [] [ text "data 1" ]
+                , td [] [ text "data 2" ]
+                , td [] [ text "data 3" ]
+                , td [] [ text "data 4" ]
+                , td [] [ text "data 5" ]
+                ]
+            , tr []
+                [ td [] [ text "data 1" ]
+                , td [] [ text "data 2" ]
+                , td [] [ text "data 3" ]
+                , td [] [ text "data 4" ]
+                , td [] [ text "data 5" ]
+                ]
+            ]
 
         -- Cannot handle Enter directly, use something like [ input [ onInput InputChanged, onKeyDown (\e -> if e.keyCode == 13 then SubmitForm else InputChanged e.targetValue) ] []
-        , input
-            [ placeholder "New todo title"
-            , value model.inputBuffer
-            , onInput InputBufferChange
-            , autofocus True
-            ]
-            []
-        , button
-            [ onClick AddTodoItem
-            , disabled (model.inputBuffer == "")
-            ]
-            [ text "Add Todo" ]
-        , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
-        , button [ onClick Download ] [ text "Download" ]
-        , button [ onClick FileRequested, style "background-color" "lightpink" ] [ text "Upload" ]
-        , button
-            [ onClick Undo
-            , disabled (undoStackSize == 0)
-            ]
-            [ text undoButtonText ]
-        , button
-            [ onClick Redo
-            , disabled (redoStackSize == 0)
-            ]
-            [ text redoButtonText ]
         , div []
             [ h3 [] [ text "Todos:" ]
             , ul [] (renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer)
             ]
         , p [] [ text "Click Todos to edit." ]
-        , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
-        , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
-        , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
-        , div [] [ text ("Edit buffer: " ++ model.editBuffer) ]
+
+        -- , div [] [ text ("Timestamp: " ++ String.fromInt model.persistentCore.timestamp) ]
+        -- , div [] [ text ("Checkpoint: " ++ String.fromInt model.persistentCore.checkpoint) ]
+        -- , div [] [ text ("Input buffer: " ++ model.inputBuffer) ]
+        -- , div [] [ text ("Edit buffer: " ++ model.editBuffer) ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
 
