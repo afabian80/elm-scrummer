@@ -4,7 +4,7 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, button, div, input, p, span, table, td, text, th, tr)
+import Html exposing (Attribute, Html, button, div, input, span, table, td, text, th, tr)
 import Html.Attributes exposing (autofocus, class, colspan, disabled, placeholder, style, value, width)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
@@ -135,23 +135,6 @@ view model =
                         ]
                         [ text "Add Todo" ]
                     ]
-                , td [] [ button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ] ]
-                ]
-             , tr []
-                [ td []
-                    [ button
-                        [ onClick Undo
-                        , disabled (undoStackSize == 0)
-                        ]
-                        [ text undoButtonText ]
-                    ]
-                , td []
-                    [ button
-                        [ onClick Redo
-                        , disabled (redoStackSize == 0)
-                        ]
-                        [ text redoButtonText ]
-                    ]
                 ]
              , tr []
                 [ th [] [ text "State" ]
@@ -164,6 +147,10 @@ view model =
                 ++ renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer
             )
         , div [ style "margin-top" "1em" ] [ text "Click Todos to edit." ]
+        , span []
+            [ button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
+            , button [ onClick Redo, disabled (redoStackSize == 0) ] [ text redoButtonText ]
+            ]
         , div [] [ text "Database is persisted in this browser only!" ]
         , span []
             [ button [ onClick Download, style "margin-right" "1em" ] [ text "Download model" ]
