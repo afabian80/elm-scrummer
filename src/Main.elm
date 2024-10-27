@@ -204,13 +204,13 @@ renderTodoState : TodoState -> Html Msg
 renderTodoState state =
     case state of
         Todo ->
-            text "[ ] "
+            span [ style "background-color" "white" ] [ text "TODO" ]
 
         Doing ->
-            text "[*] "
+            span [ style "background-color" "#f5cba7" ] [ text "DOING" ]
 
         Done ->
-            text "[x] "
+            span [ style "background-color" "lightgreen" ] [ text "DONE" ]
 
 
 markTodoItemNew : Int -> Int -> Attribute Msg
