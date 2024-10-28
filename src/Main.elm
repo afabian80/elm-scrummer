@@ -146,7 +146,7 @@ view model =
                 ]
              , tr []
                 [ th [] [ text "State" ]
-                , th [] [ text "Blocked" ]
+                , th [] [ text "🚫" ]
                 , th [] [ text "Title" ]
                 , th [] [ text "State ++" ]
                 , th [] [ text "State --" ]
