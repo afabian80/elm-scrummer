@@ -6083,54 +6083,79 @@ var $author$project$Main$ToggleBlocked = function (a) {
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $author$project$Main$markBlocked = function (isBlocked) {
-	return isBlocked ? A2($elm$html$Html$Attributes$style, 'background', 'red') : A2($elm$html$Html$Attributes$style, 'background', 'grey');
+	return isBlocked ? A2($elm$html$Html$Attributes$style, 'background', 'orange') : A2($elm$html$Html$Attributes$style, 'background', 'lavender');
 };
 var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$Main$markTodoItemNew = F2(
 	function (cp, time) {
 		return (_Utils_cmp(time, cp) > -1) ? A2($elm$html$Html$Attributes$style, 'background', 'lightgreen') : A2($elm$html$Html$Attributes$style, '', '');
 	});
+var $elm$html$Html$Attributes$height = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'height',
+		$elm$core$String$fromInt(n));
+};
+var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$span = _VirtualDom_node('span');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
 var $author$project$Main$renderTodoState = function (state) {
 	switch (state.$) {
 		case 'Todo':
 			return A2(
 				$elm$html$Html$span,
+				_List_Nil,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'background-color', 'white')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('TODO')
+						A2(
+						$elm$html$Html$img,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$src('images/checkbox.svg'),
+								$elm$html$Html$Attributes$height(20)
+							]),
+						_List_Nil)
 					]));
 		case 'Doing':
 			return A2(
 				$elm$html$Html$span,
+				_List_Nil,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'background-color', '#f5cba7')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('DOING')
+						A2(
+						$elm$html$Html$img,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$src('images/progress-clock.svg'),
+								$elm$html$Html$Attributes$height(20)
+							]),
+						_List_Nil)
 					]));
 		default:
 			return A2(
 				$elm$html$Html$span,
+				_List_Nil,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'background-color', 'lightgreen')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('DONE')
+						A2(
+						$elm$html$Html$img,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$src('images/check-square.svg'),
+								$elm$html$Html$Attributes$height(20)
+							]),
+						_List_Nil)
 					]));
 	}
 };
 var $elm$html$Html$td = _VirtualDom_node('td');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$Main$renderTodoItem = F3(

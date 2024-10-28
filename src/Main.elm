@@ -4,8 +4,8 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, button, div, input, span, table, td, text, th, tr)
-import Html.Attributes exposing (autofocus, class, colspan, disabled, placeholder, style, value, width)
+import Html exposing (Attribute, Html, button, div, img, input, span, table, td, text, th, tr)
+import Html.Attributes exposing (autofocus, class, colspan, disabled, height, placeholder, src, style, value, width)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
 import Json.Encode as E
@@ -224,23 +224,23 @@ renderTodoItem cp buffer todoItem =
 markBlocked : Bool -> Attribute msg
 markBlocked isBlocked =
     if isBlocked then
-        style "background" "red"
+        style "background" "orange"
 
     else
-        style "background" "grey"
+        style "background" "lavender"
 
 
 renderTodoState : TodoState -> Html Msg
 renderTodoState state =
     case state of
         Todo ->
-            span [ style "background-color" "white" ] [ text "TODO" ]
+            span [] [ img [ src "images/checkbox.svg", height 20 ] [] ]
 
         Doing ->
-            span [ style "background-color" "#f5cba7" ] [ text "DOING" ]
+            span [] [ img [ src "images/progress-clock.svg", height 20 ] [] ]
 
         Done ->
-            span [ style "background-color" "lightgreen" ] [ text "DONE" ]
+            span [] [ img [ src "images/check-square.svg", height 20 ] [] ]
 
 
 markTodoItemNew : Int -> Int -> Attribute Msg
