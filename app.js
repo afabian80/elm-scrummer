@@ -5341,9 +5341,9 @@ var $author$project$Main$Model = F6(
 	function (log, persistentCore, inputBuffer, editBuffer, undoStack, redoStack) {
 		return {editBuffer: editBuffer, inputBuffer: inputBuffer, log: log, persistentCore: persistentCore, redoStack: redoStack, undoStack: undoStack};
 	});
-var $author$project$ModelCore$ModelCore = F3(
-	function (timestamp, todoItems, checkpoint) {
-		return {checkpoint: checkpoint, timestamp: timestamp, todoItems: todoItems};
+var $author$project$ModelCore$ModelCore = F4(
+	function (timestamp, todoItems, checkpoint, lastBackup) {
+		return {checkpoint: checkpoint, lastBackup: lastBackup, timestamp: timestamp, todoItems: todoItems};
 	});
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $mhoare$elm_stack$Stack$Stack = function (a) {
@@ -5353,7 +5353,7 @@ var $mhoare$elm_stack$Stack$initialise = $mhoare$elm_stack$Stack$Stack(_List_Nil
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $elm$json$Json$Decode$list = _Json_decodeList;
-var $elm$json$Json$Decode$map3 = _Json_map3;
+var $elm$json$Json$Decode$map4 = _Json_map4;
 var $author$project$TodoItem$TodoItem = F4(
 	function (title, modificationTime, isEditing, state) {
 		return {isEditing: isEditing, modificationTime: modificationTime, state: state, title: title};
@@ -5380,7 +5380,6 @@ var $author$project$TodoState$decodeTodoState = A2(
 		}
 	},
 	$elm$json$Json$Decode$string);
-var $elm$json$Json$Decode$map4 = _Json_map4;
 var $author$project$TodoItem$todoItemDecoder = A5(
 	$elm$json$Json$Decode$map4,
 	$author$project$TodoItem$TodoItem,
@@ -5388,15 +5387,16 @@ var $author$project$TodoItem$todoItemDecoder = A5(
 	A2($elm$json$Json$Decode$field, 'modified', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'is_editing', $elm$json$Json$Decode$bool),
 	A2($elm$json$Json$Decode$field, 'state', $author$project$TodoState$decodeTodoState));
-var $author$project$ModelCore$modelCoreDecoder = A4(
-	$elm$json$Json$Decode$map3,
+var $author$project$ModelCore$modelCoreDecoder = A5(
+	$elm$json$Json$Decode$map4,
 	$author$project$ModelCore$ModelCore,
 	A2($elm$json$Json$Decode$field, 'timestamp', $elm$json$Json$Decode$int),
 	A2(
 		$elm$json$Json$Decode$field,
 		'todos',
 		$elm$json$Json$Decode$list($author$project$TodoItem$todoItemDecoder)),
-	A2($elm$json$Json$Decode$field, 'checkpoint', $elm$json$Json$Decode$int));
+	A2($elm$json$Json$Decode$field, 'checkpoint', $elm$json$Json$Decode$int),
+	A2($elm$json$Json$Decode$field, 'lastBackup', $elm$json$Json$Decode$int));
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (flag) {
@@ -5411,7 +5411,7 @@ var $author$project$Main$init = function (flag) {
 			A6(
 				$author$project$Main$Model,
 				'Cannot load model from local storage. Starting afresh!',
-				A3($author$project$ModelCore$ModelCore, 0, _List_Nil, 0),
+				A4($author$project$ModelCore$ModelCore, 0, _List_Nil, 0, 0),
 				'',
 				'',
 				$mhoare$elm_stack$Stack$initialise,
@@ -5489,7 +5489,10 @@ var $author$project$ModelCore$encodeModelCore = function (modelCore) {
 				A2($elm$json$Json$Encode$list, $author$project$TodoItem$encodeTodoItem, modelCore.todoItems)),
 				_Utils_Tuple2(
 				'checkpoint',
-				$elm$json$Json$Encode$int(modelCore.checkpoint))
+				$elm$json$Json$Encode$int(modelCore.checkpoint)),
+				_Utils_Tuple2(
+				'lastBackup',
+				$elm$json$Json$Encode$int(modelCore.lastBackup))
 			]));
 };
 var $author$project$Main$saveToLocalStorage = _Platform_outgoingPort('saveToLocalStorage', $elm$core$Basics$identity);
@@ -5515,7 +5518,7 @@ var $author$project$Main$addNewTodoItem = function (model) {
 			[
 				A4($author$project$TodoItem$TodoItem, model.inputBuffer, model.persistentCore.timestamp, false, $author$project$TodoState$Todo)
 			]));
-	return A3($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint);
+	return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 };
 var $author$project$Main$changeTodoItemState = F4(
 	function (theTodoItem, stateFun, time, aTodoItem) {
@@ -5536,7 +5539,7 @@ var $author$project$Main$changeTodoItemsState = F4(
 var $author$project$Main$changeTodoItemStateInModel = F3(
 	function (model, todoItem, stateFun) {
 		var newTodoItems = A4($author$project$Main$changeTodoItemsState, model.persistentCore.todoItems, todoItem, stateFun, model.persistentCore.timestamp);
-		return A3($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint);
+		return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 	});
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
@@ -5567,13 +5570,13 @@ var $author$project$Main$clearTodoItems = F2(
 	});
 var $author$project$Main$clearOldTodoItemsInModel = function (model) {
 	var cleanTodoItems = A2($author$project$Main$clearTodoItems, model.persistentCore.todoItems, model.persistentCore.checkpoint);
-	return A3($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, cleanTodoItems, model.persistentCore.checkpoint);
+	return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, cleanTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 };
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $author$project$Main$deleteTodoItem = F2(
 	function (model, todoItem) {
-		return A3(
+		return A4(
 			$author$project$ModelCore$ModelCore,
 			model.persistentCore.timestamp,
 			A2(
@@ -5582,7 +5585,8 @@ var $author$project$Main$deleteTodoItem = F2(
 					return !_Utils_eq(t, todoItem);
 				},
 				model.persistentCore.todoItems),
-			model.persistentCore.checkpoint);
+			model.persistentCore.checkpoint,
+			model.persistentCore.lastBackup);
 	});
 var $author$project$TodoState$demoteState = function (state) {
 	switch (state.$) {
@@ -5651,10 +5655,15 @@ var $author$project$Main$updateTodoItems = F4(
 var $author$project$Main$saveEditedTodoItem = F2(
 	function (model, todoItem) {
 		var newTodoItems = A4($author$project$Main$updateTodoItems, model.persistentCore.todoItems, todoItem, model.editBuffer, model.persistentCore.timestamp);
-		return A3($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint);
+		return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 	});
 var $author$project$Main$setCheckpoint = function (model) {
-	return A3($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, model.persistentCore.todoItems, model.persistentCore.timestamp);
+	return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, model.persistentCore.todoItems, model.persistentCore.timestamp, model.persistentCore.lastBackup);
+};
+var $author$project$Main$setLastBackup = function (core) {
+	return _Utils_update(
+		core,
+		{lastBackup: core.timestamp});
 };
 var $author$project$Main$editTodoItem = F3(
 	function (todoItems, todoItem, state) {
@@ -5672,10 +5681,15 @@ var $author$project$Main$editTodoItem = F3(
 var $author$project$Main$setTodoItemEditing = F3(
 	function (model, todoItem, state) {
 		var newTodoItems = A3($author$project$Main$editTodoItem, model.persistentCore.todoItems, todoItem, state);
-		return A3($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint);
+		return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 	});
+var $author$project$Main$stepLastBackup = function (core) {
+	return _Utils_update(
+		core,
+		{lastBackup: core.lastBackup + 1});
+};
 var $author$project$Main$stepTimestamp = function (model) {
-	return A3($author$project$ModelCore$ModelCore, model.persistentCore.timestamp + 1, model.persistentCore.todoItems, model.persistentCore.checkpoint);
+	return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp + 1, model.persistentCore.todoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 };
 var $elm$file$File$Download$string = F3(
 	function (name, mime, content) {
@@ -5696,7 +5710,11 @@ var $author$project$Main$update = F2(
 		switch (msg.$) {
 			case 'Download':
 				return _Utils_Tuple2(
-					model,
+					_Utils_update(
+						model,
+						{
+							persistentCore: $author$project$Main$setLastBackup(model.persistentCore)
+						}),
 					A3(
 						$elm$file$File$Download$string,
 						'scrummer.json',
@@ -5777,7 +5795,10 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{inputBuffer: buf}),
+						{
+							inputBuffer: buf,
+							persistentCore: $author$project$Main$stepLastBackup(model.persistentCore)
+						}),
 					$elm$core$Platform$Cmd$none);
 			case 'Undo':
 				var _v2 = $mhoare$elm_stack$Stack$pop(model.undoStack);
@@ -5852,7 +5873,10 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{editBuffer: buf}),
+						{
+							editBuffer: buf,
+							persistentCore: $author$project$Main$stepLastBackup(model.persistentCore)
+						}),
 					$elm$core$Platform$Cmd$none);
 			case 'Promote':
 				var todoItem = msg.a;
@@ -6273,6 +6297,9 @@ var $author$project$Main$renderTodoItems = F3(
 	});
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$th = _VirtualDom_node('th');
+var $author$project$Main$timeToBackup = function (model) {
+	return (_Utils_cmp(model.persistentCore.timestamp - 10, model.persistentCore.lastBackup) > 0) ? A2($elm$html$Html$Attributes$style, 'background', 'coral') : A2($elm$html$Html$Attributes$style, '', '');
+};
 var $mhoare$elm_stack$Stack$toList = function (_v0) {
 	var stack = _v0.a;
 	return stack;
@@ -6482,7 +6509,8 @@ var $author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$Events$onClick($author$project$Main$Download),
-								A2($elm$html$Html$Attributes$style, 'margin-right', '1em')
+								A2($elm$html$Html$Attributes$style, 'margin-right', '1em'),
+								$author$project$Main$timeToBackup(model)
 							]),
 						_List_fromArray(
 							[

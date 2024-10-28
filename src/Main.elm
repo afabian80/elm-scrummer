@@ -86,7 +86,7 @@ init flag =
         Err _ ->
             ( Model
                 "Cannot load model from local storage. Starting afresh!"
-                (ModelCore 0 [] 0)
+                (ModelCore 0 [] 0 0)
                 ""
                 ""
                 Stack.initialise
@@ -163,11 +163,21 @@ view model =
         , div [] [ text "Database is persisted in this browser only!" ]
         , div [] [ text "Page reload cleans undo history!" ]
         , span []
-            [ button [ onClick Download, style "margin-right" "1em" ] [ text "Download model" ]
+            [ button [ onClick Download, style "margin-right" "1em", timeToBackup model ] [ text "Download model" ]
             , button [ onClick FileRequested ] [ text "Upload model" ]
             ]
         , div [ style "color" "red" ] [ text model.log ]
         ]
+
+
+timeToBackup : Model -> Attribute msg
+timeToBackup model =
+    -- Download button will be red after 10 updates since the last Download. Just to nidge user to backup regularly.
+    if model.persistentCore.timestamp - 10 > model.persistentCore.lastBackup then
+        style "background" "coral"
+
+    else
+        style "" ""
 
 
 noCleanbles : Model -> Bool
@@ -255,7 +265,7 @@ update msg modelOriginal =
     in
     case msg of
         Download ->
-            ( model
+            ( { model | persistentCore = setLastBackup model.persistentCore }
             , Download.string
                 "scrummer.json"
                 "text/json"
@@ -308,7 +318,12 @@ update msg modelOriginal =
             )
 
         InputBufferChange buf ->
-            ( { model | inputBuffer = buf }, Cmd.none )
+            ( { model
+                | inputBuffer = buf
+                , persistentCore = stepLastBackup model.persistentCore
+              }
+            , Cmd.none
+            )
 
         Undo ->
             let
@@ -373,7 +388,12 @@ update msg modelOriginal =
             )
 
         EditBufferChange buf ->
-            ( { model | editBuffer = buf }, Cmd.none )
+            ( { model
+                | editBuffer = buf
+                , persistentCore = stepLastBackup model.persistentCore
+              }
+            , Cmd.none
+            )
 
         Promote todoItem ->
             ( { model
@@ -403,6 +423,17 @@ update msg modelOriginal =
             )
 
 
+setLastBackup : ModelCore -> ModelCore
+setLastBackup core =
+    { core | lastBackup = core.timestamp }
+
+
+stepLastBackup : ModelCore -> ModelCore
+stepLastBackup core =
+    -- need to move the backup in case of rapid updates during buffer change messages
+    { core | lastBackup = core.lastBackup + 1 }
+
+
 clearOldTodoItemsInModel : Model -> ModelCore
 clearOldTodoItemsInModel model =
     let
@@ -413,6 +444,7 @@ clearOldTodoItemsInModel model =
         model.persistentCore.timestamp
         cleanTodoItems
         model.persistentCore.checkpoint
+        model.persistentCore.lastBackup
 
 
 clearTodoItems : List TodoItem -> Int -> List TodoItem
@@ -440,6 +472,7 @@ changeTodoItemStateInModel model todoItem stateFun =
         model.persistentCore.timestamp
         newTodoItems
         model.persistentCore.checkpoint
+        model.persistentCore.lastBackup
 
 
 changeTodoItemsState : List TodoItem -> TodoItem -> TodoStateFunction -> Int -> List TodoItem
@@ -469,6 +502,7 @@ saveEditedTodoItem model todoItem =
         model.persistentCore.timestamp
         newTodoItems
         model.persistentCore.checkpoint
+        model.persistentCore.lastBackup
 
 
 updateTodoItems : List TodoItem -> TodoItem -> String -> Int -> List TodoItem
@@ -495,6 +529,7 @@ setTodoItemEditing model todoItem state =
         model.persistentCore.timestamp
         newTodoItems
         model.persistentCore.checkpoint
+        model.persistentCore.lastBackup
 
 
 editTodoItem : List TodoItem -> TodoItem -> Bool -> List TodoItem
@@ -516,6 +551,7 @@ deleteTodoItem model todoItem =
         model.persistentCore.timestamp
         (List.filter (\t -> t /= todoItem) model.persistentCore.todoItems)
         model.persistentCore.checkpoint
+        model.persistentCore.lastBackup
 
 
 addNewTodoItem : Model -> ModelCore
@@ -534,6 +570,7 @@ addNewTodoItem model =
         model.persistentCore.timestamp
         newTodoItems
         model.persistentCore.checkpoint
+        model.persistentCore.lastBackup
 
 
 stepTimestamp : Model -> ModelCore
@@ -542,6 +579,7 @@ stepTimestamp model =
         (model.persistentCore.timestamp + 1)
         model.persistentCore.todoItems
         model.persistentCore.checkpoint
+        model.persistentCore.lastBackup
 
 
 setCheckpoint : Model -> ModelCore
@@ -550,6 +588,7 @@ setCheckpoint model =
         model.persistentCore.timestamp
         model.persistentCore.todoItems
         model.persistentCore.timestamp
+        model.persistentCore.lastBackup
 
 
 subscriptions : Model -> Sub Msg
