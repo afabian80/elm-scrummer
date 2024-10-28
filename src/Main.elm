@@ -5,7 +5,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, button, div, img, input, span, table, td, text, th, tr)
-import Html.Attributes exposing (autofocus, class, colspan, disabled, height, placeholder, src, style, value, width)
+import Html.Attributes exposing (autofocus, class, colspan, disabled, height, placeholder, size, src, style, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as D
 import Json.Encode as E
@@ -126,13 +126,13 @@ view model =
     div [ class "table-container" ]
         [ table []
             ([ tr []
-                [ td [ colspan 4 ]
+                [ td [ colspan 5 ]
                     [ input
                         [ placeholder "New todo title"
                         , value model.inputBuffer
                         , onInput InputBufferChange
                         , autofocus True
-                        , width 200
+                        , size 40
                         ]
                         []
                     ]

@@ -6373,6 +6373,12 @@ var $author$project$Main$renderTodoItems = F3(
 			A2($author$project$Main$renderTodoItem, cp, buffer),
 			todoItem);
 	});
+var $elm$html$Html$Attributes$size = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'size',
+		$elm$core$String$fromInt(n));
+};
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$th = _VirtualDom_node('th');
 var $author$project$Main$timeToBackup = function (model) {
@@ -6381,12 +6387,6 @@ var $author$project$Main$timeToBackup = function (model) {
 var $mhoare$elm_stack$Stack$toList = function (_v0) {
 	var stack = _v0.a;
 	return stack;
-};
-var $elm$html$Html$Attributes$width = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'width',
-		$elm$core$String$fromInt(n));
 };
 var $author$project$Main$view = function (model) {
 	var undoStackSize = $elm$core$List$length(
@@ -6426,7 +6426,7 @@ var $author$project$Main$view = function (model) {
 									$elm$html$Html$td,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$colspan(4)
+											$elm$html$Html$Attributes$colspan(5)
 										]),
 									_List_fromArray(
 										[
@@ -6438,7 +6438,7 @@ var $author$project$Main$view = function (model) {
 													$elm$html$Html$Attributes$value(model.inputBuffer),
 													$elm$html$Html$Events$onInput($author$project$Main$InputBufferChange),
 													$elm$html$Html$Attributes$autofocus(true),
-													$elm$html$Html$Attributes$width(200)
+													$elm$html$Html$Attributes$size(40)
 												]),
 											_List_Nil)
 										])),
