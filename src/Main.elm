@@ -250,7 +250,7 @@ update msg modelOriginal =
         Download ->
             ( model
             , Download.string
-                "akos.json"
+                "scrummer.json"
                 "text/json"
                 (E.encode 4 (encodeModelCore model.persistentCore))
             )
