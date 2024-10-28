@@ -161,6 +161,7 @@ view model =
             , button [ onClick ClearOldDone, disabled (noCleanbles model) ] [ text cleanButtonText ]
             ]
         , div [] [ text "Database is persisted in this browser only!" ]
+        , div [] [ text "Page reload cleans undo history!" ]
         , span []
             [ button [ onClick Download, style "margin-right" "1em" ] [ text "Download model" ]
             , button [ onClick FileRequested ] [ text "Upload model" ]

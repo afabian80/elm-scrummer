@@ -6466,6 +6466,13 @@ var $author$project$Main$view = function (model) {
 						$elm$html$Html$text('Database is persisted in this browser only!')
 					])),
 				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Page reload cleans undo history!')
+					])),
+				A2(
 				$elm$html$Html$span,
 				_List_Nil,
 				_List_fromArray(
