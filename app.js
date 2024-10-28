@@ -6406,7 +6406,7 @@ var $author$project$Main$view = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Click Todos to edit.')
+						$elm$html$Html$text('Click Title to edit.')
 					])),
 				A2(
 				$elm$html$Html$span,

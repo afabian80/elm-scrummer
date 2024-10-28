@@ -153,7 +153,7 @@ view model =
              ]
                 ++ renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer
             )
-        , div [ style "margin-top" "1em" ] [ text "Click Todos to edit." ]
+        , div [ style "margin-top" "1em" ] [ text "Click Title to edit." ]
         , span []
             [ button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
             , button [ onClick Redo, disabled (redoStackSize == 0) ] [ text redoButtonText ]
