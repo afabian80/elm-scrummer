@@ -5549,10 +5549,14 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
+var $author$project$Main$cleaner = F2(
+	function (checkpoint, todoItem) {
+		return _Utils_eq(todoItem.state, $author$project$TodoState$Done) && (_Utils_cmp(todoItem.modificationTime, checkpoint) < 1);
+	});
 var $elm$core$Basics$not = _Basics_not;
 var $author$project$Main$keeper = F2(
 	function (checkpoint, todoItem) {
-		return !(_Utils_eq(todoItem.state, $author$project$TodoState$Done) && (_Utils_cmp(todoItem.modificationTime, checkpoint) < 1));
+		return !A2($author$project$Main$cleaner, checkpoint, todoItem);
 	});
 var $author$project$Main$clearTodoItems = F2(
 	function (todoItems, checkpoint) {
@@ -5695,7 +5699,7 @@ var $author$project$Main$update = F2(
 					model,
 					A3(
 						$elm$file$File$Download$string,
-						'akos.json',
+						'scrummer.json',
 						'text/json',
 						A2(
 							$elm$json$Json$Encode$encode,
@@ -6288,6 +6292,12 @@ var $author$project$Main$view = function (model) {
 		$mhoare$elm_stack$Stack$toList(model.redoStack));
 	var redoStackSizeStr = $elm$core$String$fromInt(redoStackSize);
 	var redoButtonText = 'Redo (' + (redoStackSizeStr + ')');
+	var cleanerList = A2(
+		$elm$core$List$filter,
+		$author$project$Main$cleaner(model.persistentCore.checkpoint),
+		model.persistentCore.todoItems);
+	var cleanButtonText = 'Clean old (' + ($elm$core$String$fromInt(
+		$elm$core$List$length(cleanerList)) + ')');
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -6445,7 +6455,7 @@ var $author$project$Main$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Clear Old')
+								$elm$html$Html$text(cleanButtonText)
 							]))
 					])),
 				A2(

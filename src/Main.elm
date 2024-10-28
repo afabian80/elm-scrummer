@@ -115,6 +115,12 @@ view model =
 
         redoButtonText =
             "Redo (" ++ redoStackSizeStr ++ ")"
+
+        cleanerList =
+            List.filter (cleaner model.persistentCore.checkpoint) model.persistentCore.todoItems
+
+        cleanButtonText =
+            "Clean old (" ++ String.fromInt (List.length cleanerList) ++ ")"
     in
     div [ class "table-container" ]
         [ table []
@@ -152,7 +158,7 @@ view model =
             [ button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
             , button [ onClick Redo, disabled (redoStackSize == 0) ] [ text redoButtonText ]
             , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
-            , button [ onClick ClearOldDone, disabled (noCleanbles model) ] [ text "Clear Old" ]
+            , button [ onClick ClearOldDone, disabled (noCleanbles model) ] [ text cleanButtonText ]
             ]
         , div [] [ text "Database is persisted in this browser only!" ]
         , span []
@@ -415,7 +421,12 @@ clearTodoItems todoItems checkpoint =
 
 keeper : Int -> TodoItem -> Bool
 keeper checkpoint todoItem =
-    not ((todoItem.state == Done) && (todoItem.modificationTime <= checkpoint))
+    not (cleaner checkpoint todoItem)
+
+
+cleaner : Int -> TodoItem -> Bool
+cleaner checkpoint todoItem =
+    (todoItem.state == Done) && (todoItem.modificationTime <= checkpoint)
 
 
 changeTodoItemStateInModel : Model -> TodoItem -> TodoStateFunction -> ModelCore
