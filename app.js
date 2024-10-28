@@ -5354,9 +5354,9 @@ var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $elm$json$Json$Decode$list = _Json_decodeList;
 var $elm$json$Json$Decode$map4 = _Json_map4;
-var $author$project$TodoItem$TodoItem = F4(
-	function (title, modificationTime, isEditing, state) {
-		return {isEditing: isEditing, modificationTime: modificationTime, state: state, title: title};
+var $author$project$TodoItem$TodoItem = F5(
+	function (title, modificationTime, isEditing, state, isBlocked) {
+		return {isBlocked: isBlocked, isEditing: isEditing, modificationTime: modificationTime, state: state, title: title};
 	});
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$TodoState$Doing = {$: 'Doing'};
@@ -5380,13 +5380,15 @@ var $author$project$TodoState$decodeTodoState = A2(
 		}
 	},
 	$elm$json$Json$Decode$string);
-var $author$project$TodoItem$todoItemDecoder = A5(
-	$elm$json$Json$Decode$map4,
+var $elm$json$Json$Decode$map5 = _Json_map5;
+var $author$project$TodoItem$todoItemDecoder = A6(
+	$elm$json$Json$Decode$map5,
 	$author$project$TodoItem$TodoItem,
 	A2($elm$json$Json$Decode$field, 'title', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'modified', $elm$json$Json$Decode$int),
 	A2($elm$json$Json$Decode$field, 'is_editing', $elm$json$Json$Decode$bool),
-	A2($elm$json$Json$Decode$field, 'state', $author$project$TodoState$decodeTodoState));
+	A2($elm$json$Json$Decode$field, 'state', $author$project$TodoState$decodeTodoState),
+	A2($elm$json$Json$Decode$field, 'is_blocked', $elm$json$Json$Decode$bool));
 var $author$project$ModelCore$modelCoreDecoder = A5(
 	$elm$json$Json$Decode$map4,
 	$author$project$ModelCore$ModelCore,
@@ -5465,7 +5467,10 @@ var $author$project$TodoItem$encodeTodoItem = function (todoItem) {
 				$elm$json$Json$Encode$bool(todoItem.isEditing)),
 				_Utils_Tuple2(
 				'state',
-				$author$project$TodoState$encodeTodoState(todoItem.state))
+				$author$project$TodoState$encodeTodoState(todoItem.state)),
+				_Utils_Tuple2(
+				'is_blocked',
+				$elm$json$Json$Encode$bool(todoItem.isBlocked))
 			]));
 };
 var $elm$json$Json$Encode$list = F2(
@@ -5516,7 +5521,7 @@ var $author$project$Main$addNewTodoItem = function (model) {
 		model.persistentCore.todoItems,
 		_List_fromArray(
 			[
-				A4($author$project$TodoItem$TodoItem, model.inputBuffer, model.persistentCore.timestamp, false, $author$project$TodoState$Todo)
+				A5($author$project$TodoItem$TodoItem, model.inputBuffer, model.persistentCore.timestamp, false, $author$project$TodoState$Todo, false)
 			]));
 	return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 };
@@ -5699,6 +5704,24 @@ var $elm$file$File$Download$string = F3(
 			A3(_File_download, name, mime, content));
 	});
 var $elm$file$File$toString = _File_toString;
+var $author$project$Main$toggleBlockedTodoItems = F2(
+	function (core, todo) {
+		var blockedToggler = F2(
+			function (theTodo, aTodo) {
+				return _Utils_eq(theTodo, aTodo) ? _Utils_update(
+					theTodo,
+					{isBlocked: !theTodo.isBlocked}) : aTodo;
+			});
+		var toggleBlockedAll = F2(
+			function (todoItems, t) {
+				return A2(
+					$elm$core$List$map,
+					blockedToggler(t),
+					todoItems);
+			});
+		var newTodoItems = A2(toggleBlockedAll, core.todoItems, todo);
+		return A4($author$project$ModelCore$ModelCore, core.timestamp, newTodoItems, core.checkpoint, core.lastBackup);
+	});
 var $author$project$Main$update = F2(
 	function (msg, modelOriginal) {
 		var model = _Utils_update(
@@ -5900,12 +5923,23 @@ var $author$project$Main$update = F2(
 							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
 						}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'ClearOldDone':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							persistentCore: $author$project$Main$clearOldTodoItemsInModel(model),
+							redoStack: $mhoare$elm_stack$Stack$initialise,
+							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var todoItem = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							persistentCore: A2($author$project$Main$toggleBlockedTodoItems, model.persistentCore, todoItem),
 							redoStack: $mhoare$elm_stack$Stack$initialise,
 							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
 						}),
@@ -6043,9 +6077,15 @@ var $author$project$Main$Promote = function (a) {
 var $author$project$Main$SaveEdit = function (a) {
 	return {$: 'SaveEdit', a: a};
 };
-var $elm$core$Basics$ge = _Utils_ge;
+var $author$project$Main$ToggleBlocked = function (a) {
+	return {$: 'ToggleBlocked', a: a};
+};
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $author$project$Main$markBlocked = function (isBlocked) {
+	return isBlocked ? A2($elm$html$Html$Attributes$style, 'background', 'red') : A2($elm$html$Html$Attributes$style, 'background', 'grey');
+};
+var $elm$core$Basics$ge = _Utils_ge;
 var $author$project$Main$markTodoItemNew = F2(
 	function (cp, time) {
 		return (_Utils_cmp(time, cp) > -1) ? A2($elm$html$Html$Attributes$style, 'background', 'lightgreen') : A2($elm$html$Html$Attributes$style, '', '');
@@ -6107,6 +6147,7 @@ var $author$project$Main$renderTodoItem = F3(
 						[
 							$author$project$Main$renderTodoState(todoItem.state)
 						])),
+					A2($elm$html$Html$td, _List_Nil, _List_Nil),
 					A2(
 					$elm$html$Html$td,
 					_List_Nil,
@@ -6209,6 +6250,18 @@ var $author$project$Main$renderTodoItem = F3(
 					_List_fromArray(
 						[
 							$author$project$Main$renderTodoState(todoItem.state)
+						])),
+					A2(
+					$elm$html$Html$td,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$ToggleBlocked(todoItem)),
+							$author$project$Main$markBlocked(todoItem.isBlocked)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(' ')
 						])),
 					A2(
 					$elm$html$Html$td,
@@ -6348,7 +6401,7 @@ var $author$project$Main$view = function (model) {
 									$elm$html$Html$td,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$colspan(3)
+											$elm$html$Html$Attributes$colspan(4)
 										]),
 									_List_fromArray(
 										[
@@ -6393,6 +6446,13 @@ var $author$project$Main$view = function (model) {
 									_List_fromArray(
 										[
 											$elm$html$Html$text('State')
+										])),
+									A2(
+									$elm$html$Html$th,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Blocked')
 										])),
 									A2(
 									$elm$html$Html$th,

@@ -50,6 +50,7 @@ type Msg
     | Promote TodoItem
     | Demote TodoItem
     | ClearOldDone
+    | ToggleBlocked TodoItem
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -125,7 +126,7 @@ view model =
     div [ class "table-container" ]
         [ table []
             ([ tr []
-                [ td [ colspan 3 ]
+                [ td [ colspan 4 ]
                     [ input
                         [ placeholder "New todo title"
                         , value model.inputBuffer
@@ -145,6 +146,7 @@ view model =
                 ]
              , tr []
                 [ th [] [ text "State" ]
+                , th [] [ text "Blocked" ]
                 , th [] [ text "Title" ]
                 , th [] [ text "State ++" ]
                 , th [] [ text "State --" ]
@@ -197,6 +199,7 @@ renderTodoItem cp buffer todoItem =
     if todoItem.isEditing then
         tr []
             [ td [] [ renderTodoState todoItem.state ]
+            , td [] []
             , td []
                 [ input [ value buffer, onInput EditBufferChange ] []
                 , button [ onClick (SaveEdit todoItem) ] [ text "Save" ]
@@ -210,11 +213,21 @@ renderTodoItem cp buffer todoItem =
     else
         tr []
             [ td [] [ renderTodoState todoItem.state ]
+            , td [ onClick (ToggleBlocked todoItem), markBlocked todoItem.isBlocked ] [ text " " ]
             , td [ markTodoItemNew cp todoItem.modificationTime ] [ span [ onClick (Edit todoItem) ] [ text todoItem.title ] ]
             , td [] [ button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ] ]
             , td [] [ button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ] ]
             , td [] [ button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ] ]
             ]
+
+
+markBlocked : Bool -> Attribute msg
+markBlocked isBlocked =
+    if isBlocked then
+        style "background" "red"
+
+    else
+        style "background" "grey"
 
 
 renderTodoState : TodoState -> Html Msg
@@ -422,6 +435,40 @@ update msg modelOriginal =
             , Cmd.none
             )
 
+        ToggleBlocked todoItem ->
+            ( { model
+                | persistentCore = toggleBlockedTodoItems model.persistentCore todoItem
+                , undoStack = Stack.push model.persistentCore model.undoStack
+                , redoStack = Stack.initialise
+              }
+            , Cmd.none
+            )
+
+
+toggleBlockedTodoItems : ModelCore -> TodoItem -> ModelCore
+toggleBlockedTodoItems core todo =
+    let
+        newTodoItems =
+            toggleBlockedAll core.todoItems todo
+
+        toggleBlockedAll : List TodoItem -> TodoItem -> List TodoItem
+        toggleBlockedAll todoItems t =
+            List.map (blockedToggler t) todoItems
+
+        blockedToggler : TodoItem -> TodoItem -> TodoItem
+        blockedToggler theTodo aTodo =
+            if theTodo == aTodo then
+                { theTodo | isBlocked = not theTodo.isBlocked }
+
+            else
+                aTodo
+    in
+    ModelCore
+        core.timestamp
+        newTodoItems
+        core.checkpoint
+        core.lastBackup
+
 
 setLastBackup : ModelCore -> ModelCore
 setLastBackup core =
@@ -564,7 +611,7 @@ addNewTodoItem model =
             else
                 List.append
                     model.persistentCore.todoItems
-                    [ TodoItem model.inputBuffer model.persistentCore.timestamp False Todo ]
+                    [ TodoItem model.inputBuffer model.persistentCore.timestamp False Todo False ]
     in
     ModelCore
         model.persistentCore.timestamp

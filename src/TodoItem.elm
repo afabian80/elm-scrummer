@@ -10,17 +10,19 @@ type alias TodoItem =
     , modificationTime : Int
     , isEditing : Bool
     , state : TodoState
+    , isBlocked : Bool
     }
 
 
 todoItemDecoder : D.Decoder TodoItem
 todoItemDecoder =
-    D.map4
+    D.map5
         TodoItem
         (D.field "title" D.string)
         (D.field "modified" D.int)
         (D.field "is_editing" D.bool)
         (D.field "state" decodeTodoState)
+        (D.field "is_blocked" D.bool)
 
 
 encodeTodoItem : TodoItem -> E.Value
@@ -30,4 +32,5 @@ encodeTodoItem todoItem =
         , ( "modified", E.int todoItem.modificationTime )
         , ( "is_editing", E.bool todoItem.isEditing )
         , ( "state", encodeTodoState todoItem.state )
+        , ( "is_blocked", E.bool todoItem.isBlocked )
         ]
