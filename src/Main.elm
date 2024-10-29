@@ -147,7 +147,7 @@ view model =
                 ]
              , tr []
                 [ th [] [ text "State" ]
-                , th [] [ text "🚫" ]
+                , th [] [ text "B!" ]
                 , th [] [ text "Title" ]
                 , th [] [ text "State ++" ]
                 , th [] [ text "State --" ]
