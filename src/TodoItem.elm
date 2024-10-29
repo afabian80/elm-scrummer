@@ -34,3 +34,8 @@ encodeTodoItem todoItem =
         , ( "state", encodeTodoState todoItem.state )
         , ( "is_blocked", E.bool todoItem.isBlocked )
         ]
+
+
+compareTodoItems : TodoItem -> TodoItem -> Order
+compareTodoItems t1 t2 =
+    compareTodoState t2.state t1.state

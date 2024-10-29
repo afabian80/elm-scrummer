@@ -71,3 +71,40 @@ decodeTodoState =
                     _ ->
                         D.fail "Invalid TodoState"
             )
+
+
+compareTodoState : TodoState -> TodoState -> Order
+compareTodoState s1 s2 =
+    case s1 of
+        Todo ->
+            case s2 of
+                Todo ->
+                    EQ
+
+                Doing ->
+                    LT
+
+                Done ->
+                    LT
+
+        Doing ->
+            case s2 of
+                Todo ->
+                    GT
+
+                Doing ->
+                    EQ
+
+                Done ->
+                    LT
+
+        Done ->
+            case s2 of
+                Todo ->
+                    GT
+
+                Doing ->
+                    GT
+
+                Done ->
+                    EQ

@@ -5688,6 +5688,50 @@ var $author$project$Main$setTodoItemEditing = F3(
 		var newTodoItems = A3($author$project$Main$editTodoItem, model.persistentCore.todoItems, todoItem, state);
 		return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 	});
+var $author$project$TodoState$compareTodoState = F2(
+	function (s1, s2) {
+		switch (s1.$) {
+			case 'Todo':
+				switch (s2.$) {
+					case 'Todo':
+						return $elm$core$Basics$EQ;
+					case 'Doing':
+						return $elm$core$Basics$LT;
+					default:
+						return $elm$core$Basics$LT;
+				}
+			case 'Doing':
+				switch (s2.$) {
+					case 'Todo':
+						return $elm$core$Basics$GT;
+					case 'Doing':
+						return $elm$core$Basics$EQ;
+					default:
+						return $elm$core$Basics$LT;
+				}
+			default:
+				switch (s2.$) {
+					case 'Todo':
+						return $elm$core$Basics$GT;
+					case 'Doing':
+						return $elm$core$Basics$GT;
+					default:
+						return $elm$core$Basics$EQ;
+				}
+		}
+	});
+var $author$project$TodoItem$compareTodoItems = F2(
+	function (t1, t2) {
+		return A2($author$project$TodoState$compareTodoState, t2.state, t1.state);
+	});
+var $elm$core$List$sortWith = _List_sortWith;
+var $author$project$Main$sortTodos = function (core) {
+	return _Utils_update(
+		core,
+		{
+			todoItems: A2($elm$core$List$sortWith, $author$project$TodoItem$compareTodoItems, core.todoItems)
+		});
+};
 var $author$project$Main$stepLastBackup = function (core) {
 	return _Utils_update(
 		core,
@@ -5933,13 +5977,23 @@ var $author$project$Main$update = F2(
 							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
 						}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'ToggleBlocked':
 				var todoItem = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
 							persistentCore: A2($author$project$Main$toggleBlockedTodoItems, model.persistentCore, todoItem),
+							redoStack: $mhoare$elm_stack$Stack$initialise,
+							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							persistentCore: $author$project$Main$sortTodos(model.persistentCore),
 							redoStack: $mhoare$elm_stack$Stack$initialise,
 							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
 						}),
@@ -5971,6 +6025,7 @@ var $author$project$Main$InputBufferChange = function (a) {
 };
 var $author$project$Main$Redo = {$: 'Redo'};
 var $author$project$Main$SetCheckpoint = {$: 'SetCheckpoint'};
+var $author$project$Main$Sort = {$: 'Sort'};
 var $author$project$Main$Undo = {$: 'Undo'};
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -6545,6 +6600,16 @@ var $author$project$Main$view = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$Main$Sort)
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Sort')
+							])),
 						A2(
 						$elm$html$Html$button,
 						_List_fromArray(

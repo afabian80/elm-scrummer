@@ -51,6 +51,7 @@ type Msg
     | Demote TodoItem
     | ClearOldDone
     | ToggleBlocked TodoItem
+    | Sort
 
 
 port saveToLocalStorage : E.Value -> Cmd msg
@@ -157,7 +158,8 @@ view model =
             )
         , div [ style "margin-top" "1em" ] [ text "Click Title to edit." ]
         , span []
-            [ button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
+            [ button [ onClick Sort ] [ text "Sort" ]
+            , button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
             , button [ onClick Redo, disabled (redoStackSize == 0) ] [ text redoButtonText ]
             , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
             , button [ onClick ClearOldDone, disabled (noCleanbles model) ] [ text cleanButtonText ]
@@ -456,6 +458,20 @@ update msg modelOriginal =
               }
             , Cmd.none
             )
+
+        Sort ->
+            ( { model
+                | persistentCore = sortTodos model.persistentCore
+                , undoStack = Stack.push model.persistentCore model.undoStack
+                , redoStack = Stack.initialise
+              }
+            , Cmd.none
+            )
+
+
+sortTodos : ModelCore -> ModelCore
+sortTodos core =
+    { core | todoItems = List.sortWith compareTodoItems core.todoItems }
 
 
 toggleBlockedTodoItems : ModelCore -> TodoItem -> ModelCore
