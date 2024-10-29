@@ -214,11 +214,24 @@ renderTodoItem cp buffer todoItem =
         tr []
             [ td [] [ renderTodoState todoItem.state ]
             , td [ onClick (ToggleBlocked todoItem), markBlocked todoItem.isBlocked ] [ text " " ]
-            , td [ markTodoItemNew cp todoItem.modificationTime ] [ span [ onClick (Edit todoItem) ] [ text todoItem.title ] ]
+            , td [ markTodoItemNew cp todoItem.modificationTime ] [ span [ onClick (Edit todoItem) ] [ span [ setTitleStyle todoItem ] [ text todoItem.title ] ] ]
             , td [] [ button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ] ]
             , td [] [ button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ] ]
             , td [] [ button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ] ]
             ]
+
+
+setTitleStyle : TodoItem -> Attribute msg
+setTitleStyle todoItem =
+    case todoItem.state of
+        Done ->
+            style "text-decoration" "line-through"
+
+        Doing ->
+            style "text-decoration" "underline red"
+
+        _ ->
+            style "" ""
 
 
 markBlocked : Bool -> Attribute msg

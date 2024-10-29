@@ -6153,6 +6153,17 @@ var $author$project$Main$renderTodoState = function (state) {
 					]));
 	}
 };
+var $author$project$Main$setTitleStyle = function (todoItem) {
+	var _v0 = todoItem.state;
+	switch (_v0.$) {
+		case 'Done':
+			return A2($elm$html$Html$Attributes$style, 'text-decoration', 'line-through');
+		case 'Doing':
+			return A2($elm$html$Html$Attributes$style, 'text-decoration', 'underline red');
+		default:
+			return A2($elm$html$Html$Attributes$style, '', '');
+	}
+};
 var $elm$html$Html$td = _VirtualDom_node('td');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
@@ -6305,7 +6316,16 @@ var $author$project$Main$renderTodoItem = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(todoItem.title)
+									A2(
+									$elm$html$Html$span,
+									_List_fromArray(
+										[
+											$author$project$Main$setTitleStyle(todoItem)
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text(todoItem.title)
+										]))
 								]))
 						])),
 					A2(
