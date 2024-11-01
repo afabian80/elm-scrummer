@@ -2,6 +2,7 @@ port module Main exposing (..)
 
 -- import Html.Events exposing ()
 
+import Bootstrap.Alert exposing (simpleDanger)
 import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
@@ -145,7 +146,10 @@ view model =
             [ Grid.col [ Col.textAlign Text.alignLgCenter ] [ h1 [] [ text "Task Manager" ] ] ]
         , Grid.row []
             [ Grid.col [ Col.sm3 ]
-                []
+                [ Grid.row []
+                    [ Grid.col [] [ renderLog model.log ]
+                    ]
+                ]
             , Grid.col [ Col.lg6 ]
                 [ Form.form []
                     [ InputGroup.config
@@ -184,8 +188,7 @@ view model =
                     }
                 ]
             , Grid.col [ Col.lg3 ]
-                [ Grid.row [] [ Grid.col [] [ text model.log ] ]
-                , Grid.row [] [ Grid.col [] [ text "Actions:" ] ]
+                [ Grid.row [] [ Grid.col [] [ text "Actions:" ] ]
                 , Grid.row []
                     [ Grid.col []
                         [ Button.button
@@ -256,6 +259,15 @@ view model =
                 ]
             ]
         ]
+
+
+renderLog : String -> Html msg
+renderLog log =
+    if log == "" then
+        text ""
+
+    else
+        simpleDanger [] [ text log ]
 
 
 renderModel : Model -> List (Table.Row Msg)
