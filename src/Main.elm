@@ -17,7 +17,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, div, h1, p, span, text)
-import Html.Attributes exposing (autofocus, class, value)
+import Html.Attributes exposing (autofocus, class, style, value)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
@@ -340,8 +340,7 @@ renderTodoItem cp buffer todoItem =
                     ]
                 ]
             , Table.td
-                [ setTitleCellOption todoItem.state
-                ]
+                (setTitleCellOptions todoItem.state)
                 [ if todoItem.state == Done then
                     span []
                         [ --Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
@@ -364,23 +363,23 @@ renderTodoItem cp buffer todoItem =
             ]
 
 
-setTitleCellOption : TodoState -> Table.CellOption Msg
-setTitleCellOption state =
+setTitleCellOptions : TodoState -> List (Table.CellOption Msg)
+setTitleCellOptions state =
     case state of
         Done ->
-            Table.cellSuccess
+            [ Table.cellSuccess ]
 
         Doing ->
-            Table.cellWarning
+            [ Table.cellWarning ]
 
         Blocked ->
-            Table.cellDanger
+            [ Table.cellDanger ]
 
         Cancelled ->
-            Table.cellSuccess
+            [ Table.cellSuccess ]
 
         _ ->
-            Table.cellLight
+            []
 
 
 renderNewBadge : Bool -> Html msg
