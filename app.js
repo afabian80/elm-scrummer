@@ -6633,12 +6633,6 @@ var $author$project$Main$SelectChange = F2(
 	function (a, b) {
 		return {$: 'SelectChange', a: a, b: b};
 	});
-var $rundis$elm_bootstrap$Bootstrap$Spinner$Color = function (a) {
-	return {$: 'Color', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$color = function (color_) {
-	return $rundis$elm_bootstrap$Bootstrap$Spinner$Color(color_);
-};
 var $rundis$elm_bootstrap$Bootstrap$Form$Select$Custom = {$: 'Custom'};
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
@@ -6820,11 +6814,6 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Select$custom = function (options) {
 		$rundis$elm_bootstrap$Bootstrap$Form$Select$create(
 			A2($elm$core$List$cons, $rundis$elm_bootstrap$Bootstrap$Form$Select$Custom, options)));
 };
-var $rundis$elm_bootstrap$Bootstrap$Spinner$Growing = {$: 'Growing'};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$Kind = function (a) {
-	return {$: 'Kind', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$grow = $rundis$elm_bootstrap$Bootstrap$Spinner$Kind($rundis$elm_bootstrap$Bootstrap$Spinner$Growing);
 var $rundis$elm_bootstrap$Bootstrap$Form$Select$Id = function (a) {
 	return {$: 'Id', a: a};
 };
@@ -6976,10 +6965,6 @@ var $author$project$Main$renderStatusBadge = function (todoItem) {
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary = {$: 'Secondary'};
 var $rundis$elm_bootstrap$Bootstrap$Button$secondary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary));
-var $rundis$elm_bootstrap$Bootstrap$Internal$Text$Role = function (a) {
-	return {$: 'Role', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Text$secondary = $rundis$elm_bootstrap$Bootstrap$Internal$Text$Role($rundis$elm_bootstrap$Bootstrap$Internal$Role$Secondary);
 var $rundis$elm_bootstrap$Bootstrap$General$Internal$SM = {$: 'SM'};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Size = function (a) {
 	return {$: 'Size', a: a};
@@ -6993,130 +6978,6 @@ var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$small = function (_v0) {
 			{
 				size: $elm$core$Maybe$Just($rundis$elm_bootstrap$Bootstrap$General$Internal$SM)
 			}));
-};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$Size = function (a) {
-	return {$: 'Size', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$Small = {$: 'Small'};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$small = $rundis$elm_bootstrap$Bootstrap$Spinner$Size($rundis$elm_bootstrap$Bootstrap$Spinner$Small);
-var $rundis$elm_bootstrap$Bootstrap$Spinner$applyModifier = F2(
-	function (modifier, options) {
-		switch (modifier.$) {
-			case 'Kind':
-				var spinnerKind = modifier.a;
-				return _Utils_update(
-					options,
-					{kind: spinnerKind});
-			case 'Size':
-				var spinnerSize = modifier.a;
-				return _Utils_update(
-					options,
-					{size: spinnerSize});
-			case 'Color':
-				var color_ = modifier.a;
-				return _Utils_update(
-					options,
-					{
-						color: $elm$core$Maybe$Just(color_)
-					});
-			default:
-				var list = modifier.a;
-				return _Utils_update(
-					options,
-					{attributes: list});
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Spinner$Border = {$: 'Border'};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$Normal = {$: 'Normal'};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$defaultOptions = {attributes: _List_Nil, color: $elm$core$Maybe$Nothing, kind: $rundis$elm_bootstrap$Bootstrap$Spinner$Border, size: $rundis$elm_bootstrap$Bootstrap$Spinner$Normal};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$kindClassName = function (kind_) {
-	if (kind_.$ === 'Border') {
-		return 'spinner-border';
-	} else {
-		return 'spinner-grow';
-	}
-};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$kindClass = A2($elm$core$Basics$composeL, $elm$html$Html$Attributes$class, $rundis$elm_bootstrap$Bootstrap$Spinner$kindClassName);
-var $rundis$elm_bootstrap$Bootstrap$Spinner$sizeAttributes = F2(
-	function (size_, kind_) {
-		switch (size_.$) {
-			case 'Normal':
-				return $elm$core$Maybe$Nothing;
-			case 'Small':
-				return $elm$core$Maybe$Just(
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class(
-							$rundis$elm_bootstrap$Bootstrap$Spinner$kindClassName(kind_) + '-sm')
-						]));
-			default:
-				return $elm$core$Maybe$Just(
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'width', '3rem'),
-							A2($elm$html$Html$Attributes$style, 'height', '3rem')
-						]));
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Internal$Text$textColorClass = function (color) {
-	if (color.$ === 'White') {
-		return $elm$html$Html$Attributes$class('text-white');
-	} else {
-		var role = color.a;
-		return A2($rundis$elm_bootstrap$Bootstrap$Internal$Role$toClass, 'text', role);
-	}
-};
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $rundis$elm_bootstrap$Bootstrap$Spinner$toAttributes = function (options) {
-	return _Utils_ap(
-		A2(
-			$elm$core$List$filterMap,
-			$elm$core$Basics$identity,
-			_List_fromArray(
-				[
-					$elm$core$Maybe$Just(
-					$rundis$elm_bootstrap$Bootstrap$Spinner$kindClass(options.kind)),
-					A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Internal$Text$textColorClass, options.color)
-				])),
-		_Utils_ap(
-			A2(
-				$elm$core$Maybe$withDefault,
-				_List_Nil,
-				A2($rundis$elm_bootstrap$Bootstrap$Spinner$sizeAttributes, options.size, options.kind)),
-			_Utils_ap(
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$attribute, 'role', 'status')
-					]),
-				options.attributes)));
-};
-var $rundis$elm_bootstrap$Bootstrap$Spinner$spinner = F2(
-	function (options, children) {
-		var opts = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Spinner$applyModifier, $rundis$elm_bootstrap$Bootstrap$Spinner$defaultOptions, options);
-		return A2(
-			$elm$html$Html$div,
-			$rundis$elm_bootstrap$Bootstrap$Spinner$toAttributes(opts),
-			children);
-	});
-var $rundis$elm_bootstrap$Bootstrap$Spinner$srMessage = function (msg) {
-	return A2(
-		$elm$html$Html$span,
-		_List_fromArray(
-			[
-				$elm$html$Html$Attributes$class('sr-only')
-			]),
-		_List_fromArray(
-			[
-				$elm$html$Html$text(msg)
-			]));
 };
 var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$successors = F2(
 	function (addons, _v0) {
@@ -7581,17 +7442,6 @@ var $author$project$Main$renderTodoItem = F3(
 							_List_fromArray(
 								[
 									A2(
-									$rundis$elm_bootstrap$Bootstrap$Spinner$spinner,
-									_List_fromArray(
-										[
-											$rundis$elm_bootstrap$Bootstrap$Spinner$small,
-											$rundis$elm_bootstrap$Bootstrap$Spinner$color($rundis$elm_bootstrap$Bootstrap$Text$secondary)
-										]),
-									_List_fromArray(
-										[
-											$rundis$elm_bootstrap$Bootstrap$Spinner$srMessage('Doing')
-										])),
-									A2(
 									$elm$html$Html$span,
 									_List_fromArray(
 										[
@@ -7609,18 +7459,6 @@ var $author$project$Main$renderTodoItem = F3(
 							_List_Nil,
 							_List_fromArray(
 								[
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Spinner$spinner,
-									_List_fromArray(
-										[
-											$rundis$elm_bootstrap$Bootstrap$Spinner$grow,
-											$rundis$elm_bootstrap$Bootstrap$Spinner$small,
-											$rundis$elm_bootstrap$Bootstrap$Spinner$color($rundis$elm_bootstrap$Bootstrap$Text$secondary)
-										]),
-									_List_fromArray(
-										[
-											$rundis$elm_bootstrap$Bootstrap$Spinner$srMessage('Doing')
-										])),
 									A2(
 									$elm$html$Html$span,
 									_List_fromArray(
@@ -7951,6 +7789,15 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$columnCountOption = function (
 			return $elm$core$Maybe$Just('auto');
 	}
 };
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthClass = function (_v0) {
 	var screenSize = _v0.screenSize;
 	var columnCount = _v0.columnCount;

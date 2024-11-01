@@ -10,7 +10,6 @@ import Bootstrap.Form.InputGroup as InputGroup
 import Bootstrap.Form.Select as Select
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
-import Bootstrap.Spinner as Spinner
 import Bootstrap.Table as Table
 import Bootstrap.Text as Text
 import Browser
@@ -18,7 +17,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, div, h1, p, span, text)
-import Html.Attributes exposing (autofocus, class, selected, style, value)
+import Html.Attributes exposing (autofocus, class, value)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
@@ -344,8 +343,8 @@ renderTodoItem cp buffer todoItem =
                 []
                 [ if todoItem.state == Done then
                     span []
-                        [ Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
-                        , span [ onClick (Edit todoItem) ]
+                        [ --Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
+                          span [ onClick (Edit todoItem) ]
                             [ text (" " ++ todoItem.title ++ " ")
                             , renderNewBadge (cp < todoItem.modificationTime)
                             ]
@@ -353,8 +352,8 @@ renderTodoItem cp buffer todoItem =
 
                   else
                     span []
-                        [ Spinner.spinner [ Spinner.grow, Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
-                        , span [ onClick (Edit todoItem) ]
+                        [ --Spinner.spinner [ Spinner.grow, Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
+                          span [ onClick (Edit todoItem) ]
                             [ text (" " ++ todoItem.title ++ " ")
                             , renderNewBadge (cp < todoItem.modificationTime)
                             ]
