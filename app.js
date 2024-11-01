@@ -6858,6 +6858,12 @@ var $rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess = $rundis$elm_bootstrap$B
 		[
 			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Success)
 		]));
+var $rundis$elm_bootstrap$Bootstrap$Badge$Warning = {$: 'Warning'};
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgeWarning = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
+	_List_fromArray(
+		[
+			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Warning)
+		]));
 var $author$project$Main$renderStatusBadge = function (todoItem) {
 	var _v0 = todoItem.state;
 	switch (_v0.$) {
@@ -6871,7 +6877,7 @@ var $author$project$Main$renderStatusBadge = function (todoItem) {
 					]));
 		case 'Doing':
 			return A2(
-				$rundis$elm_bootstrap$Bootstrap$Badge$badgeSecondary,
+				$rundis$elm_bootstrap$Bootstrap$Badge$badgeWarning,
 				_List_Nil,
 				_List_fromArray(
 					[

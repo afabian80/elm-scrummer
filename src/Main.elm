@@ -371,7 +371,7 @@ renderStatusBadge todoItem =
             Badge.badgeSecondary [] [ text "TODO" ]
 
         Doing ->
-            Badge.badgeSecondary [] [ text "DOING" ]
+            Badge.badgeWarning [] [ text "DOING" ]
 
         Done ->
             Badge.badgeSuccess [] [ text "DONE" ]
