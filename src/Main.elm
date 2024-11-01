@@ -248,10 +248,9 @@ view model =
                             [ Button.primary
                             , Button.small
                             , Button.onClick Download
-                            , Button.attrs [ class "m-1" ]
+                            , Button.attrs [ class "m-1", timeToBackupBlinker model ]
                             ]
-                            [ timeToBackupSpinner model
-                            , text "Download"
+                            [ text "Download"
                             ]
                         , Button.button
                             [ Button.danger
@@ -267,18 +266,13 @@ view model =
         ]
 
 
-timeToBackupSpinner : Model -> Html msg
-timeToBackupSpinner model =
+timeToBackupBlinker : Model -> Attribute msg
+timeToBackupBlinker model =
     if model.persistentCore.timestamp - 10 > model.persistentCore.lastBackup then
-        Spinner.spinner
-            [ Spinner.grow
-            , Spinner.small
-            , Spinner.color Text.warning
-            ]
-            []
+        class "blink"
 
     else
-        text ""
+        class ""
 
 
 renderLog : String -> Html msg

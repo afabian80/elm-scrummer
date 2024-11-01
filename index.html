@@ -7,11 +7,21 @@
     <title>Scrummer</title>
     <script type="text/javascript" src="app.js"></script>
     <style>
-    .table-container {
-        display: grid;
-        grid-template-columns: auto;
-        justify-items: center;
-        margin-top: 2em;
+    @keyframes blink {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .blink {
+        animation: blink 1s infinite;
+    }
     </style>
 </head>
 
