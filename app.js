@@ -6028,6 +6028,7 @@ var $author$project$Main$updateWithStorage = F2(
 var $elm$json$Json$Decode$value = _Json_decodeValue;
 var $author$project$Main$AddTodoItem = {$: 'AddTodoItem'};
 var $author$project$Main$ClearOldDone = {$: 'ClearOldDone'};
+var $author$project$Main$Download = {$: 'Download'};
 var $author$project$Main$InputBufferChange = function (a) {
 	return {$: 'InputBufferChange', a: a};
 };
@@ -8563,6 +8564,9 @@ var $rundis$elm_bootstrap$Bootstrap$Table$th = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
 			{children: children, options: options});
 	});
+var $author$project$Main$timeToBackup = function (model) {
+	return (_Utils_cmp(model.persistentCore.timestamp - 10, model.persistentCore.lastBackup) > 0) ? A2($elm$html$Html$Attributes$style, 'background', 'coral') : A2($elm$html$Html$Attributes$style, '', '');
+};
 var $mhoare$elm_stack$Stack$toList = function (_v0) {
 	var stack = _v0.a;
 	return stack;
@@ -8961,10 +8965,12 @@ var $author$project$Main$view = function (model) {
 													[
 														$rundis$elm_bootstrap$Bootstrap$Button$primary,
 														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$Download),
 														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[
-																$elm$html$Html$Attributes$class('m-1')
+																$elm$html$Html$Attributes$class('m-1'),
+																$author$project$Main$timeToBackup(model)
 															]))
 													]),
 												_List_fromArray(

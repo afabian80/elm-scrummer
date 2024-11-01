@@ -237,8 +237,19 @@ view model =
                 , Grid.row [] [ Grid.col [] [ text "Model operations:" ] ]
                 , Grid.row []
                     [ Grid.col []
-                        [ Button.button [ Button.primary, Button.small, Button.attrs [ class "m-1" ] ] [ text "Download" ]
-                        , Button.button [ Button.danger, Button.small, Button.attrs [ class "m-1" ] ] [ text "Upload" ]
+                        [ Button.button
+                            [ Button.primary
+                            , Button.small
+                            , Button.onClick Download
+                            , Button.attrs [ class "m-1", timeToBackup model ]
+                            ]
+                            [ text "Download" ]
+                        , Button.button
+                            [ Button.danger
+                            , Button.small
+                            , Button.attrs [ class "m-1" ]
+                            ]
+                            [ text "Upload" ]
                         ]
                     ]
                 ]
