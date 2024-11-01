@@ -11,7 +11,7 @@ import Bootstrap.Form.Select as Select
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
-import Bootstrap.Text as Text
+import Bootstrap.Text as Text exposing (Color, success)
 import Browser
 import File
 import File.Download as Download
@@ -340,7 +340,8 @@ renderTodoItem cp buffer todoItem =
                     ]
                 ]
             , Table.td
-                []
+                [ setTitleCellOption todoItem.state
+                ]
                 [ if todoItem.state == Done then
                     span []
                         [ --Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
@@ -361,6 +362,25 @@ renderTodoItem cp buffer todoItem =
                 ]
             , Table.td [] [ Button.button [ Button.danger, Button.onClick (DeleteTodoItem todoItem), Button.small ] [ text "Delete" ] ]
             ]
+
+
+setTitleCellOption : TodoState -> Table.CellOption Msg
+setTitleCellOption state =
+    case state of
+        Done ->
+            Table.cellSuccess
+
+        Doing ->
+            Table.cellWarning
+
+        Blocked ->
+            Table.cellDanger
+
+        Cancelled ->
+            Table.cellSuccess
+
+        _ ->
+            Table.cellLight
 
 
 renderNewBadge : Bool -> Html msg

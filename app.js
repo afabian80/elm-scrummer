@@ -6965,6 +6965,37 @@ var $author$project$Main$renderStatusBadge = function (todoItem) {
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary = {$: 'Secondary'};
 var $rundis$elm_bootstrap$Bootstrap$Button$secondary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary));
+var $rundis$elm_bootstrap$Bootstrap$Table$Roled = function (a) {
+	return {$: 'Roled', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$RoledCell = function (a) {
+	return {$: 'RoledCell', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$cellDanger = $rundis$elm_bootstrap$Bootstrap$Table$RoledCell(
+	$rundis$elm_bootstrap$Bootstrap$Table$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Role$Danger));
+var $rundis$elm_bootstrap$Bootstrap$Internal$Role$Light = {$: 'Light'};
+var $rundis$elm_bootstrap$Bootstrap$Table$cellLight = $rundis$elm_bootstrap$Bootstrap$Table$RoledCell(
+	$rundis$elm_bootstrap$Bootstrap$Table$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Role$Light));
+var $rundis$elm_bootstrap$Bootstrap$Internal$Role$Success = {$: 'Success'};
+var $rundis$elm_bootstrap$Bootstrap$Table$cellSuccess = $rundis$elm_bootstrap$Bootstrap$Table$RoledCell(
+	$rundis$elm_bootstrap$Bootstrap$Table$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Role$Success));
+var $rundis$elm_bootstrap$Bootstrap$Internal$Role$Warning = {$: 'Warning'};
+var $rundis$elm_bootstrap$Bootstrap$Table$cellWarning = $rundis$elm_bootstrap$Bootstrap$Table$RoledCell(
+	$rundis$elm_bootstrap$Bootstrap$Table$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Role$Warning));
+var $author$project$Main$setTitleCellOption = function (state) {
+	switch (state.$) {
+		case 'Done':
+			return $rundis$elm_bootstrap$Bootstrap$Table$cellSuccess;
+		case 'Doing':
+			return $rundis$elm_bootstrap$Bootstrap$Table$cellWarning;
+		case 'Blocked':
+			return $rundis$elm_bootstrap$Bootstrap$Table$cellDanger;
+		case 'Cancelled':
+			return $rundis$elm_bootstrap$Bootstrap$Table$cellSuccess;
+		default:
+			return $rundis$elm_bootstrap$Bootstrap$Table$cellLight;
+	}
+};
 var $rundis$elm_bootstrap$Bootstrap$General$Internal$SM = {$: 'SM'};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Size = function (a) {
 	return {$: 'Size', a: a};
@@ -7433,7 +7464,10 @@ var $author$project$Main$renderTodoItem = F3(
 						])),
 					A2(
 					$rundis$elm_bootstrap$Bootstrap$Table$td,
-					_List_Nil,
+					_List_fromArray(
+						[
+							$author$project$Main$setTitleCellOption(todoItem.state)
+						]),
 					_List_fromArray(
 						[
 							_Utils_eq(todoItem.state, $author$project$TodoState$Done) ? A2(
