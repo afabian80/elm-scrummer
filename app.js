@@ -6994,10 +6994,6 @@ var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$small = function (_v0) {
 				size: $elm$core$Maybe$Just($rundis$elm_bootstrap$Bootstrap$General$Internal$SM)
 			}));
 };
-var $rundis$elm_bootstrap$Bootstrap$Form$Select$Size = function (a) {
-	return {$: 'Size', a: a};
-};
-var $rundis$elm_bootstrap$Bootstrap$Form$Select$small = $rundis$elm_bootstrap$Bootstrap$Form$Select$Size($rundis$elm_bootstrap$Bootstrap$General$Internal$SM);
 var $rundis$elm_bootstrap$Bootstrap$Spinner$Size = function (a) {
 	return {$: 'Size', a: a};
 };
@@ -7508,11 +7504,20 @@ var $author$project$Main$renderTodoItem = F3(
 								[
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$id('StatusSelector'),
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$onChange(
-									$author$project$Main$SelectChange(todoItem)),
-									$rundis$elm_bootstrap$Bootstrap$Form$Select$small
+									$author$project$Main$SelectChange(todoItem))
 								]),
 							_List_fromArray(
 								[
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('select')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Select...')
+										])),
 									A2(
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
 									_List_fromArray(
