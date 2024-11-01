@@ -11,13 +11,13 @@ import Bootstrap.Form.Select as Select
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Table as Table
-import Bootstrap.Text as Text exposing (Color, success)
+import Bootstrap.Text as Text
 import Browser
 import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, div, h1, p, span, text)
-import Html.Attributes exposing (autofocus, class, style, value)
+import Html.Attributes exposing (autofocus, class, value)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
@@ -408,16 +408,6 @@ renderStatusBadge todoItem =
 
         Cancelled ->
             Badge.badgePrimary [] [ text "CANCELLED" ]
-
-
-
--- timeToBackup : Model -> Attribute msg
--- timeToBackup model =
---     -- Download button will be red after 10 updates since the last Download. Just to nidge user to backup regularly.
---     if model.persistentCore.timestamp - 10 > model.persistentCore.lastBackup then
---         style "background" "coral"
---     else
---         style "" ""
 
 
 noCleanbles : Model -> Bool
