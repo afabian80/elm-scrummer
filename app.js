@@ -6031,8 +6031,10 @@ var $author$project$Main$ClearOldDone = {$: 'ClearOldDone'};
 var $author$project$Main$InputBufferChange = function (a) {
 	return {$: 'InputBufferChange', a: a};
 };
+var $author$project$Main$Redo = {$: 'Redo'};
 var $author$project$Main$SetCheckpoint = {$: 'SetCheckpoint'};
 var $author$project$Main$Sort = {$: 'Sort'};
+var $author$project$Main$Undo = {$: 'Undo'};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Text$Center = {$: 'Center'};
 var $rundis$elm_bootstrap$Bootstrap$General$Internal$LG = {$: 'LG'};
 var $rundis$elm_bootstrap$Bootstrap$Text$alignLg = function (dir) {
@@ -8561,6 +8563,10 @@ var $rundis$elm_bootstrap$Bootstrap$Table$th = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
 			{children: children, options: options});
 	});
+var $mhoare$elm_stack$Stack$toList = function (_v0) {
+	var stack = _v0.a;
+	return stack;
+};
 var $rundis$elm_bootstrap$Bootstrap$Form$Input$Value = function (a) {
 	return {$: 'Value', a: a};
 };
@@ -8632,6 +8638,20 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Warning = {$: 'Warning'};
 var $rundis$elm_bootstrap$Bootstrap$Button$warning = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Warning));
 var $author$project$Main$view = function (model) {
+	var undoStackSize = $elm$core$List$length(
+		$mhoare$elm_stack$Stack$toList(model.undoStack));
+	var undoStackSizeStr = $elm$core$String$fromInt(undoStackSize);
+	var undoButtonText = 'Undo (' + (undoStackSizeStr + ')');
+	var redoStackSize = $elm$core$List$length(
+		$mhoare$elm_stack$Stack$toList(model.redoStack));
+	var redoStackSizeStr = $elm$core$String$fromInt(redoStackSize);
+	var redoButtonText = 'Redo (' + (redoStackSizeStr + ')');
+	var cleanerList = A2(
+		$elm$core$List$filter,
+		$author$project$Main$cleaner(model.persistentCore.checkpoint),
+		model.persistentCore.todoItems);
+	var cleanButtonText = 'Clean old (' + ($elm$core$String$fromInt(
+		$elm$core$List$length(cleanerList)) + ')');
 	return A2(
 		$rundis$elm_bootstrap$Bootstrap$Grid$container,
 		_List_Nil,
@@ -8847,7 +8867,7 @@ var $author$project$Main$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('Clean done')
+														$elm$html$Html$text(cleanButtonText)
 													]))
 											]))
 									])),
@@ -8880,6 +8900,8 @@ var $author$project$Main$view = function (model) {
 													[
 														$rundis$elm_bootstrap$Bootstrap$Button$primary,
 														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$Undo),
+														$rundis$elm_bootstrap$Bootstrap$Button$disabled(!undoStackSize),
 														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[
@@ -8888,7 +8910,7 @@ var $author$project$Main$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('Undo')
+														$elm$html$Html$text(undoButtonText)
 													])),
 												A2(
 												$rundis$elm_bootstrap$Bootstrap$Button$button,
@@ -8896,6 +8918,8 @@ var $author$project$Main$view = function (model) {
 													[
 														$rundis$elm_bootstrap$Bootstrap$Button$warning,
 														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$Redo),
+														$rundis$elm_bootstrap$Bootstrap$Button$disabled(!redoStackSize),
 														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[
@@ -8904,7 +8928,7 @@ var $author$project$Main$view = function (model) {
 													]),
 												_List_fromArray(
 													[
-														$elm$html$Html$text('Redo')
+														$elm$html$Html$text(redoButtonText)
 													]))
 											]))
 									])),

@@ -112,6 +112,31 @@ init flag =
 
 view : Model -> Html Msg
 view model =
+    let
+        undoStackSize =
+            List.length (Stack.toList model.undoStack)
+
+        undoStackSizeStr =
+            String.fromInt undoStackSize
+
+        undoButtonText =
+            "Undo (" ++ undoStackSizeStr ++ ")"
+
+        redoStackSize =
+            List.length (Stack.toList model.redoStack)
+
+        redoStackSizeStr =
+            String.fromInt redoStackSize
+
+        redoButtonText =
+            "Redo (" ++ redoStackSizeStr ++ ")"
+
+        cleanerList =
+            List.filter (cleaner model.persistentCore.checkpoint) model.persistentCore.todoItems
+
+        cleanButtonText =
+            "Clean old (" ++ String.fromInt (List.length cleanerList) ++ ")"
+    in
     Grid.container
         []
         [ CDN.stylesheet
@@ -163,16 +188,48 @@ view model =
                 , Grid.row [] [ Grid.col [] [ text "Actions:" ] ]
                 , Grid.row []
                     [ Grid.col []
-                        [ Button.button [ Button.primary, Button.small, Button.onClick Sort, Button.attrs [ class "m-1" ] ] [ text "Sort" ]
-                        , Button.button [ Button.primary, Button.small, Button.onClick SetCheckpoint, Button.attrs [ class "m-1" ] ] [ text "Checkpoint" ]
-                        , Button.button [ Button.danger, Button.small, Button.onClick ClearOldDone, Button.attrs [ class "m-1" ] ] [ text "Clean done" ]
+                        [ Button.button
+                            [ Button.primary
+                            , Button.small
+                            , Button.onClick Sort
+                            , Button.attrs [ class "m-1" ]
+                            ]
+                            [ text "Sort" ]
+                        , Button.button
+                            [ Button.primary
+                            , Button.small
+                            , Button.onClick SetCheckpoint
+                            , Button.attrs [ class "m-1" ]
+                            ]
+                            [ text "Checkpoint" ]
+                        , Button.button
+                            [ Button.danger
+                            , Button.small
+                            , Button.onClick ClearOldDone
+                            , Button.attrs [ class "m-1" ]
+                            ]
+                            [ text cleanButtonText ]
                         ]
                     ]
                 , Grid.row [] [ Grid.col [] [ text "History:" ] ]
                 , Grid.row []
                     [ Grid.col []
-                        [ Button.button [ Button.primary, Button.small, Button.attrs [ class "m-1" ] ] [ text "Undo" ]
-                        , Button.button [ Button.warning, Button.small, Button.attrs [ class "m-1" ] ] [ text "Redo" ]
+                        [ Button.button
+                            [ Button.primary
+                            , Button.small
+                            , Button.onClick Undo
+                            , Button.disabled (undoStackSize == 0)
+                            , Button.attrs [ class "m-1" ]
+                            ]
+                            [ text undoButtonText ]
+                        , Button.button
+                            [ Button.warning
+                            , Button.small
+                            , Button.onClick Redo
+                            , Button.disabled (redoStackSize == 0)
+                            , Button.attrs [ class "m-1" ]
+                            ]
+                            [ text redoButtonText ]
                         ]
                     ]
 
