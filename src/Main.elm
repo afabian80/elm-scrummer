@@ -326,9 +326,8 @@ renderTodoItem cp buffer todoItem =
                     [ Select.item [ value "todo" ] [ text "TODO" ]
                     , Select.item [ value "doing" ] [ text "DOING" ]
                     , Select.item [ value "done" ] [ text "DONE" ]
-
-                    -- , Select.item [ value "blocked" ] [ text "BLOCKED" ]
-                    -- , Select.item [ value "cancelled" ] [ text "CANCELLED" ]
+                    , Select.item [ value "blocked" ] [ text "BLOCKED" ]
+                    , Select.item [ value "cancelled" ] [ text "CANCELLED" ]
                     ]
                 ]
             , Table.td
@@ -375,6 +374,12 @@ renderStatusBadge todoItem =
 
         Done ->
             Badge.badgeSuccess [] [ text "DONE" ]
+
+        Blocked ->
+            Badge.badgeDanger [] [ text "BLOCKED" ]
+
+        Cancelled ->
+            Badge.badgePrimary [] [ text "CANCELLED" ]
 
 
 timeToBackup : Model -> Attribute msg
@@ -687,6 +692,12 @@ changeTodoItemState theTodoItem state time aTodoItem =
 
                 "done" ->
                     Done
+
+                "blocked" ->
+                    Blocked
+
+                "cancelled" ->
+                    Cancelled
 
                 _ ->
                     Todo

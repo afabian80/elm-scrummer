@@ -5359,6 +5359,8 @@ var $author$project$TodoItem$TodoItem = F5(
 		return {isBlocked: isBlocked, isEditing: isEditing, modificationTime: modificationTime, state: state, title: title};
 	});
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
+var $author$project$TodoState$Blocked = {$: 'Blocked'};
+var $author$project$TodoState$Cancelled = {$: 'Cancelled'};
 var $author$project$TodoState$Doing = {$: 'Doing'};
 var $author$project$TodoState$Done = {$: 'Done'};
 var $author$project$TodoState$Todo = {$: 'Todo'};
@@ -5375,6 +5377,10 @@ var $author$project$TodoState$decodeTodoState = A2(
 				return $elm$json$Json$Decode$succeed($author$project$TodoState$Doing);
 			case 'Done':
 				return $elm$json$Json$Decode$succeed($author$project$TodoState$Done);
+			case 'Blocked':
+				return $elm$json$Json$Decode$succeed($author$project$TodoState$Blocked);
+			case 'Cancelled':
+				return $elm$json$Json$Decode$succeed($author$project$TodoState$Cancelled);
 			default:
 				return $elm$json$Json$Decode$fail('Invalid TodoState');
 		}
@@ -5434,8 +5440,12 @@ var $author$project$TodoState$encodeTodoState = function (state) {
 			return $elm$json$Json$Encode$string('Todo');
 		case 'Doing':
 			return $elm$json$Json$Encode$string('Doing');
-		default:
+		case 'Done':
 			return $elm$json$Json$Encode$string('Done');
+		case 'Blocked':
+			return $elm$json$Json$Encode$string('Blocked');
+		default:
+			return $elm$json$Json$Encode$string('Cancelled');
 	}
 };
 var $elm$json$Json$Encode$int = _Json_wrap;
@@ -5535,6 +5545,10 @@ var $author$project$Main$changeTodoItemState = F4(
 					return $author$project$TodoState$Doing;
 				case 'done':
 					return $author$project$TodoState$Done;
+				case 'blocked':
+					return $author$project$TodoState$Blocked;
+				case 'cancelled':
+					return $author$project$TodoState$Cancelled;
 				default:
 					return $author$project$TodoState$Todo;
 			}
@@ -5686,6 +5700,10 @@ var $author$project$TodoState$compareTodoState = F2(
 						return $elm$core$Basics$EQ;
 					case 'Doing':
 						return $elm$core$Basics$LT;
+					case 'Done':
+						return $elm$core$Basics$LT;
+					case 'Blocked':
+						return $elm$core$Basics$LT;
 					default:
 						return $elm$core$Basics$LT;
 				}
@@ -5695,6 +5713,36 @@ var $author$project$TodoState$compareTodoState = F2(
 						return $elm$core$Basics$GT;
 					case 'Doing':
 						return $elm$core$Basics$EQ;
+					case 'Done':
+						return $elm$core$Basics$LT;
+					case 'Blocked':
+						return $elm$core$Basics$LT;
+					default:
+						return $elm$core$Basics$LT;
+				}
+			case 'Done':
+				switch (s2.$) {
+					case 'Todo':
+						return $elm$core$Basics$GT;
+					case 'Doing':
+						return $elm$core$Basics$GT;
+					case 'Done':
+						return $elm$core$Basics$EQ;
+					case 'Blocked':
+						return $elm$core$Basics$LT;
+					default:
+						return $elm$core$Basics$LT;
+				}
+			case 'Blocked':
+				switch (s2.$) {
+					case 'Todo':
+						return $elm$core$Basics$GT;
+					case 'Doing':
+						return $elm$core$Basics$GT;
+					case 'Done':
+						return $elm$core$Basics$GT;
+					case 'Blocked':
+						return $elm$core$Basics$EQ;
 					default:
 						return $elm$core$Basics$LT;
 				}
@@ -5703,6 +5751,10 @@ var $author$project$TodoState$compareTodoState = F2(
 					case 'Todo':
 						return $elm$core$Basics$GT;
 					case 'Doing':
+						return $elm$core$Basics$GT;
+					case 'Done':
+						return $elm$core$Basics$GT;
+					case 'Blocked':
 						return $elm$core$Basics$GT;
 					default:
 						return $elm$core$Basics$EQ;
@@ -6797,10 +6849,10 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Select$onChange = function (toMsg) {
 var $author$project$Main$renderNewBadge = function (isNew) {
 	return isNew ? $elm$html$Html$text('🌞') : $elm$html$Html$text('');
 };
+var $rundis$elm_bootstrap$Bootstrap$Badge$Danger = {$: 'Danger'};
 var $rundis$elm_bootstrap$Bootstrap$Badge$Roled = function (a) {
 	return {$: 'Roled', a: a};
 };
-var $rundis$elm_bootstrap$Bootstrap$Badge$Secondary = {$: 'Secondary'};
 var $rundis$elm_bootstrap$Bootstrap$Badge$roleOption = function (role) {
 	switch (role.$) {
 		case 'Primary':
@@ -6847,6 +6899,18 @@ var $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal = F3(
 				attributes),
 			children);
 	});
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgeDanger = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
+	_List_fromArray(
+		[
+			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Danger)
+		]));
+var $rundis$elm_bootstrap$Bootstrap$Badge$Primary = {$: 'Primary'};
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgePrimary = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
+	_List_fromArray(
+		[
+			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Primary)
+		]));
+var $rundis$elm_bootstrap$Bootstrap$Badge$Secondary = {$: 'Secondary'};
 var $rundis$elm_bootstrap$Bootstrap$Badge$badgeSecondary = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
 	_List_fromArray(
 		[
@@ -6883,13 +6947,29 @@ var $author$project$Main$renderStatusBadge = function (todoItem) {
 					[
 						$elm$html$Html$text('DOING')
 					]));
-		default:
+		case 'Done':
 			return A2(
 				$rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess,
 				_List_Nil,
 				_List_fromArray(
 					[
 						$elm$html$Html$text('DONE')
+					]));
+		case 'Blocked':
+			return A2(
+				$rundis$elm_bootstrap$Bootstrap$Badge$badgeDanger,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('BLOCKED')
+					]));
+		default:
+			return A2(
+				$rundis$elm_bootstrap$Bootstrap$Badge$badgePrimary,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('CANCELLED')
 					]));
 	}
 };
@@ -7462,6 +7542,26 @@ var $author$project$Main$renderTodoItem = F3(
 									_List_fromArray(
 										[
 											$elm$html$Html$text('DONE')
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('blocked')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('BLOCKED')
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('cancelled')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('CANCELLED')
 										]))
 								]))
 						])),
