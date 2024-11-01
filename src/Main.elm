@@ -248,9 +248,11 @@ view model =
                             [ Button.primary
                             , Button.small
                             , Button.onClick Download
-                            , Button.attrs [ class "m-1", timeToBackup model ]
+                            , Button.attrs [ class "m-1" ]
                             ]
-                            [ text "Download" ]
+                            [ timeToBackupSpinner model
+                            , text "Download"
+                            ]
                         , Button.button
                             [ Button.danger
                             , Button.small
@@ -263,6 +265,20 @@ view model =
                 ]
             ]
         ]
+
+
+timeToBackupSpinner : Model -> Html msg
+timeToBackupSpinner model =
+    if model.persistentCore.timestamp - 10 > model.persistentCore.lastBackup then
+        Spinner.spinner
+            [ Spinner.grow
+            , Spinner.small
+            , Spinner.color Text.warning
+            ]
+            []
+
+    else
+        text ""
 
 
 renderLog : String -> Html msg
@@ -382,14 +398,14 @@ renderStatusBadge todoItem =
             Badge.badgePrimary [] [ text "CANCELLED" ]
 
 
-timeToBackup : Model -> Attribute msg
-timeToBackup model =
-    -- Download button will be red after 10 updates since the last Download. Just to nidge user to backup regularly.
-    if model.persistentCore.timestamp - 10 > model.persistentCore.lastBackup then
-        style "background" "coral"
 
-    else
-        style "" ""
+-- timeToBackup : Model -> Attribute msg
+-- timeToBackup model =
+--     -- Download button will be red after 10 updates since the last Download. Just to nidge user to backup regularly.
+--     if model.persistentCore.timestamp - 10 > model.persistentCore.lastBackup then
+--         style "background" "coral"
+--     else
+--         style "" ""
 
 
 noCleanbles : Model -> Bool

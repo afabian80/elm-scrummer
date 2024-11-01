@@ -9004,8 +9004,18 @@ var $rundis$elm_bootstrap$Bootstrap$Table$th = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
 			{children: children, options: options});
 	});
-var $author$project$Main$timeToBackup = function (model) {
-	return (_Utils_cmp(model.persistentCore.timestamp - 10, model.persistentCore.lastBackup) > 0) ? A2($elm$html$Html$Attributes$style, 'background', 'coral') : A2($elm$html$Html$Attributes$style, '', '');
+var $rundis$elm_bootstrap$Bootstrap$Internal$Role$Warning = {$: 'Warning'};
+var $rundis$elm_bootstrap$Bootstrap$Text$warning = $rundis$elm_bootstrap$Bootstrap$Internal$Text$Role($rundis$elm_bootstrap$Bootstrap$Internal$Role$Warning);
+var $author$project$Main$timeToBackupSpinner = function (model) {
+	return (_Utils_cmp(model.persistentCore.timestamp - 10, model.persistentCore.lastBackup) > 0) ? A2(
+		$rundis$elm_bootstrap$Bootstrap$Spinner$spinner,
+		_List_fromArray(
+			[
+				$rundis$elm_bootstrap$Bootstrap$Spinner$grow,
+				$rundis$elm_bootstrap$Bootstrap$Spinner$small,
+				$rundis$elm_bootstrap$Bootstrap$Spinner$color($rundis$elm_bootstrap$Bootstrap$Text$warning)
+			]),
+		_List_Nil) : $elm$html$Html$text('');
 };
 var $mhoare$elm_stack$Stack$toList = function (_v0) {
 	var stack = _v0.a;
@@ -9383,12 +9393,12 @@ var $author$project$Main$view = function (model) {
 														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[
-																$elm$html$Html$Attributes$class('m-1'),
-																$author$project$Main$timeToBackup(model)
+																$elm$html$Html$Attributes$class('m-1')
 															]))
 													]),
 												_List_fromArray(
 													[
+														$author$project$Main$timeToBackupSpinner(model),
 														$elm$html$Html$text('Download')
 													])),
 												A2(
