@@ -7057,153 +7057,158 @@ var $rundis$elm_bootstrap$Bootstrap$Table$tr = F2(
 			{cells: cells, options: options});
 	});
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$renderTodoItem = function (todoItem) {
-	return A2(
-		$rundis$elm_bootstrap$Bootstrap$Table$tr,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				$rundis$elm_bootstrap$Bootstrap$Table$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$author$project$Main$renderStatusBadge(todoItem)
-					])),
-				A2(
-				$rundis$elm_bootstrap$Bootstrap$Table$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$rundis$elm_bootstrap$Bootstrap$Form$Select$custom,
-						_List_fromArray(
-							[
-								$rundis$elm_bootstrap$Bootstrap$Form$Select$id('valami'),
-								$rundis$elm_bootstrap$Bootstrap$Form$Select$onChange(
-								$author$project$Main$SelectChange(todoItem)),
-								$rundis$elm_bootstrap$Bootstrap$Form$Select$small
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('todo')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('TODO')
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('doing')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('DOING')
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('done')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('DONE')
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('blocked')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('BLOCKED')
-									])),
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$value('cancelld')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text('CANCELLED')
-									]))
-							]))
-					])),
-				A2(
-				$rundis$elm_bootstrap$Bootstrap$Table$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						_Utils_eq(todoItem.state, $author$project$TodoState$Done) ? A2(
-						$elm$html$Html$span,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Spinner$spinner,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Spinner$small,
-										$rundis$elm_bootstrap$Bootstrap$Spinner$color($rundis$elm_bootstrap$Bootstrap$Text$secondary)
-									]),
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Spinner$srMessage('Doing')
-									])),
-								$elm$html$Html$text(' ' + todoItem.title)
-							])) : A2(
-						$elm$html$Html$span,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$rundis$elm_bootstrap$Bootstrap$Spinner$spinner,
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Spinner$grow,
-										$rundis$elm_bootstrap$Bootstrap$Spinner$small,
-										$rundis$elm_bootstrap$Bootstrap$Spinner$color($rundis$elm_bootstrap$Bootstrap$Text$secondary)
-									]),
-								_List_fromArray(
-									[
-										$rundis$elm_bootstrap$Bootstrap$Spinner$srMessage('Doing')
-									])),
-								$elm$html$Html$text(' ' + todoItem.title)
-							]))
-					])),
-				A2(
-				$rundis$elm_bootstrap$Bootstrap$Table$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$rundis$elm_bootstrap$Bootstrap$Button$button,
-						_List_fromArray(
-							[
-								$rundis$elm_bootstrap$Bootstrap$Button$danger,
-								$rundis$elm_bootstrap$Bootstrap$Button$onClick(
-								$author$project$Main$DeleteTodoItem(todoItem)),
-								$rundis$elm_bootstrap$Bootstrap$Button$small
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Delete')
-							]))
-					]))
-			]));
-};
-var $author$project$Main$renderModel = function (model) {
-	return A2($elm$core$List$map, $author$project$Main$renderTodoItem, model.persistentCore.todoItems);
-};
+var $author$project$Main$renderTodoItem = F3(
+	function (cp, buffer, todoItem) {
+		return A2(
+			$rundis$elm_bootstrap$Bootstrap$Table$tr,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$rundis$elm_bootstrap$Bootstrap$Table$td,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$author$project$Main$renderStatusBadge(todoItem)
+						])),
+					A2(
+					$rundis$elm_bootstrap$Bootstrap$Table$td,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Form$Select$custom,
+							_List_fromArray(
+								[
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$id('valami'),
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$onChange(
+									$author$project$Main$SelectChange(todoItem)),
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$small
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('todo')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('TODO')
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('doing')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('DOING')
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('done')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('DONE')
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('blocked')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('BLOCKED')
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('cancelld')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('CANCELLED')
+										]))
+								]))
+						])),
+					A2(
+					$rundis$elm_bootstrap$Bootstrap$Table$td,
+					_List_Nil,
+					_List_fromArray(
+						[
+							_Utils_eq(todoItem.state, $author$project$TodoState$Done) ? A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Spinner$spinner,
+									_List_fromArray(
+										[
+											$rundis$elm_bootstrap$Bootstrap$Spinner$small,
+											$rundis$elm_bootstrap$Bootstrap$Spinner$color($rundis$elm_bootstrap$Bootstrap$Text$secondary)
+										]),
+									_List_fromArray(
+										[
+											$rundis$elm_bootstrap$Bootstrap$Spinner$srMessage('Doing')
+										])),
+									$elm$html$Html$text(' ' + todoItem.title)
+								])) : A2(
+							$elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Spinner$spinner,
+									_List_fromArray(
+										[
+											$rundis$elm_bootstrap$Bootstrap$Spinner$grow,
+											$rundis$elm_bootstrap$Bootstrap$Spinner$small,
+											$rundis$elm_bootstrap$Bootstrap$Spinner$color($rundis$elm_bootstrap$Bootstrap$Text$secondary)
+										]),
+									_List_fromArray(
+										[
+											$rundis$elm_bootstrap$Bootstrap$Spinner$srMessage('Doing')
+										])),
+									$elm$html$Html$text(' ' + todoItem.title)
+								]))
+						])),
+					A2(
+					$rundis$elm_bootstrap$Bootstrap$Table$td,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$rundis$elm_bootstrap$Bootstrap$Button$button,
+							_List_fromArray(
+								[
+									$rundis$elm_bootstrap$Bootstrap$Button$danger,
+									$rundis$elm_bootstrap$Bootstrap$Button$onClick(
+									$author$project$Main$DeleteTodoItem(todoItem)),
+									$rundis$elm_bootstrap$Bootstrap$Button$small
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Delete')
+								]))
+						]))
+				]));
+	});
+var $author$project$Main$renderModel = F3(
+	function (model, cp, buffer) {
+		return A2(
+			$elm$core$List$map,
+			A2($author$project$Main$renderTodoItem, cp, buffer),
+			model.persistentCore.todoItems);
+	});
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
 var $rundis$elm_bootstrap$Bootstrap$General$Internal$XS = {$: 'XS'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColAlign = F2(
@@ -9000,7 +9005,7 @@ var $author$project$Main$view = function (model) {
 									tbody: A2(
 										$rundis$elm_bootstrap$Bootstrap$Table$tbody,
 										_List_Nil,
-										$author$project$Main$renderModel(model)),
+										A3($author$project$Main$renderModel, model, model.persistentCore.checkpoint, model.editBuffer)),
 									thead: $rundis$elm_bootstrap$Bootstrap$Table$simpleThead(
 										_List_fromArray(
 											[

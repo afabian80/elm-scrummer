@@ -191,7 +191,7 @@ view model =
                             , Table.th [ Table.cellAttr (class "col-md-6") ] [ text "Title" ]
                             , Table.th [] [ text "Actions" ]
                             ]
-                    , tbody = Table.tbody [] (renderModel model)
+                    , tbody = Table.tbody [] (renderModel model model.persistentCore.checkpoint model.editBuffer)
                     }
                 ]
             , Grid.col [ Col.lg3 ]
@@ -278,13 +278,13 @@ renderLog log =
         simpleDanger [] [ text log ]
 
 
-renderModel : Model -> List (Table.Row Msg)
-renderModel model =
-    List.map renderTodoItem model.persistentCore.todoItems
+renderModel : Model -> Int -> String -> List (Table.Row Msg)
+renderModel model cp buffer =
+    List.map (renderTodoItem cp buffer) model.persistentCore.todoItems
 
 
-renderTodoItem : TodoItem -> Table.Row Msg
-renderTodoItem todoItem =
+renderTodoItem : Int -> String -> TodoItem -> Table.Row Msg
+renderTodoItem cp buffer todoItem =
     Table.tr
         []
         [ Table.td [] [ renderStatusBadge todoItem ]
