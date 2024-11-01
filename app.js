@@ -5988,7 +5988,7 @@ var $author$project$Main$update = F2(
 							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
 						}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'Sort':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -5996,6 +5996,16 @@ var $author$project$Main$update = F2(
 							persistentCore: $author$project$Main$sortTodos(model.persistentCore),
 							redoStack: $mhoare$elm_stack$Stack$initialise,
 							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
+						}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				var todoItem = msg.a;
+				var s = msg.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							log: _Utils_ap(s, todoItem.title)
 						}),
 					$elm$core$Platform$Cmd$none);
 		}
@@ -6017,25 +6027,68 @@ var $author$project$Main$updateWithStorage = F2(
 	});
 var $elm$json$Json$Decode$value = _Json_decodeValue;
 var $author$project$Main$AddTodoItem = {$: 'AddTodoItem'};
-var $author$project$Main$ClearOldDone = {$: 'ClearOldDone'};
-var $author$project$Main$Download = {$: 'Download'};
-var $author$project$Main$FileRequested = {$: 'FileRequested'};
 var $author$project$Main$InputBufferChange = function (a) {
 	return {$: 'InputBufferChange', a: a};
 };
-var $author$project$Main$Redo = {$: 'Redo'};
-var $author$project$Main$SetCheckpoint = {$: 'SetCheckpoint'};
-var $author$project$Main$Sort = {$: 'Sort'};
-var $author$project$Main$Undo = {$: 'Undo'};
-var $elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$bool(bool));
-	});
-var $elm$html$Html$Attributes$autofocus = $elm$html$Html$Attributes$boolProperty('autofocus');
+var $rundis$elm_bootstrap$Bootstrap$Internal$Text$Center = {$: 'Center'};
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$LG = {$: 'LG'};
+var $rundis$elm_bootstrap$Bootstrap$Text$alignLg = function (dir) {
+	return {dir: dir, size: $rundis$elm_bootstrap$Bootstrap$General$Internal$LG};
+};
+var $rundis$elm_bootstrap$Bootstrap$Text$alignLgCenter = $rundis$elm_bootstrap$Bootstrap$Text$alignLg($rundis$elm_bootstrap$Bootstrap$Internal$Text$Center);
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
+	return {$: 'Attrs', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
+	return $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
+var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: $elm$core$Maybe$Just(size)
+					});
+			case 'Coloring':
+				var coloring = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						coloring: $elm$core$Maybe$Just(coloring)
+					});
+			case 'Block':
+				return _Utils_update(
+					options,
+					{block: true});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			default:
+				var attrs = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs)
+					});
+		}
+	});
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -6044,28 +6097,315 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$html$Html$Attributes$colspan = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'colspan',
-		$elm$core$String$fromInt(n));
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
 };
-var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$input = _VirtualDom_node('input');
-var $author$project$Main$noCleanbles = function (model) {
-	return _Utils_eq(
-		$elm$core$List$length(
+var $elm$html$Html$Attributes$classList = function (classes) {
+	return $elm$html$Html$Attributes$class(
+		A2(
+			$elm$core$String$join,
+			' ',
 			A2(
-				$elm$core$List$filter,
-				$author$project$Main$keeper(model.persistentCore.checkpoint),
-				model.persistentCore.todoItems)),
-		$elm$core$List$length(model.persistentCore.todoItems));
+				$elm$core$List$map,
+				$elm$core$Tuple$first,
+				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
 };
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions = {attributes: _List_Nil, block: false, coloring: $elm$core$Maybe$Nothing, disabled: false, size: $elm$core$Maybe$Nothing};
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass = function (role) {
+	switch (role.$) {
+		case 'Primary':
+			return 'primary';
+		case 'Secondary':
+			return 'secondary';
+		case 'Success':
+			return 'success';
+		case 'Info':
+			return 'info';
+		case 'Warning':
+			return 'warning';
+		case 'Danger':
+			return 'danger';
+		case 'Dark':
+			return 'dark';
+		case 'Light':
+			return 'light';
+		default:
+			return 'link';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption = function (size) {
+	switch (size.$) {
+		case 'XS':
+			return $elm$core$Maybe$Nothing;
+		case 'SM':
+			return $elm$core$Maybe$Just('sm');
+		case 'MD':
+			return $elm$core$Maybe$Just('md');
+		case 'LG':
+			return $elm$core$Maybe$Just('lg');
+		default:
+			return $elm$core$Maybe$Just('xl');
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Internal$Button$applyModifier, $rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('btn', true),
+						_Utils_Tuple2('btn-block', options.block),
+						_Utils_Tuple2('disabled', options.disabled)
+					])),
+				$elm$html$Html$Attributes$disabled(options.disabled)
+			]),
+		_Utils_ap(
+			function () {
+				var _v0 = A2($elm$core$Maybe$andThen, $rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption, options.size);
+				if (_v0.$ === 'Just') {
+					var s = _v0.a;
+					return _List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('btn-' + s)
+						]);
+				} else {
+					return _List_Nil;
+				}
+			}(),
+			_Utils_ap(
+				function () {
+					var _v1 = options.coloring;
+					if (_v1.$ === 'Just') {
+						if (_v1.a.$ === 'Roled') {
+							var role = _v1.a.a;
+							return _List_fromArray(
+								[
+									$elm$html$Html$Attributes$class(
+									'btn-' + $rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
+								]);
+						} else {
+							var role = _v1.a.a;
+							return _List_fromArray(
+								[
+									$elm$html$Html$Attributes$class(
+									'btn-outline-' + $rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass(role))
+								]);
+						}
+					} else {
+						return _List_Nil;
+					}
+				}(),
+				options.attributes)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$button = F2(
+	function (options, children) {
+		return A2(
+			$elm$html$Html$button,
+			$rundis$elm_bootstrap$Bootstrap$Internal$Button$buttonAttributes(options),
+			children);
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$Addon = function (a) {
+	return {$: 'Addon', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$button = F2(
+	function (options, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$Addon(
+			A2($rundis$elm_bootstrap$Bootstrap$Button$button, options, children));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Table$CellAttr = function (a) {
+	return {$: 'CellAttr', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$cellAttr = function (attr_) {
+	return $rundis$elm_bootstrap$Bootstrap$Table$CellAttr(attr_);
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Column = function (a) {
+	return {$: 'Column', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$col = F2(
+	function (options, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Grid$Column(
+			{children: children, options: options});
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$Config = function (a) {
+	return {$: 'Config', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$config = function (input_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$Config(
+		{attributes: _List_Nil, input: input_, predecessors: _List_Nil, size: $elm$core$Maybe$Nothing, successors: _List_Nil});
+};
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $rundis$elm_bootstrap$Bootstrap$Grid$container = F2(
+	function (attributes, children) {
+		return A2(
+			$elm$html$Html$div,
+			_Utils_ap(
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('container')
+					]),
+				attributes),
+			children);
+	});
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring = function (a) {
+	return {$: 'Coloring', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Danger = {$: 'Danger'};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
+	return {$: 'Roled', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$danger = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Danger));
+var $elm$html$Html$form = _VirtualDom_node('form');
+var $rundis$elm_bootstrap$Bootstrap$Form$form = F2(
+	function (attributes, children) {
+		return A2($elm$html$Html$form, attributes, children);
+	});
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col3 = {$: 'Col3'};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth = function (a) {
+	return {$: 'ColWidth', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width = F2(
+	function (screenSize, columnCount) {
+		return {columnCount: columnCount, screenSize: screenSize};
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$width = F2(
+	function (size, count) {
+		return $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth(
+			A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, size, count));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Col$lg3 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$LG, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col3);
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col6 = {$: 'Col6'};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Col$lg6 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$LG, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col6);
+var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
+	return {$: 'MayPreventDefault', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$preventDefaultOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayPreventDefault(decoder));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Button$onClick = function (message) {
+	return $rundis$elm_bootstrap$Bootstrap$Button$attrs(
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$Events$preventDefaultOn,
+				'click',
+				$elm$json$Json$Decode$succeed(
+					_Utils_Tuple2(message, true)))
+			]));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$OnInput = function (a) {
+	return {$: 'OnInput', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$onInput = function (toMsg) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$OnInput(toMsg);
+};
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder = function (a) {
+	return {$: 'Placeholder', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder = function (value_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$Placeholder(value_);
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary = {$: 'Primary'};
+var $rundis$elm_bootstrap$Bootstrap$Button$primary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Primary));
+var $author$project$Main$DeleteTodoItem = function (a) {
+	return {$: 'DeleteTodoItem', a: a};
+};
+var $author$project$Main$SelectChange = F2(
+	function (a, b) {
+		return {$: 'SelectChange', a: a, b: b};
+	});
+var $rundis$elm_bootstrap$Bootstrap$Spinner$Color = function (a) {
+	return {$: 'Color', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$color = function (color_) {
+	return $rundis$elm_bootstrap$Bootstrap$Spinner$Color(color_);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$Custom = {$: 'Custom'};
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$Select = function (a) {
+	return {$: 'Select', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$create = F2(
+	function (options, items) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Select$Select(
+			{items: items, options: options});
+	});
+var $elm$html$Html$select = _VirtualDom_node('select');
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: $elm$core$Maybe$Just(size_)
+					});
+			case 'Id':
+				var id_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						id: $elm$core$Maybe$Just(id_)
+					});
+			case 'Custom':
+				return _Utils_update(
+					options,
+					{custom: true});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			case 'OnChange':
+				var onChange_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						onChange: $elm$core$Maybe$Just(onChange_)
+					});
+			case 'Validation':
+				var validation_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						validation: $elm$core$Maybe$Just(validation_)
+					});
+			default:
+				var attrs_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs_)
+					});
+		}
+	});
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var $elm$html$Html$Events$on = F2(
 	function (event, decoder) {
 		return A2(
@@ -6073,12 +6413,2024 @@ var $elm$html$Html$Events$on = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$Normal(decoder));
 	});
-var $elm$html$Html$Events$onClick = function (msg) {
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$customEventOnChange = function (tagger) {
 	return A2(
 		$elm$html$Html$Events$on,
-		'click',
-		$elm$json$Json$Decode$succeed(msg));
+		'change',
+		A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue));
 };
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$defaultOptions = {attributes: _List_Nil, custom: false, disabled: false, id: $elm$core$Maybe$Nothing, onChange: $elm$core$Maybe$Nothing, size: $elm$core$Maybe$Nothing, validation: $elm$core$Maybe$Nothing};
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (_v0.$ === 'Just') {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$sizeAttribute = F2(
+	function (isCustom, size_) {
+		var prefix = isCustom ? 'custom-select-' : 'form-control-';
+		return A2(
+			$elm$core$Maybe$map,
+			function (s) {
+				return $elm$html$Html$Attributes$class(
+					_Utils_ap(prefix, s));
+			},
+			$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size_));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString = function (validation) {
+	if (validation.$ === 'Success') {
+		return 'is-valid';
+	} else {
+		return 'is-invalid';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$validationAttribute = function (validation_) {
+	return $elm$html$Html$Attributes$class(
+		$rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString(validation_));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$toAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Form$Select$applyModifier, $rundis$elm_bootstrap$Bootstrap$Form$Select$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('form-control', !options.custom),
+						_Utils_Tuple2('custom-select', options.custom)
+					])),
+				$elm$html$Html$Attributes$disabled(options.disabled)
+			]),
+		_Utils_ap(
+			A2(
+				$elm$core$List$filterMap,
+				$elm$core$Basics$identity,
+				_List_fromArray(
+					[
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$id, options.id),
+						A2(
+						$elm$core$Maybe$andThen,
+						$rundis$elm_bootstrap$Bootstrap$Form$Select$sizeAttribute(options.custom),
+						options.size),
+						A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Form$Select$customEventOnChange, options.onChange),
+						A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Form$Select$validationAttribute, options.validation)
+					])),
+			options.attributes));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$view = function (_v0) {
+	var options = _v0.a.options;
+	var items = _v0.a.items;
+	return A2(
+		$elm$html$Html$select,
+		$rundis$elm_bootstrap$Bootstrap$Form$Select$toAttributes(options),
+		A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var e = _v1.a;
+				return e;
+			},
+			items));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$custom = function (options) {
+	return A2(
+		$elm$core$Basics$composeL,
+		$rundis$elm_bootstrap$Bootstrap$Form$Select$view,
+		$rundis$elm_bootstrap$Bootstrap$Form$Select$create(
+			A2($elm$core$List$cons, $rundis$elm_bootstrap$Bootstrap$Form$Select$Custom, options)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$Growing = {$: 'Growing'};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$Kind = function (a) {
+	return {$: 'Kind', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$grow = $rundis$elm_bootstrap$Bootstrap$Spinner$Kind($rundis$elm_bootstrap$Bootstrap$Spinner$Growing);
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$Id = function (a) {
+	return {$: 'Id', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$id = function (id_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Select$Id(id_);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$Item = function (a) {
+	return {$: 'Item', a: a};
+};
+var $elm$html$Html$option = _VirtualDom_node('option');
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$item = F2(
+	function (attributes, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Select$Item(
+			A2($elm$html$Html$option, attributes, children));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$OnChange = function (a) {
+	return {$: 'OnChange', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$onChange = function (toMsg) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Select$OnChange(toMsg);
+};
+var $rundis$elm_bootstrap$Bootstrap$Badge$Roled = function (a) {
+	return {$: 'Roled', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Badge$Secondary = {$: 'Secondary'};
+var $rundis$elm_bootstrap$Bootstrap$Badge$roleOption = function (role) {
+	switch (role.$) {
+		case 'Primary':
+			return 'badge-primary';
+		case 'Secondary':
+			return 'badge-secondary';
+		case 'Success':
+			return 'badge-success';
+		case 'Info':
+			return 'badge-info';
+		case 'Warning':
+			return 'badge-warning';
+		case 'Danger':
+			return 'badge-danger';
+		case 'Light':
+			return 'badge-light';
+		default:
+			return 'badge-dark';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgeClass = function (option) {
+	return $elm$html$Html$Attributes$class(
+		function () {
+			if (option.$ === 'Pill') {
+				return 'badge-pill';
+			} else {
+				var role = option.a;
+				return $rundis$elm_bootstrap$Bootstrap$Badge$roleOption(role);
+			}
+		}());
+};
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgeAttributes = function (options) {
+	return A2(
+		$elm$core$List$cons,
+		$elm$html$Html$Attributes$class('badge'),
+		A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Badge$badgeClass, options));
+};
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal = F3(
+	function (options, attributes, children) {
+		return A2(
+			$elm$html$Html$span,
+			_Utils_ap(
+				$rundis$elm_bootstrap$Bootstrap$Badge$badgeAttributes(options),
+				attributes),
+			children);
+	});
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgeSecondary = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
+	_List_fromArray(
+		[
+			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Secondary)
+		]));
+var $rundis$elm_bootstrap$Bootstrap$Badge$Success = {$: 'Success'};
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
+	_List_fromArray(
+		[
+			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Success)
+		]));
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Main$renderStatusBadge = function (todoItem) {
+	var _v0 = todoItem.state;
+	switch (_v0.$) {
+		case 'Todo':
+			return A2(
+				$rundis$elm_bootstrap$Bootstrap$Badge$badgeSecondary,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('TODO')
+					]));
+		case 'Doing':
+			return A2(
+				$rundis$elm_bootstrap$Bootstrap$Badge$badgeSecondary,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('DOING')
+					]));
+		default:
+			return A2(
+				$rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('DONE')
+					]));
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Text$Role = function (a) {
+	return {$: 'Role', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Role$Secondary = {$: 'Secondary'};
+var $rundis$elm_bootstrap$Bootstrap$Text$secondary = $rundis$elm_bootstrap$Bootstrap$Internal$Text$Role($rundis$elm_bootstrap$Bootstrap$Internal$Role$Secondary);
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$SM = {$: 'SM'};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Size = function (a) {
+	return {$: 'Size', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$small = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Size($rundis$elm_bootstrap$Bootstrap$General$Internal$SM);
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$Size = function (a) {
+	return {$: 'Size', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$small = $rundis$elm_bootstrap$Bootstrap$Form$Select$Size($rundis$elm_bootstrap$Bootstrap$General$Internal$SM);
+var $rundis$elm_bootstrap$Bootstrap$Spinner$Size = function (a) {
+	return {$: 'Size', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$Small = {$: 'Small'};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$small = $rundis$elm_bootstrap$Bootstrap$Spinner$Size($rundis$elm_bootstrap$Bootstrap$Spinner$Small);
+var $rundis$elm_bootstrap$Bootstrap$Spinner$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Kind':
+				var spinnerKind = modifier.a;
+				return _Utils_update(
+					options,
+					{kind: spinnerKind});
+			case 'Size':
+				var spinnerSize = modifier.a;
+				return _Utils_update(
+					options,
+					{size: spinnerSize});
+			case 'Color':
+				var color_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						color: $elm$core$Maybe$Just(color_)
+					});
+			default:
+				var list = modifier.a;
+				return _Utils_update(
+					options,
+					{attributes: list});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Spinner$Border = {$: 'Border'};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$Normal = {$: 'Normal'};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$defaultOptions = {attributes: _List_Nil, color: $elm$core$Maybe$Nothing, kind: $rundis$elm_bootstrap$Bootstrap$Spinner$Border, size: $rundis$elm_bootstrap$Bootstrap$Spinner$Normal};
+var $elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $rundis$elm_bootstrap$Bootstrap$Spinner$kindClassName = function (kind_) {
+	if (kind_.$ === 'Border') {
+		return 'spinner-border';
+	} else {
+		return 'spinner-grow';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$kindClass = A2($elm$core$Basics$composeL, $elm$html$Html$Attributes$class, $rundis$elm_bootstrap$Bootstrap$Spinner$kindClassName);
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $rundis$elm_bootstrap$Bootstrap$Spinner$sizeAttributes = F2(
+	function (size_, kind_) {
+		switch (size_.$) {
+			case 'Normal':
+				return $elm$core$Maybe$Nothing;
+			case 'Small':
+				return $elm$core$Maybe$Just(
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class(
+							$rundis$elm_bootstrap$Bootstrap$Spinner$kindClassName(kind_) + '-sm')
+						]));
+			default:
+				return $elm$core$Maybe$Just(
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'width', '3rem'),
+							A2($elm$html$Html$Attributes$style, 'height', '3rem')
+						]));
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Internal$Role$toClass = F2(
+	function (prefix, role) {
+		return $elm$html$Html$Attributes$class(
+			prefix + ('-' + function () {
+				switch (role.$) {
+					case 'Primary':
+						return 'primary';
+					case 'Secondary':
+						return 'secondary';
+					case 'Success':
+						return 'success';
+					case 'Info':
+						return 'info';
+					case 'Warning':
+						return 'warning';
+					case 'Danger':
+						return 'danger';
+					case 'Light':
+						return 'light';
+					default:
+						return 'dark';
+				}
+			}()));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Internal$Text$textColorClass = function (color) {
+	if (color.$ === 'White') {
+		return $elm$html$Html$Attributes$class('text-white');
+	} else {
+		var role = color.a;
+		return A2($rundis$elm_bootstrap$Bootstrap$Internal$Role$toClass, 'text', role);
+	}
+};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Spinner$toAttributes = function (options) {
+	return _Utils_ap(
+		A2(
+			$elm$core$List$filterMap,
+			$elm$core$Basics$identity,
+			_List_fromArray(
+				[
+					$elm$core$Maybe$Just(
+					$rundis$elm_bootstrap$Bootstrap$Spinner$kindClass(options.kind)),
+					A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Internal$Text$textColorClass, options.color)
+				])),
+		_Utils_ap(
+			A2(
+				$elm$core$Maybe$withDefault,
+				_List_Nil,
+				A2($rundis$elm_bootstrap$Bootstrap$Spinner$sizeAttributes, options.size, options.kind)),
+			_Utils_ap(
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$attribute, 'role', 'status')
+					]),
+				options.attributes)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Spinner$spinner = F2(
+	function (options, children) {
+		var opts = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Spinner$applyModifier, $rundis$elm_bootstrap$Bootstrap$Spinner$defaultOptions, options);
+		return A2(
+			$elm$html$Html$div,
+			$rundis$elm_bootstrap$Bootstrap$Spinner$toAttributes(opts),
+			children);
+	});
+var $rundis$elm_bootstrap$Bootstrap$Spinner$srMessage = function (msg) {
+	return A2(
+		$elm$html$Html$span,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('sr-only')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text(msg)
+			]));
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$Td = function (a) {
+	return {$: 'Td', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$td = F2(
+	function (options, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Table$Td(
+			{children: children, options: options});
+	});
+var $rundis$elm_bootstrap$Bootstrap$Table$Row = function (a) {
+	return {$: 'Row', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$tr = F2(
+	function (options, cells) {
+		return $rundis$elm_bootstrap$Bootstrap$Table$Row(
+			{cells: cells, options: options});
+	});
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$renderTodoItem = function (todoItem) {
+	return A2(
+		$rundis$elm_bootstrap$Bootstrap$Table$tr,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Table$td,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$author$project$Main$renderStatusBadge(todoItem)
+					])),
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Table$td,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$rundis$elm_bootstrap$Bootstrap$Form$Select$custom,
+						_List_fromArray(
+							[
+								$rundis$elm_bootstrap$Bootstrap$Form$Select$id('valami'),
+								$rundis$elm_bootstrap$Bootstrap$Form$Select$onChange(
+								$author$project$Main$SelectChange(todoItem)),
+								$rundis$elm_bootstrap$Bootstrap$Form$Select$small
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('todo')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('TODO')
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('doing')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('DOING')
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('done')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('DONE')
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('blocked')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('BLOCKED')
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$value('cancelld')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('CANCELLED')
+									]))
+							]))
+					])),
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Table$td,
+				_List_Nil,
+				_List_fromArray(
+					[
+						_Utils_eq(todoItem.state, $author$project$TodoState$Done) ? A2(
+						$elm$html$Html$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Spinner$spinner,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Spinner$small,
+										$rundis$elm_bootstrap$Bootstrap$Spinner$color($rundis$elm_bootstrap$Bootstrap$Text$secondary)
+									]),
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Spinner$srMessage('Doing')
+									])),
+								$elm$html$Html$text(' ' + todoItem.title)
+							])) : A2(
+						$elm$html$Html$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Spinner$spinner,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Spinner$grow,
+										$rundis$elm_bootstrap$Bootstrap$Spinner$small,
+										$rundis$elm_bootstrap$Bootstrap$Spinner$color($rundis$elm_bootstrap$Bootstrap$Text$secondary)
+									]),
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Spinner$srMessage('Doing')
+									])),
+								$elm$html$Html$text(' ' + todoItem.title)
+							]))
+					])),
+				A2(
+				$rundis$elm_bootstrap$Bootstrap$Table$td,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$rundis$elm_bootstrap$Bootstrap$Button$button,
+						_List_fromArray(
+							[
+								$rundis$elm_bootstrap$Bootstrap$Button$danger,
+								$rundis$elm_bootstrap$Bootstrap$Button$onClick(
+								$author$project$Main$DeleteTodoItem(todoItem)),
+								$rundis$elm_bootstrap$Bootstrap$Button$small
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Delete')
+							]))
+					]))
+			]));
+};
+var $author$project$Main$renderModel = function (model) {
+	return A2($elm$core$List$map, $author$project$Main$renderTodoItem, model.persistentCore.todoItems);
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col = {$: 'Col'};
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$XS = {$: 'XS'};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColAlign = F2(
+	function (align_, options) {
+		var _v0 = align_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						alignXs: $elm$core$Maybe$Just(align_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						alignSm: $elm$core$Maybe$Just(align_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						alignMd: $elm$core$Maybe$Just(align_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						alignLg: $elm$core$Maybe$Just(align_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						alignXl: $elm$core$Maybe$Just(align_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOffset = F2(
+	function (offset_, options) {
+		var _v0 = offset_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						offsetXs: $elm$core$Maybe$Just(offset_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						offsetSm: $elm$core$Maybe$Just(offset_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						offsetMd: $elm$core$Maybe$Just(offset_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						offsetLg: $elm$core$Maybe$Just(offset_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						offsetXl: $elm$core$Maybe$Just(offset_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOrder = F2(
+	function (order_, options) {
+		var _v0 = order_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						orderXs: $elm$core$Maybe$Just(order_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						orderSm: $elm$core$Maybe$Just(order_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						orderMd: $elm$core$Maybe$Just(order_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						orderLg: $elm$core$Maybe$Just(order_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						orderXl: $elm$core$Maybe$Just(order_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPull = F2(
+	function (pull_, options) {
+		var _v0 = pull_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						pullXs: $elm$core$Maybe$Just(pull_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						pullSm: $elm$core$Maybe$Just(pull_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						pullMd: $elm$core$Maybe$Just(pull_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						pullLg: $elm$core$Maybe$Just(pull_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						pullXl: $elm$core$Maybe$Just(pull_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPush = F2(
+	function (push_, options) {
+		var _v0 = push_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						pushXs: $elm$core$Maybe$Just(push_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						pushSm: $elm$core$Maybe$Just(push_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						pushMd: $elm$core$Maybe$Just(push_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						pushLg: $elm$core$Maybe$Just(push_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						pushXl: $elm$core$Maybe$Just(push_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColWidth = F2(
+	function (width_, options) {
+		var _v0 = width_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						widthXs: $elm$core$Maybe$Just(width_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						widthSm: $elm$core$Maybe$Just(width_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						widthMd: $elm$core$Maybe$Just(width_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						widthLg: $elm$core$Maybe$Just(width_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						widthXl: $elm$core$Maybe$Just(width_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOption = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'ColAttrs':
+				var attrs = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs)
+					});
+			case 'ColWidth':
+				var width_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColWidth, width_, options);
+			case 'ColOffset':
+				var offset_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOffset, offset_, options);
+			case 'ColPull':
+				var pull_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPull, pull_, options);
+			case 'ColPush':
+				var push_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColPush, push_, options);
+			case 'ColOrder':
+				var order_ = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOrder, order_, options);
+			case 'ColAlign':
+				var align = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColAlign, align, options);
+			default:
+				var align = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						textAlign: $elm$core$Maybe$Just(align)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$columnCountOption = function (size) {
+	switch (size.$) {
+		case 'Col':
+			return $elm$core$Maybe$Nothing;
+		case 'Col1':
+			return $elm$core$Maybe$Just('1');
+		case 'Col2':
+			return $elm$core$Maybe$Just('2');
+		case 'Col3':
+			return $elm$core$Maybe$Just('3');
+		case 'Col4':
+			return $elm$core$Maybe$Just('4');
+		case 'Col5':
+			return $elm$core$Maybe$Just('5');
+		case 'Col6':
+			return $elm$core$Maybe$Just('6');
+		case 'Col7':
+			return $elm$core$Maybe$Just('7');
+		case 'Col8':
+			return $elm$core$Maybe$Just('8');
+		case 'Col9':
+			return $elm$core$Maybe$Just('9');
+		case 'Col10':
+			return $elm$core$Maybe$Just('10');
+		case 'Col11':
+			return $elm$core$Maybe$Just('11');
+		case 'Col12':
+			return $elm$core$Maybe$Just('12');
+		default:
+			return $elm$core$Maybe$Just('auto');
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthClass = function (_v0) {
+	var screenSize = _v0.screenSize;
+	var columnCount = _v0.columnCount;
+	return $elm$html$Html$Attributes$class(
+		'col' + (A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A2(
+				$elm$core$Maybe$map,
+				function (v) {
+					return '-' + v;
+				},
+				$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize))) + A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A2(
+				$elm$core$Maybe$map,
+				function (v) {
+					return '-' + v;
+				},
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$columnCountOption(columnCount)))));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthsToAttributes = function (widths) {
+	var width_ = function (w) {
+		return A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthClass, w);
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, width_, widths));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultColOptions = {alignLg: $elm$core$Maybe$Nothing, alignMd: $elm$core$Maybe$Nothing, alignSm: $elm$core$Maybe$Nothing, alignXl: $elm$core$Maybe$Nothing, alignXs: $elm$core$Maybe$Nothing, attributes: _List_Nil, offsetLg: $elm$core$Maybe$Nothing, offsetMd: $elm$core$Maybe$Nothing, offsetSm: $elm$core$Maybe$Nothing, offsetXl: $elm$core$Maybe$Nothing, offsetXs: $elm$core$Maybe$Nothing, orderLg: $elm$core$Maybe$Nothing, orderMd: $elm$core$Maybe$Nothing, orderSm: $elm$core$Maybe$Nothing, orderXl: $elm$core$Maybe$Nothing, orderXs: $elm$core$Maybe$Nothing, pullLg: $elm$core$Maybe$Nothing, pullMd: $elm$core$Maybe$Nothing, pullSm: $elm$core$Maybe$Nothing, pullXl: $elm$core$Maybe$Nothing, pullXs: $elm$core$Maybe$Nothing, pushLg: $elm$core$Maybe$Nothing, pushMd: $elm$core$Maybe$Nothing, pushSm: $elm$core$Maybe$Nothing, pushXl: $elm$core$Maybe$Nothing, pushXs: $elm$core$Maybe$Nothing, textAlign: $elm$core$Maybe$Nothing, widthLg: $elm$core$Maybe$Nothing, widthMd: $elm$core$Maybe$Nothing, widthSm: $elm$core$Maybe$Nothing, widthXl: $elm$core$Maybe$Nothing, widthXs: $elm$core$Maybe$Nothing};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetCountOption = function (size) {
+	switch (size.$) {
+		case 'Offset0':
+			return '0';
+		case 'Offset1':
+			return '1';
+		case 'Offset2':
+			return '2';
+		case 'Offset3':
+			return '3';
+		case 'Offset4':
+			return '4';
+		case 'Offset5':
+			return '5';
+		case 'Offset6':
+			return '6';
+		case 'Offset7':
+			return '7';
+		case 'Offset8':
+			return '8';
+		case 'Offset9':
+			return '9';
+		case 'Offset10':
+			return '10';
+		default:
+			return '11';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString = function (screenSize) {
+	var _v0 = $rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize);
+	if (_v0.$ === 'Just') {
+		var s = _v0.a;
+		return '-' + (s + '-');
+	} else {
+		return '-';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetClass = function (_v0) {
+	var screenSize = _v0.screenSize;
+	var offsetCount = _v0.offsetCount;
+	return $elm$html$Html$Attributes$class(
+		'offset' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetCountOption(offsetCount)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetsToAttributes = function (offsets) {
+	var offset_ = function (m) {
+		return A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetClass, m);
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, offset_, offsets));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderColOption = function (size) {
+	switch (size.$) {
+		case 'OrderFirst':
+			return 'first';
+		case 'Order1':
+			return '1';
+		case 'Order2':
+			return '2';
+		case 'Order3':
+			return '3';
+		case 'Order4':
+			return '4';
+		case 'Order5':
+			return '5';
+		case 'Order6':
+			return '6';
+		case 'Order7':
+			return '7';
+		case 'Order8':
+			return '8';
+		case 'Order9':
+			return '9';
+		case 'Order10':
+			return '10';
+		case 'Order11':
+			return '11';
+		case 'Order12':
+			return '12';
+		default:
+			return 'last';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderToAttributes = function (orders) {
+	var order_ = function (m) {
+		if (m.$ === 'Just') {
+			var screenSize = m.a.screenSize;
+			var moveCount = m.a.moveCount;
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class(
+					'order' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderColOption(moveCount))));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, order_, orders));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$moveCountOption = function (size) {
+	switch (size.$) {
+		case 'Move0':
+			return '0';
+		case 'Move1':
+			return '1';
+		case 'Move2':
+			return '2';
+		case 'Move3':
+			return '3';
+		case 'Move4':
+			return '4';
+		case 'Move5':
+			return '5';
+		case 'Move6':
+			return '6';
+		case 'Move7':
+			return '7';
+		case 'Move8':
+			return '8';
+		case 'Move9':
+			return '9';
+		case 'Move10':
+			return '10';
+		case 'Move11':
+			return '11';
+		default:
+			return '12';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$pullsToAttributes = function (pulls) {
+	var pull_ = function (m) {
+		if (m.$ === 'Just') {
+			var screenSize = m.a.screenSize;
+			var moveCount = m.a.moveCount;
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class(
+					'pull' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$moveCountOption(moveCount))));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, pull_, pulls));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$pushesToAttributes = function (pushes) {
+	var push_ = function (m) {
+		if (m.$ === 'Just') {
+			var screenSize = m.a.screenSize;
+			var moveCount = m.a.moveCount;
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class(
+					'push' + ($rundis$elm_bootstrap$Bootstrap$Grid$Internal$screenSizeToPartialString(screenSize) + $rundis$elm_bootstrap$Bootstrap$Grid$Internal$moveCountOption(moveCount))));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, push_, pushes));
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignDirOption = function (dir) {
+	switch (dir.$) {
+		case 'Center':
+			return 'center';
+		case 'Left':
+			return 'left';
+		default:
+			return 'right';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignClass = function (_v0) {
+	var dir = _v0.dir;
+	var size = _v0.size;
+	return $elm$html$Html$Attributes$class(
+		'text' + (A2(
+			$elm$core$Maybe$withDefault,
+			'-',
+			A2(
+				$elm$core$Maybe$map,
+				function (s) {
+					return '-' + (s + '-');
+				},
+				$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size))) + $rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignDirOption(dir)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$verticalAlignOption = function (align) {
+	switch (align.$) {
+		case 'Top':
+			return 'start';
+		case 'Middle':
+			return 'center';
+		default:
+			return 'end';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignClass = F2(
+	function (prefix, _v0) {
+		var align = _v0.align;
+		var screenSize = _v0.screenSize;
+		return $elm$html$Html$Attributes$class(
+			_Utils_ap(
+				prefix,
+				_Utils_ap(
+					A2(
+						$elm$core$Maybe$withDefault,
+						'',
+						A2(
+							$elm$core$Maybe$map,
+							function (v) {
+								return v + '-';
+							},
+							$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize))),
+					$rundis$elm_bootstrap$Bootstrap$Grid$Internal$verticalAlignOption(align))));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignsToAttributes = F2(
+	function (prefix, aligns) {
+		var align = function (a) {
+			return A2(
+				$elm$core$Maybe$map,
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignClass(prefix),
+				a);
+		};
+		return A2(
+			$elm$core$List$filterMap,
+			$elm$core$Basics$identity,
+			A2($elm$core$List$map, align, aligns));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$colAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyColOption, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultColOptions, modifiers);
+	var shouldAddDefaultXs = !$elm$core$List$length(
+		A2(
+			$elm$core$List$filterMap,
+			$elm$core$Basics$identity,
+			_List_fromArray(
+				[options.widthXs, options.widthSm, options.widthMd, options.widthLg, options.widthXl])));
+	return _Utils_ap(
+		$rundis$elm_bootstrap$Bootstrap$Grid$Internal$colWidthsToAttributes(
+			_List_fromArray(
+				[
+					shouldAddDefaultXs ? $elm$core$Maybe$Just(
+					A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, $rundis$elm_bootstrap$Bootstrap$General$Internal$XS, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col)) : options.widthXs,
+					options.widthSm,
+					options.widthMd,
+					options.widthLg,
+					options.widthXl
+				])),
+		_Utils_ap(
+			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$offsetsToAttributes(
+				_List_fromArray(
+					[options.offsetXs, options.offsetSm, options.offsetMd, options.offsetLg, options.offsetXl])),
+			_Utils_ap(
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$pullsToAttributes(
+					_List_fromArray(
+						[options.pullXs, options.pullSm, options.pullMd, options.pullLg, options.pullXl])),
+				_Utils_ap(
+					$rundis$elm_bootstrap$Bootstrap$Grid$Internal$pushesToAttributes(
+						_List_fromArray(
+							[options.pushXs, options.pushSm, options.pushMd, options.pushLg, options.pushXl])),
+					_Utils_ap(
+						$rundis$elm_bootstrap$Bootstrap$Grid$Internal$orderToAttributes(
+							_List_fromArray(
+								[options.orderXs, options.orderSm, options.orderMd, options.orderLg, options.orderXl])),
+						_Utils_ap(
+							A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignsToAttributes,
+								'align-self-',
+								_List_fromArray(
+									[options.alignXs, options.alignSm, options.alignMd, options.alignLg, options.alignXl])),
+							_Utils_ap(
+								function () {
+									var _v0 = options.textAlign;
+									if (_v0.$ === 'Just') {
+										var a = _v0.a;
+										return _List_fromArray(
+											[
+												$rundis$elm_bootstrap$Bootstrap$Internal$Text$textAlignClass(a)
+											]);
+									} else {
+										return _List_Nil;
+									}
+								}(),
+								options.attributes)))))));
+};
+var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
+	return _VirtualDom_keyedNode(
+		_VirtualDom_noScript(tag));
+};
+var $elm$html$Html$Keyed$node = $elm$virtual_dom$VirtualDom$keyedNode;
+var $rundis$elm_bootstrap$Bootstrap$Grid$renderCol = function (column) {
+	switch (column.$) {
+		case 'Column':
+			var options = column.a.options;
+			var children = column.a.children;
+			return A2(
+				$elm$html$Html$div,
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$colAttributes(options),
+				children);
+		case 'ColBreak':
+			var e = column.a;
+			return e;
+		default:
+			var options = column.a.options;
+			var children = column.a.children;
+			return A3(
+				$elm$html$Html$Keyed$node,
+				'div',
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$colAttributes(options),
+				children);
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowHAlign = F2(
+	function (align, options) {
+		var _v0 = align.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						hAlignXs: $elm$core$Maybe$Just(align)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						hAlignSm: $elm$core$Maybe$Just(align)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						hAlignMd: $elm$core$Maybe$Just(align)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						hAlignLg: $elm$core$Maybe$Just(align)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						hAlignXl: $elm$core$Maybe$Just(align)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowVAlign = F2(
+	function (align_, options) {
+		var _v0 = align_.screenSize;
+		switch (_v0.$) {
+			case 'XS':
+				return _Utils_update(
+					options,
+					{
+						vAlignXs: $elm$core$Maybe$Just(align_)
+					});
+			case 'SM':
+				return _Utils_update(
+					options,
+					{
+						vAlignSm: $elm$core$Maybe$Just(align_)
+					});
+			case 'MD':
+				return _Utils_update(
+					options,
+					{
+						vAlignMd: $elm$core$Maybe$Just(align_)
+					});
+			case 'LG':
+				return _Utils_update(
+					options,
+					{
+						vAlignLg: $elm$core$Maybe$Just(align_)
+					});
+			default:
+				return _Utils_update(
+					options,
+					{
+						vAlignXl: $elm$core$Maybe$Just(align_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowOption = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'RowAttrs':
+				var attrs = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs)
+					});
+			case 'RowVAlign':
+				var align = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowVAlign, align, options);
+			default:
+				var align = modifier.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowHAlign, align, options);
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultRowOptions = {attributes: _List_Nil, hAlignLg: $elm$core$Maybe$Nothing, hAlignMd: $elm$core$Maybe$Nothing, hAlignSm: $elm$core$Maybe$Nothing, hAlignXl: $elm$core$Maybe$Nothing, hAlignXs: $elm$core$Maybe$Nothing, vAlignLg: $elm$core$Maybe$Nothing, vAlignMd: $elm$core$Maybe$Nothing, vAlignSm: $elm$core$Maybe$Nothing, vAlignXl: $elm$core$Maybe$Nothing, vAlignXs: $elm$core$Maybe$Nothing};
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$horizontalAlignOption = function (align) {
+	switch (align.$) {
+		case 'Left':
+			return 'start';
+		case 'Center':
+			return 'center';
+		case 'Right':
+			return 'end';
+		case 'Around':
+			return 'around';
+		default:
+			return 'between';
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$General$Internal$hAlignClass = function (_v0) {
+	var align = _v0.align;
+	var screenSize = _v0.screenSize;
+	return $elm$html$Html$Attributes$class(
+		'justify-content-' + (A2(
+			$elm$core$Maybe$withDefault,
+			'',
+			A2(
+				$elm$core$Maybe$map,
+				function (v) {
+					return v + '-';
+				},
+				$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(screenSize))) + $rundis$elm_bootstrap$Bootstrap$General$Internal$horizontalAlignOption(align)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$hAlignsToAttributes = function (aligns) {
+	var align = function (a) {
+		return A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$General$Internal$hAlignClass, a);
+	};
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$Basics$identity,
+		A2($elm$core$List$map, align, aligns));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$applyRowOption, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$defaultRowOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('row')
+			]),
+		_Utils_ap(
+			A2(
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$vAlignsToAttributes,
+				'align-items-',
+				_List_fromArray(
+					[options.vAlignXs, options.vAlignSm, options.vAlignMd, options.vAlignLg, options.vAlignXl])),
+			_Utils_ap(
+				$rundis$elm_bootstrap$Bootstrap$Grid$Internal$hAlignsToAttributes(
+					_List_fromArray(
+						[options.hAlignXs, options.hAlignSm, options.hAlignMd, options.hAlignLg, options.hAlignXl])),
+				options.attributes)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
+	function (options, cols) {
+		return A2(
+			$elm$html$Html$div,
+			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
+			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
+	return {$: 'THead', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$thead = F2(
+	function (options, rows) {
+		return $rundis$elm_bootstrap$Bootstrap$Table$THead(
+			{options: options, rows: rows});
+	});
+var $rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
+	return A2(
+		$rundis$elm_bootstrap$Bootstrap$Table$thead,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2($rundis$elm_bootstrap$Bootstrap$Table$tr, _List_Nil, cells)
+			]));
+};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Col$sm3 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$SM, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col3);
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$small = function (_v0) {
+	var conf = _v0.a;
+	return $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$Config(
+		_Utils_update(
+			conf,
+			{
+				size: $elm$core$Maybe$Just($rundis$elm_bootstrap$Bootstrap$General$Internal$SM)
+			}));
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$Small = {$: 'Small'};
+var $rundis$elm_bootstrap$Bootstrap$Table$small = $rundis$elm_bootstrap$Bootstrap$Table$Small;
+var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
+var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $elm$virtual_dom$VirtualDom$node = function (tag) {
+	return _VirtualDom_node(
+		_VirtualDom_noScript(tag));
+};
+var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
+var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
+var $rundis$elm_bootstrap$Bootstrap$CDN$stylesheet = A3(
+	$elm$html$Html$node,
+	'link',
+	_List_fromArray(
+		[
+			$elm$html$Html$Attributes$rel('stylesheet'),
+			$elm$html$Html$Attributes$href('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css')
+		]),
+	_List_Nil);
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$successors = F2(
+	function (addons, _v0) {
+		var conf = _v0.a;
+		return $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$Config(
+			_Utils_update(
+				conf,
+				{successors: addons}));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Table$Inversed = {$: 'Inversed'};
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Table$isResponsive = function (option) {
+	if (option.$ === 'Responsive') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$KeyedTBody = function (a) {
+	return {$: 'KeyedTBody', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$TBody = function (a) {
+	return {$: 'TBody', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$InversedRow = function (a) {
+	return {$: 'InversedRow', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$KeyedRow = function (a) {
+	return {$: 'KeyedRow', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$InversedCell = function (a) {
+	return {$: 'InversedCell', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$Th = function (a) {
+	return {$: 'Th', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$mapInversedCell = function (cell) {
+	var inverseOptions = function (options) {
+		return A2(
+			$elm$core$List$map,
+			function (opt) {
+				if (opt.$ === 'RoledCell') {
+					var role = opt.a;
+					return $rundis$elm_bootstrap$Bootstrap$Table$InversedCell(role);
+				} else {
+					return opt;
+				}
+			},
+			options);
+	};
+	if (cell.$ === 'Th') {
+		var cellCfg = cell.a;
+		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
+			_Utils_update(
+				cellCfg,
+				{
+					options: inverseOptions(cellCfg.options)
+				}));
+	} else {
+		var cellCfg = cell.a;
+		return $rundis$elm_bootstrap$Bootstrap$Table$Td(
+			_Utils_update(
+				cellCfg,
+				{
+					options: inverseOptions(cellCfg.options)
+				}));
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$mapInversedRow = function (row) {
+	var inversedOptions = function (options) {
+		return A2(
+			$elm$core$List$map,
+			function (opt) {
+				if (opt.$ === 'RoledRow') {
+					var role = opt.a;
+					return $rundis$elm_bootstrap$Bootstrap$Table$InversedRow(role);
+				} else {
+					return opt;
+				}
+			},
+			options);
+	};
+	if (row.$ === 'Row') {
+		var options = row.a.options;
+		var cells = row.a.cells;
+		return $rundis$elm_bootstrap$Bootstrap$Table$Row(
+			{
+				cells: A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$mapInversedCell, cells),
+				options: inversedOptions(options)
+			});
+	} else {
+		var options = row.a.options;
+		var cells = row.a.cells;
+		return $rundis$elm_bootstrap$Bootstrap$Table$KeyedRow(
+			{
+				cells: A2(
+					$elm$core$List$map,
+					function (_v1) {
+						var key = _v1.a;
+						var cell = _v1.b;
+						return _Utils_Tuple2(
+							key,
+							$rundis$elm_bootstrap$Bootstrap$Table$mapInversedCell(cell));
+					},
+					cells),
+				options: inversedOptions(options)
+			});
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$maybeMapInversedTBody = F2(
+	function (isTableInversed, tbody_) {
+		var _v0 = _Utils_Tuple2(isTableInversed, tbody_);
+		if (!_v0.a) {
+			return tbody_;
+		} else {
+			if (_v0.b.$ === 'TBody') {
+				var body = _v0.b.a;
+				return $rundis$elm_bootstrap$Bootstrap$Table$TBody(
+					_Utils_update(
+						body,
+						{
+							rows: A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$mapInversedRow, body.rows)
+						}));
+			} else {
+				var keyedBody = _v0.b.a;
+				return $rundis$elm_bootstrap$Bootstrap$Table$KeyedTBody(
+					_Utils_update(
+						keyedBody,
+						{
+							rows: A2(
+								$elm$core$List$map,
+								function (_v1) {
+									var key = _v1.a;
+									var row = _v1.b;
+									return _Utils_Tuple2(
+										key,
+										$rundis$elm_bootstrap$Bootstrap$Table$mapInversedRow(row));
+								},
+								keyedBody.rows)
+						}));
+			}
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Table$InversedHead = {$: 'InversedHead'};
+var $rundis$elm_bootstrap$Bootstrap$Table$maybeMapInversedTHead = F2(
+	function (isTableInversed, _v0) {
+		var thead_ = _v0.a;
+		var isHeadInversed = A2(
+			$elm$core$List$any,
+			function (opt) {
+				return _Utils_eq(opt, $rundis$elm_bootstrap$Bootstrap$Table$InversedHead);
+			},
+			thead_.options);
+		return $rundis$elm_bootstrap$Bootstrap$Table$THead(
+			(isTableInversed || isHeadInversed) ? _Utils_update(
+				thead_,
+				{
+					rows: A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$mapInversedRow, thead_.rows)
+				}) : thead_);
+	});
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$maybeWrapResponsive = F2(
+	function (options, table_) {
+		var responsiveClass = $elm$html$Html$Attributes$class(
+			'table-responsive' + A2(
+				$elm$core$Maybe$withDefault,
+				'',
+				A2(
+					$elm$core$Maybe$map,
+					function (v) {
+						return '-' + v;
+					},
+					A2(
+						$elm$core$Maybe$andThen,
+						$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption,
+						A2(
+							$elm$core$Maybe$andThen,
+							function (opt) {
+								if (opt.$ === 'Responsive') {
+									var val = opt.a;
+									return val;
+								} else {
+									return $elm$core$Maybe$Nothing;
+								}
+							},
+							$elm$core$List$head(
+								A2($elm$core$List$filter, $rundis$elm_bootstrap$Bootstrap$Table$isResponsive, options)))))));
+		return A2($elm$core$List$any, $rundis$elm_bootstrap$Bootstrap$Table$isResponsive, options) ? A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[responsiveClass]),
+			_List_fromArray(
+				[table_])) : table_;
+	});
+var $elm$html$Html$Attributes$scope = $elm$html$Html$Attributes$stringProperty('scope');
+var $rundis$elm_bootstrap$Bootstrap$Table$addScopeIfTh = function (cell) {
+	if (cell.$ === 'Th') {
+		var cellConfig = cell.a;
+		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
+			_Utils_update(
+				cellConfig,
+				{
+					options: A2(
+						$elm$core$List$cons,
+						$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+							$elm$html$Html$Attributes$scope('row')),
+						cellConfig.options)
+				}));
+	} else {
+		return cell;
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$maybeAddScopeToFirstCell = function (row) {
+	if (row.$ === 'Row') {
+		var options = row.a.options;
+		var cells = row.a.cells;
+		if (!cells.b) {
+			return row;
+		} else {
+			var first = cells.a;
+			var rest = cells.b;
+			return $rundis$elm_bootstrap$Bootstrap$Table$Row(
+				{
+					cells: A2(
+						$elm$core$List$cons,
+						$rundis$elm_bootstrap$Bootstrap$Table$addScopeIfTh(first),
+						rest),
+					options: options
+				});
+		}
+	} else {
+		var options = row.a.options;
+		var cells = row.a.cells;
+		if (!cells.b) {
+			return row;
+		} else {
+			var _v3 = cells.a;
+			var firstKey = _v3.a;
+			var first = _v3.b;
+			var rest = cells.b;
+			return $rundis$elm_bootstrap$Bootstrap$Table$KeyedRow(
+				{
+					cells: A2(
+						$elm$core$List$cons,
+						_Utils_Tuple2(
+							firstKey,
+							$rundis$elm_bootstrap$Bootstrap$Table$addScopeIfTh(first)),
+						rest),
+					options: options
+				});
+		}
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$cellAttribute = function (option) {
+	switch (option.$) {
+		case 'RoledCell':
+			if (option.a.$ === 'Roled') {
+				var role = option.a.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Internal$Role$toClass, 'table', role);
+			} else {
+				var _v1 = option.a;
+				return $elm$html$Html$Attributes$class('table-active');
+			}
+		case 'InversedCell':
+			if (option.a.$ === 'Roled') {
+				var role = option.a.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Internal$Role$toClass, 'bg-', role);
+			} else {
+				var _v2 = option.a;
+				return $elm$html$Html$Attributes$class('bg-active');
+			}
+		default:
+			var attr_ = option.a;
+			return attr_;
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$cellAttributes = function (options) {
+	return A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$cellAttribute, options);
+};
+var $elm$html$Html$td = _VirtualDom_node('td');
+var $elm$html$Html$th = _VirtualDom_node('th');
+var $rundis$elm_bootstrap$Bootstrap$Table$renderCell = function (cell) {
+	if (cell.$ === 'Td') {
+		var options = cell.a.options;
+		var children = cell.a.children;
+		return A2(
+			$elm$html$Html$td,
+			$rundis$elm_bootstrap$Bootstrap$Table$cellAttributes(options),
+			children);
+	} else {
+		var options = cell.a.options;
+		var children = cell.a.children;
+		return A2(
+			$elm$html$Html$th,
+			$rundis$elm_bootstrap$Bootstrap$Table$cellAttributes(options),
+			children);
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$rowClass = function (option) {
+	switch (option.$) {
+		case 'RoledRow':
+			if (option.a.$ === 'Roled') {
+				var role_ = option.a.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Internal$Role$toClass, 'table', role_);
+			} else {
+				var _v1 = option.a;
+				return $elm$html$Html$Attributes$class('table-active');
+			}
+		case 'InversedRow':
+			if (option.a.$ === 'Roled') {
+				var role_ = option.a.a;
+				return A2($rundis$elm_bootstrap$Bootstrap$Internal$Role$toClass, 'bg', role_);
+			} else {
+				var _v2 = option.a;
+				return $elm$html$Html$Attributes$class('bg-active');
+			}
+		default:
+			var attr_ = option.a;
+			return attr_;
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$rowAttributes = function (options) {
+	return A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$rowClass, options);
+};
+var $elm$html$Html$tr = _VirtualDom_node('tr');
+var $rundis$elm_bootstrap$Bootstrap$Table$renderRow = function (row) {
+	if (row.$ === 'Row') {
+		var options = row.a.options;
+		var cells = row.a.cells;
+		return A2(
+			$elm$html$Html$tr,
+			$rundis$elm_bootstrap$Bootstrap$Table$rowAttributes(options),
+			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$renderCell, cells));
+	} else {
+		var options = row.a.options;
+		var cells = row.a.cells;
+		return A3(
+			$elm$html$Html$Keyed$node,
+			'tr',
+			$rundis$elm_bootstrap$Bootstrap$Table$rowAttributes(options),
+			A2(
+				$elm$core$List$map,
+				function (_v1) {
+					var key = _v1.a;
+					var cell = _v1.b;
+					return _Utils_Tuple2(
+						key,
+						$rundis$elm_bootstrap$Bootstrap$Table$renderCell(cell));
+				},
+				cells));
+	}
+};
+var $elm$html$Html$tbody = _VirtualDom_node('tbody');
+var $rundis$elm_bootstrap$Bootstrap$Table$renderTBody = function (body) {
+	if (body.$ === 'TBody') {
+		var attributes = body.a.attributes;
+		var rows = body.a.rows;
+		return A2(
+			$elm$html$Html$tbody,
+			attributes,
+			A2(
+				$elm$core$List$map,
+				function (row) {
+					return $rundis$elm_bootstrap$Bootstrap$Table$renderRow(
+						$rundis$elm_bootstrap$Bootstrap$Table$maybeAddScopeToFirstCell(row));
+				},
+				rows));
+	} else {
+		var attributes = body.a.attributes;
+		var rows = body.a.rows;
+		return A3(
+			$elm$html$Html$Keyed$node,
+			'tbody',
+			attributes,
+			A2(
+				$elm$core$List$map,
+				function (_v1) {
+					var key = _v1.a;
+					var row = _v1.b;
+					return _Utils_Tuple2(
+						key,
+						$rundis$elm_bootstrap$Bootstrap$Table$renderRow(
+							$rundis$elm_bootstrap$Bootstrap$Table$maybeAddScopeToFirstCell(row)));
+				},
+				rows));
+	}
+};
+var $elm$html$Html$thead = _VirtualDom_node('thead');
+var $rundis$elm_bootstrap$Bootstrap$Table$theadAttribute = function (option) {
+	switch (option.$) {
+		case 'InversedHead':
+			return $elm$html$Html$Attributes$class('thead-dark');
+		case 'DefaultHead':
+			return $elm$html$Html$Attributes$class('thead-default');
+		default:
+			var attr_ = option.a;
+			return attr_;
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$theadAttributes = function (options) {
+	return A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$theadAttribute, options);
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$renderTHead = function (_v0) {
+	var options = _v0.a.options;
+	var rows = _v0.a.rows;
+	return A2(
+		$elm$html$Html$thead,
+		$rundis$elm_bootstrap$Bootstrap$Table$theadAttributes(options),
+		A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$renderRow, rows));
+};
+var $elm$html$Html$table = _VirtualDom_node('table');
+var $rundis$elm_bootstrap$Bootstrap$Table$tableClass = function (option) {
+	switch (option.$) {
+		case 'Inversed':
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class('table-dark'));
+		case 'Striped':
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class('table-striped'));
+		case 'Bordered':
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class('table-bordered'));
+		case 'Hover':
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class('table-hover'));
+		case 'Small':
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class('table-sm'));
+		case 'Responsive':
+			return $elm$core$Maybe$Nothing;
+		case 'Reflow':
+			return $elm$core$Maybe$Just(
+				$elm$html$Html$Attributes$class('table-reflow'));
+		default:
+			var attr_ = option.a;
+			return $elm$core$Maybe$Just(attr_);
+	}
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$tableAttributes = function (options) {
+	return A2(
+		$elm$core$List$cons,
+		$elm$html$Html$Attributes$class('table'),
+		A2(
+			$elm$core$List$filterMap,
+			$elm$core$Basics$identity,
+			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Table$tableClass, options)));
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$table = function (rec) {
+	var isInversed = A2(
+		$elm$core$List$any,
+		function (opt) {
+			return _Utils_eq(opt, $rundis$elm_bootstrap$Bootstrap$Table$Inversed);
+		},
+		rec.options);
+	var classOptions = A2(
+		$elm$core$List$filter,
+		function (opt) {
+			return !$rundis$elm_bootstrap$Bootstrap$Table$isResponsive(opt);
+		},
+		rec.options);
+	return A2(
+		$rundis$elm_bootstrap$Bootstrap$Table$maybeWrapResponsive,
+		rec.options,
+		A2(
+			$elm$html$Html$table,
+			$rundis$elm_bootstrap$Bootstrap$Table$tableAttributes(classOptions),
+			_List_fromArray(
+				[
+					$rundis$elm_bootstrap$Bootstrap$Table$renderTHead(
+					A2($rundis$elm_bootstrap$Bootstrap$Table$maybeMapInversedTHead, isInversed, rec.thead)),
+					$rundis$elm_bootstrap$Bootstrap$Table$renderTBody(
+					A2($rundis$elm_bootstrap$Bootstrap$Table$maybeMapInversedTBody, isInversed, rec.tbody))
+				])));
+};
+var $rundis$elm_bootstrap$Bootstrap$Table$tbody = F2(
+	function (attributes, rows) {
+		return $rundis$elm_bootstrap$Bootstrap$Table$TBody(
+			{attributes: attributes, rows: rows});
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$Input = function (a) {
+	return {$: 'Input', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$input = F2(
+	function (inputFn, options) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$Input(
+			inputFn(options));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Text = {$: 'Text'};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Input = function (a) {
+	return {$: 'Input', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Type = function (a) {
+	return {$: 'Type', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$create = F2(
+	function (tipe, options) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Input$Input(
+			{
+				options: A2(
+					$elm$core$List$cons,
+					$rundis$elm_bootstrap$Bootstrap$Form$Input$Type(tipe),
+					options)
+			});
+	});
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$applyModifier = F2(
+	function (modifier, options) {
+		switch (modifier.$) {
+			case 'Size':
+				var size_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						size: $elm$core$Maybe$Just(size_)
+					});
+			case 'Id':
+				var id_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						id: $elm$core$Maybe$Just(id_)
+					});
+			case 'Type':
+				var tipe = modifier.a;
+				return _Utils_update(
+					options,
+					{tipe: tipe});
+			case 'Disabled':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{disabled: val});
+			case 'Value':
+				var value_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						value: $elm$core$Maybe$Just(value_)
+					});
+			case 'Placeholder':
+				var value_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						placeholder: $elm$core$Maybe$Just(value_)
+					});
+			case 'OnInput':
+				var onInput_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						onInput: $elm$core$Maybe$Just(onInput_)
+					});
+			case 'Validation':
+				var validation_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						validation: $elm$core$Maybe$Just(validation_)
+					});
+			case 'Readonly':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{readonly: val});
+			case 'PlainText':
+				var val = modifier.a;
+				return _Utils_update(
+					options,
+					{plainText: val});
+			default:
+				var attrs_ = modifier.a;
+				return _Utils_update(
+					options,
+					{
+						attributes: _Utils_ap(options.attributes, attrs_)
+					});
+		}
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$defaultOptions = {attributes: _List_Nil, disabled: false, id: $elm$core$Maybe$Nothing, onInput: $elm$core$Maybe$Nothing, placeholder: $elm$core$Maybe$Nothing, plainText: false, readonly: false, size: $elm$core$Maybe$Nothing, tipe: $rundis$elm_bootstrap$Bootstrap$Form$Input$Text, validation: $elm$core$Maybe$Nothing, value: $elm$core$Maybe$Nothing};
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -6092,15 +8444,6 @@ var $elm$html$Html$Events$stopPropagationOn = F2(
 			event,
 			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
 	});
-var $elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
-	});
-var $elm$html$Html$Events$targetValue = A2(
-	$elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	$elm$json$Json$Decode$string);
 var $elm$html$Html$Events$onInput = function (tagger) {
 	return A2(
 		$elm$html$Html$Events$stopPropagationOn,
@@ -6111,601 +8454,489 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $author$project$Main$CancelEdit = function (a) {
-	return {$: 'CancelEdit', a: a};
-};
-var $author$project$Main$DeleteTodoItem = function (a) {
-	return {$: 'DeleteTodoItem', a: a};
-};
-var $author$project$Main$Demote = function (a) {
-	return {$: 'Demote', a: a};
-};
-var $author$project$Main$Edit = function (a) {
-	return {$: 'Edit', a: a};
-};
-var $author$project$Main$EditBufferChange = function (a) {
-	return {$: 'EditBufferChange', a: a};
-};
-var $author$project$Main$Promote = function (a) {
-	return {$: 'Promote', a: a};
-};
-var $author$project$Main$SaveEdit = function (a) {
-	return {$: 'SaveEdit', a: a};
-};
-var $author$project$Main$ToggleBlocked = function (a) {
-	return {$: 'ToggleBlocked', a: a};
-};
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
-var $author$project$Main$markBlocked = function (isBlocked) {
-	return isBlocked ? A2($elm$html$Html$Attributes$style, 'background', 'orange') : A2($elm$html$Html$Attributes$style, 'background', 'lavender');
-};
-var $elm$core$Basics$ge = _Utils_ge;
-var $author$project$Main$markTodoItemNew = F2(
-	function (cp, time) {
-		return (_Utils_cmp(time, cp) > -1) ? A2($elm$html$Html$Attributes$style, 'background', 'lightgreen') : A2($elm$html$Html$Attributes$style, '', '');
-	});
-var $elm$html$Html$Attributes$height = function (n) {
+var $elm$html$Html$Attributes$readonly = $elm$html$Html$Attributes$boolProperty('readOnly');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$sizeAttribute = function (size) {
 	return A2(
-		_VirtualDom_attribute,
-		'height',
-		$elm$core$String$fromInt(n));
+		$elm$core$Maybe$map,
+		function (s) {
+			return $elm$html$Html$Attributes$class('form-control-' + s);
+		},
+		$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size));
 };
-var $elm$html$Html$img = _VirtualDom_node('img');
-var $elm$html$Html$span = _VirtualDom_node('span');
-var $elm$html$Html$Attributes$src = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'src',
-		_VirtualDom_noJavaScriptOrHtmlUri(url));
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$typeAttribute = function (inputType) {
+	return $elm$html$Html$Attributes$type_(
+		function () {
+			switch (inputType.$) {
+				case 'Text':
+					return 'text';
+				case 'Password':
+					return 'password';
+				case 'DatetimeLocal':
+					return 'datetime-local';
+				case 'Date':
+					return 'date';
+				case 'Month':
+					return 'month';
+				case 'Time':
+					return 'time';
+				case 'Week':
+					return 'week';
+				case 'Number':
+					return 'number';
+				case 'Email':
+					return 'email';
+				case 'Url':
+					return 'url';
+				case 'Search':
+					return 'search';
+				case 'Tel':
+					return 'tel';
+				default:
+					return 'color';
+			}
+		}());
 };
-var $author$project$Main$renderTodoState = function (state) {
-	switch (state.$) {
-		case 'Todo':
-			return A2(
-				$elm$html$Html$span,
-				_List_Nil,
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$validationAttribute = function (validation) {
+	return $elm$html$Html$Attributes$class(
+		$rundis$elm_bootstrap$Bootstrap$Form$FormInternal$validationToString(validation));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$toAttributes = function (modifiers) {
+	var options = A3($elm$core$List$foldl, $rundis$elm_bootstrap$Bootstrap$Form$Input$applyModifier, $rundis$elm_bootstrap$Bootstrap$Form$Input$defaultOptions, modifiers);
+	return _Utils_ap(
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class(
+				options.plainText ? 'form-control-plaintext' : 'form-control'),
+				$elm$html$Html$Attributes$disabled(options.disabled),
+				$elm$html$Html$Attributes$readonly(options.readonly || options.plainText),
+				$rundis$elm_bootstrap$Bootstrap$Form$Input$typeAttribute(options.tipe)
+			]),
+		_Utils_ap(
+			A2(
+				$elm$core$List$filterMap,
+				$elm$core$Basics$identity,
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src('images/checkbox.svg'),
-								$elm$html$Html$Attributes$height(20)
-							]),
-						_List_Nil)
-					]));
-		case 'Doing':
-			return A2(
-				$elm$html$Html$span,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src('images/progress-clock.svg'),
-								$elm$html$Html$Attributes$height(20)
-							]),
-						_List_Nil)
-					]));
-		default:
-			return A2(
-				$elm$html$Html$span,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src('images/check-square.svg'),
-								$elm$html$Html$Attributes$height(20)
-							]),
-						_List_Nil)
-					]));
-	}
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$id, options.id),
+						A2($elm$core$Maybe$andThen, $rundis$elm_bootstrap$Bootstrap$Form$Input$sizeAttribute, options.size),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$value, options.value),
+						A2($elm$core$Maybe$map, $elm$html$Html$Attributes$placeholder, options.placeholder),
+						A2($elm$core$Maybe$map, $elm$html$Html$Events$onInput, options.onInput),
+						A2($elm$core$Maybe$map, $rundis$elm_bootstrap$Bootstrap$Form$Input$validationAttribute, options.validation)
+					])),
+			options.attributes));
 };
-var $author$project$Main$setTitleStyle = function (todoItem) {
-	var _v0 = todoItem.state;
-	switch (_v0.$) {
-		case 'Done':
-			return A2($elm$html$Html$Attributes$style, 'text-decoration', 'line-through');
-		case 'Doing':
-			return A2($elm$html$Html$Attributes$style, 'text-decoration', 'underline red');
-		default:
-			return A2($elm$html$Html$Attributes$style, '', '');
-	}
-};
-var $elm$html$Html$td = _VirtualDom_node('td');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$tr = _VirtualDom_node('tr');
-var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$renderTodoItem = F3(
-	function (cp, buffer, todoItem) {
-		return todoItem.isEditing ? A2(
-			$elm$html$Html$tr,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$author$project$Main$renderTodoState(todoItem.state)
-						])),
-					A2($elm$html$Html$td, _List_Nil, _List_Nil),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$input,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$value(buffer),
-									$elm$html$Html$Events$onInput($author$project$Main$EditBufferChange)
-								]),
-							_List_Nil),
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$SaveEdit(todoItem))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Save')
-								])),
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$CancelEdit(todoItem))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Cancel')
-								]))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$Promote(todoItem)),
-									$elm$html$Html$Attributes$disabled(true)
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Promote')
-								]))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$Demote(todoItem)),
-									$elm$html$Html$Attributes$disabled(true)
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Demote')
-								]))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$DeleteTodoItem(todoItem)),
-									A2($elm$html$Html$Attributes$style, 'background-color', 'lightpink'),
-									$elm$html$Html$Attributes$disabled(true)
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Delete')
-								]))
-						]))
-				])) : A2(
-			$elm$html$Html$tr,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$author$project$Main$renderTodoState(todoItem.state)
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_fromArray(
-						[
-							$elm$html$Html$Events$onClick(
-							$author$project$Main$ToggleBlocked(todoItem)),
-							$author$project$Main$markBlocked(todoItem.isBlocked)
-						]),
-					_List_fromArray(
-						[
-							$elm$html$Html$text(' ')
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_fromArray(
-						[
-							A2($author$project$Main$markTodoItemNew, cp, todoItem.modificationTime)
-						]),
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$span,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$Edit(todoItem))
-								]),
-							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$span,
-									_List_fromArray(
-										[
-											$author$project$Main$setTitleStyle(todoItem)
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text(todoItem.title)
-										]))
-								]))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$Promote(todoItem)),
-									$elm$html$Html$Attributes$disabled(
-									_Utils_eq(todoItem.state, $author$project$TodoState$Done))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Promote')
-								]))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$Demote(todoItem)),
-									$elm$html$Html$Attributes$disabled(
-									_Utils_eq(todoItem.state, $author$project$TodoState$Todo))
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Demote')
-								]))
-						])),
-					A2(
-					$elm$html$Html$td,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$button,
-							_List_fromArray(
-								[
-									$elm$html$Html$Events$onClick(
-									$author$project$Main$DeleteTodoItem(todoItem)),
-									A2($elm$html$Html$Attributes$style, 'background-color', 'lightpink')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Delete')
-								]))
-						]))
-				]));
-	});
-var $author$project$Main$renderTodoItems = F3(
-	function (todoItem, cp, buffer) {
-		return A2(
-			$elm$core$List$map,
-			A2($author$project$Main$renderTodoItem, cp, buffer),
-			todoItem);
-	});
-var $elm$html$Html$Attributes$size = function (n) {
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$view = function (_v0) {
+	var options = _v0.a.options;
 	return A2(
-		_VirtualDom_attribute,
-		'size',
-		$elm$core$String$fromInt(n));
+		$elm$html$Html$input,
+		$rundis$elm_bootstrap$Bootstrap$Form$Input$toAttributes(options),
+		_List_Nil);
 };
-var $elm$html$Html$table = _VirtualDom_node('table');
-var $elm$html$Html$th = _VirtualDom_node('th');
-var $author$project$Main$timeToBackup = function (model) {
-	return (_Utils_cmp(model.persistentCore.timestamp - 10, model.persistentCore.lastBackup) > 0) ? A2($elm$html$Html$Attributes$style, 'background', 'coral') : A2($elm$html$Html$Attributes$style, '', '');
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$input = F2(
+	function (tipe, options) {
+		return $rundis$elm_bootstrap$Bootstrap$Form$Input$view(
+			A2($rundis$elm_bootstrap$Bootstrap$Form$Input$create, tipe, options));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$text = $rundis$elm_bootstrap$Bootstrap$Form$Input$input($rundis$elm_bootstrap$Bootstrap$Form$Input$Text);
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$text = $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$input($rundis$elm_bootstrap$Bootstrap$Form$Input$text);
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$TextAlign = function (a) {
+	return {$: 'TextAlign', a: a};
 };
-var $mhoare$elm_stack$Stack$toList = function (_v0) {
-	var stack = _v0.a;
-	return stack;
+var $rundis$elm_bootstrap$Bootstrap$Grid$Col$textAlign = function (align) {
+	return $rundis$elm_bootstrap$Bootstrap$Grid$Internal$TextAlign(align);
 };
-var $author$project$Main$view = function (model) {
-	var undoStackSize = $elm$core$List$length(
-		$mhoare$elm_stack$Stack$toList(model.undoStack));
-	var undoStackSizeStr = $elm$core$String$fromInt(undoStackSize);
-	var undoButtonText = 'Undo (' + (undoStackSizeStr + ')');
-	var redoStackSize = $elm$core$List$length(
-		$mhoare$elm_stack$Stack$toList(model.redoStack));
-	var redoStackSizeStr = $elm$core$String$fromInt(redoStackSize);
-	var redoButtonText = 'Redo (' + (redoStackSizeStr + ')');
-	var cleanerList = A2(
-		$elm$core$List$filter,
-		$author$project$Main$cleaner(model.persistentCore.checkpoint),
-		model.persistentCore.todoItems);
-	var cleanButtonText = 'Clean old (' + ($elm$core$String$fromInt(
-		$elm$core$List$length(cleanerList)) + ')');
+var $rundis$elm_bootstrap$Bootstrap$Table$th = F2(
+	function (options, children) {
+		return $rundis$elm_bootstrap$Bootstrap$Table$Th(
+			{children: children, options: options});
+	});
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Value = function (a) {
+	return {$: 'Value', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$value = function (value_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$Value(value_);
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$sizeAttribute = function (size) {
+	return A2(
+		$elm$core$Maybe$map,
+		function (s) {
+			return $elm$html$Html$Attributes$class('input-group-' + s);
+		},
+		$rundis$elm_bootstrap$Bootstrap$General$Internal$screenSizeOption(size));
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$view = function (_v0) {
+	var conf = _v0.a;
+	var _v1 = conf.input;
+	var input_ = _v1.a;
 	return A2(
 		$elm$html$Html$div,
-		_List_fromArray(
-			[
-				$elm$html$Html$Attributes$class('table-container')
-			]),
-		_List_fromArray(
-			[
+		_Utils_ap(
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('input-group')
+				]),
+			_Utils_ap(
 				A2(
-				$elm$html$Html$table,
-				_List_Nil,
-				_Utils_ap(
+					$elm$core$List$filterMap,
+					$elm$core$Basics$identity,
 					_List_fromArray(
 						[
-							A2(
-							$elm$html$Html$tr,
-							_List_Nil,
+							A2($elm$core$Maybe$andThen, $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$sizeAttribute, conf.size)
+						])),
+				conf.attributes)),
+		_Utils_ap(
+			A2(
+				$elm$core$List$map,
+				function (_v2) {
+					var e = _v2.a;
+					return A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('input-group-prepend')
+							]),
+						_List_fromArray(
+							[e]));
+				},
+				conf.predecessors),
+			_Utils_ap(
+				_List_fromArray(
+					[input_]),
+				A2(
+					$elm$core$List$map,
+					function (_v3) {
+						var e = _v3.a;
+						return A2(
+							$elm$html$Html$div,
 							_List_fromArray(
 								[
-									A2(
-									$elm$html$Html$td,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$colspan(5)
-										]),
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$input,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$placeholder('New todo title'),
-													$elm$html$Html$Attributes$value(model.inputBuffer),
-													$elm$html$Html$Events$onInput($author$project$Main$InputBufferChange),
-													$elm$html$Html$Attributes$autofocus(true),
-													$elm$html$Html$Attributes$size(40)
-												]),
-											_List_Nil)
-										])),
-									A2(
-									$elm$html$Html$td,
-									_List_Nil,
-									_List_fromArray(
-										[
-											A2(
-											$elm$html$Html$button,
-											_List_fromArray(
-												[
-													$elm$html$Html$Events$onClick($author$project$Main$AddTodoItem),
-													$elm$html$Html$Attributes$disabled(model.inputBuffer === '')
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Add Todo')
-												]))
-										]))
-								])),
-							A2(
-							$elm$html$Html$tr,
-							_List_Nil,
+									$elm$html$Html$Attributes$class('input-group-append')
+								]),
 							_List_fromArray(
-								[
-									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('State')
-										])),
-									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('B!')
-										])),
-									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Title')
-										])),
-									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('State ++')
-										])),
-									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('State --')
-										])),
-									A2(
-									$elm$html$Html$th,
-									_List_Nil,
-									_List_fromArray(
-										[
-											$elm$html$Html$text('Action')
-										]))
-								]))
-						]),
-					A3($author$project$Main$renderTodoItems, model.persistentCore.todoItems, model.persistentCore.checkpoint, model.editBuffer))),
+								[e]));
+					},
+					conf.successors))));
+};
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Warning = {$: 'Warning'};
+var $rundis$elm_bootstrap$Bootstrap$Button$warning = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
+	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Warning));
+var $author$project$Main$view = function (model) {
+	return A2(
+		$rundis$elm_bootstrap$Bootstrap$Grid$container,
+		_List_Nil,
+		_List_fromArray(
+			[
+				$rundis$elm_bootstrap$Bootstrap$CDN$stylesheet,
 				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'margin-top', '1em')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Click Title to edit.')
-					])),
-				A2(
-				$elm$html$Html$span,
+				$rundis$elm_bootstrap$Bootstrap$Grid$row,
 				_List_Nil,
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$button,
+						$rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Main$Sort)
+								$rundis$elm_bootstrap$Bootstrap$Grid$Col$textAlign($rundis$elm_bootstrap$Bootstrap$Text$alignLgCenter)
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Sort')
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Main$Undo),
-								$elm$html$Html$Attributes$disabled(!undoStackSize)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(undoButtonText)
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Main$Redo),
-								$elm$html$Html$Attributes$disabled(!redoStackSize)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(redoButtonText)
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Main$SetCheckpoint)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Set Checkpoint')
-							])),
-						A2(
-						$elm$html$Html$button,
-						_List_fromArray(
-							[
-								$elm$html$Html$Events$onClick($author$project$Main$ClearOldDone),
-								$elm$html$Html$Attributes$disabled(
-								$author$project$Main$noCleanbles(model))
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text(cleanButtonText)
+								A2(
+								$elm$html$Html$h1,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Task Manager')
+									]))
 							]))
 					])),
 				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Database is persisted in this browser only!')
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Page reload cleans undo history!')
-					])),
-				A2(
-				$elm$html$Html$span,
+				$rundis$elm_bootstrap$Bootstrap$Grid$row,
 				_List_Nil,
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$button,
+						$rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_fromArray(
+							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$sm3]),
+						_List_Nil),
+						A2(
+						$rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_fromArray(
+							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$lg6]),
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Main$Download),
-								A2($elm$html$Html$Attributes$style, 'margin-right', '1em'),
-								$author$project$Main$timeToBackup(model)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Download model')
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Form$form,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$rundis$elm_bootstrap$Bootstrap$Form$InputGroup$view(
+										A2(
+											$rundis$elm_bootstrap$Bootstrap$Form$InputGroup$successors,
+											_List_fromArray(
+												[
+													A2(
+													$rundis$elm_bootstrap$Bootstrap$Form$InputGroup$button,
+													_List_fromArray(
+														[
+															$rundis$elm_bootstrap$Bootstrap$Button$primary,
+															$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$AddTodoItem)
+														]),
+													_List_fromArray(
+														[
+															$elm$html$Html$text('Add')
+														]))
+												]),
+											$rundis$elm_bootstrap$Bootstrap$Form$InputGroup$small(
+												$rundis$elm_bootstrap$Bootstrap$Form$InputGroup$config(
+													$rundis$elm_bootstrap$Bootstrap$Form$InputGroup$text(
+														_List_fromArray(
+															[
+																$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Main$InputBufferChange),
+																$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('Type to add new task...'),
+																$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.inputBuffer)
+															]))))))
+									])),
+								A2($elm$html$Html$p, _List_Nil, _List_Nil),
+								$rundis$elm_bootstrap$Bootstrap$Table$table(
+								{
+									options: _List_fromArray(
+										[$rundis$elm_bootstrap$Bootstrap$Table$striped, $rundis$elm_bootstrap$Bootstrap$Table$small, $rundis$elm_bootstrap$Bootstrap$Table$bordered]),
+									tbody: A2(
+										$rundis$elm_bootstrap$Bootstrap$Table$tbody,
+										_List_Nil,
+										$author$project$Main$renderModel(model)),
+									thead: $rundis$elm_bootstrap$Bootstrap$Table$simpleThead(
+										_List_fromArray(
+											[
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Table$th,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('State')
+													])),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Table$th,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Change')
+													])),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Table$th,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+														$elm$html$Html$Attributes$class('col-md-6'))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Title')
+													])),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Table$th,
+												_List_Nil,
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Actions')
+													]))
+											]))
+								})
 							])),
 						A2(
-						$elm$html$Html$button,
+						$rundis$elm_bootstrap$Bootstrap$Grid$col,
+						_List_fromArray(
+							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$lg3]),
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Main$FileRequested)
-							]),
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Upload model')
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$row,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Grid$col,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text(model.log)
+											]))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$row,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Grid$col,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Actions:')
+											]))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$row,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Grid$col,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Button$primary,
+														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('m-1')
+															]))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Checkpoint')
+													])),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Button$danger,
+														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('m-1')
+															]))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Clean done')
+													]))
+											]))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$row,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Grid$col,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('History:')
+											]))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$row,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Grid$col,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Button$primary,
+														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('m-1')
+															]))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Undo')
+													])),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Button$warning,
+														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('m-1')
+															]))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Redo')
+													]))
+											]))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$row,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Grid$col,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Model operations:')
+											]))
+									])),
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$row,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Grid$col,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Button$primary,
+														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('m-1')
+															]))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Download')
+													])),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Button$danger,
+														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('m-1')
+															]))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Upload')
+													]))
+											]))
+									]))
 							]))
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'color', 'red')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text(model.log)
 					]))
 			]));
 };
