@@ -285,6 +285,7 @@ renderModel model cp buffer =
 
 renderTodoItem : Int -> String -> TodoItem -> Table.Row Msg
 renderTodoItem cp buffer todoItem =
+    -- render conditionally, edit mode is different
     Table.tr
         []
         [ Table.td [] [ renderStatusBadge todoItem ]
