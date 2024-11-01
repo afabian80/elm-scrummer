@@ -6301,6 +6301,15 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$width = F2(
 var $rundis$elm_bootstrap$Bootstrap$Grid$Col$lg3 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$LG, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col3);
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col6 = {$: 'Col6'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Col$lg6 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$LG, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col6);
+var $author$project$Main$noCleanbles = function (model) {
+	return _Utils_eq(
+		$elm$core$List$length(
+			A2(
+				$elm$core$List$filter,
+				$author$project$Main$keeper(model.persistentCore.checkpoint),
+				model.persistentCore.todoItems)),
+		$elm$core$List$length(model.persistentCore.todoItems));
+};
 var $elm$virtual_dom$VirtualDom$MayPreventDefault = function (a) {
 	return {$: 'MayPreventDefault', a: a};
 };
@@ -9088,6 +9097,8 @@ var $author$project$Main$view = function (model) {
 														$rundis$elm_bootstrap$Bootstrap$Button$danger,
 														$rundis$elm_bootstrap$Bootstrap$Button$small,
 														$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$ClearOldDone),
+														$rundis$elm_bootstrap$Bootstrap$Button$disabled(
+														$author$project$Main$noCleanbles(model)),
 														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[

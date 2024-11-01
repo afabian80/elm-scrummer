@@ -215,6 +215,7 @@ view model =
                             [ Button.danger
                             , Button.small
                             , Button.onClick ClearOldDone
+                            , Button.disabled (noCleanbles model)
                             , Button.attrs [ class "m-1" ]
                             ]
                             [ text cleanButtonText ]
