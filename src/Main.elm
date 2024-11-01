@@ -17,7 +17,7 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, div, h1, img, p, span, text)
+import Html exposing (Attribute, Html, div, h1, img, p, small, span, text)
 import Html.Attributes exposing (autofocus, class, height, src, style, value)
 import Html.Events exposing (onClick)
 import Json.Decode as D
@@ -338,17 +338,32 @@ renderTodoItem cp buffer todoItem =
                 [ if todoItem.state == Done then
                     span []
                         [ Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
-                        , span [ onClick (Edit todoItem) ] [ text (" " ++ todoItem.title) ]
+                        , span [ onClick (Edit todoItem) ]
+                            [ text (" " ++ todoItem.title ++ " ")
+                            , renderNewBadge (cp < todoItem.modificationTime)
+                            ]
                         ]
 
                   else
                     span []
                         [ Spinner.spinner [ Spinner.grow, Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
-                        , span [ onClick (Edit todoItem) ] [ text (" " ++ todoItem.title) ]
+                        , span [ onClick (Edit todoItem) ]
+                            [ text (" " ++ todoItem.title ++ " ")
+                            , renderNewBadge (cp < todoItem.modificationTime)
+                            ]
                         ]
                 ]
             , Table.td [] [ Button.button [ Button.danger, Button.onClick (DeleteTodoItem todoItem), Button.small ] [ text "Delete" ] ]
             ]
+
+
+renderNewBadge : Bool -> Html msg
+renderNewBadge isNew =
+    if isNew then
+        text "🌞"
+
+    else
+        text ""
 
 
 renderStatusBadge : TodoItem -> Html Msg

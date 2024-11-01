@@ -6825,6 +6825,9 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Select$OnChange = function (a) {
 var $rundis$elm_bootstrap$Bootstrap$Form$Select$onChange = function (toMsg) {
 	return $rundis$elm_bootstrap$Bootstrap$Form$Select$OnChange(toMsg);
 };
+var $author$project$Main$renderNewBadge = function (isNew) {
+	return isNew ? $elm$html$Html$text('🌞') : $elm$html$Html$text('');
+};
 var $rundis$elm_bootstrap$Bootstrap$Badge$Roled = function (a) {
 	return {$: 'Roled', a: a};
 };
@@ -7537,7 +7540,9 @@ var $author$project$Main$renderTodoItem = F3(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(' ' + todoItem.title)
+											$elm$html$Html$text(' ' + (todoItem.title + ' ')),
+											$author$project$Main$renderNewBadge(
+											_Utils_cmp(cp, todoItem.modificationTime) < 0)
 										]))
 								])) : A2(
 							$elm$html$Html$span,
@@ -7565,7 +7570,9 @@ var $author$project$Main$renderTodoItem = F3(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(' ' + todoItem.title)
+											$elm$html$Html$text(' ' + (todoItem.title + ' ')),
+											$author$project$Main$renderNewBadge(
+											_Utils_cmp(cp, todoItem.modificationTime) < 0)
 										]))
 								]))
 						])),
