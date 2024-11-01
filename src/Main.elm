@@ -1,4 +1,4 @@
-port module Main exposing (..)
+port module Main exposing (main)
 
 import Bootstrap.Alert exposing (simpleDanger, simpleSecondary)
 import Bootstrap.Badge as Badge
@@ -17,8 +17,8 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, div, h1, img, p, span, text)
-import Html.Attributes exposing (autofocus, class, height, src, style, value)
+import Html exposing (Attribute, Html, div, h1, p, span, text)
+import Html.Attributes exposing (autofocus, class, style, value)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
@@ -32,6 +32,7 @@ import TodoState exposing (..)
 
 -- TODO render links in task title
 -- TODO add filters for state
+-- TODO remove is_blocked field from todoitem if still unused
 
 
 type alias Model =
@@ -391,50 +392,6 @@ noCleanbles model =
     List.length
         (List.filter (keeper model.persistentCore.checkpoint) model.persistentCore.todoItems)
         == List.length model.persistentCore.todoItems
-
-
-setTitleStyle : TodoItem -> Attribute msg
-setTitleStyle todoItem =
-    case todoItem.state of
-        Done ->
-            style "text-decoration" "line-through"
-
-        Doing ->
-            style "text-decoration" "underline red"
-
-        _ ->
-            style "" ""
-
-
-markBlocked : Bool -> Attribute msg
-markBlocked isBlocked =
-    if isBlocked then
-        style "background" "orange"
-
-    else
-        style "background" "lavender"
-
-
-renderTodoState : TodoState -> Html Msg
-renderTodoState state =
-    case state of
-        Todo ->
-            span [] [ img [ src "images/checkbox.svg", height 20 ] [] ]
-
-        Doing ->
-            span [] [ img [ src "images/progress-clock.svg", height 20 ] [] ]
-
-        Done ->
-            span [] [ img [ src "images/check-square.svg", height 20 ] [] ]
-
-
-markTodoItemNew : Int -> Int -> Attribute Msg
-markTodoItemNew cp time =
-    if time >= cp then
-        style "background" "lightgreen"
-
-    else
-        style "" ""
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
