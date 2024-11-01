@@ -6313,7 +6313,7 @@ var $rundis$elm_bootstrap$Bootstrap$Form$form = F2(
 		return A2($elm$html$Html$form, attributes, children);
 	});
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col3 = {$: 'Col3'};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col2 = {$: 'Col2'};
 var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth = function (a) {
 	return {$: 'ColWidth', a: a};
 };
@@ -6326,9 +6326,9 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$width = F2(
 		return $rundis$elm_bootstrap$Bootstrap$Grid$Internal$ColWidth(
 			A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$Width, size, count));
 	});
-var $rundis$elm_bootstrap$Bootstrap$Grid$Col$lg3 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$LG, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col3);
-var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col6 = {$: 'Col6'};
-var $rundis$elm_bootstrap$Bootstrap$Grid$Col$lg6 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$LG, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col6);
+var $rundis$elm_bootstrap$Bootstrap$Grid$Col$lg2 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$LG, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col2);
+var $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col8 = {$: 'Col8'};
+var $rundis$elm_bootstrap$Bootstrap$Grid$Col$lg8 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$LG, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col8);
 var $author$project$Main$noCleanbles = function (model) {
 	return _Utils_eq(
 		$elm$core$List$length(
@@ -8348,7 +8348,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$simpleThead = function (cells) {
 				A2($rundis$elm_bootstrap$Bootstrap$Table$tr, _List_Nil, cells)
 			]));
 };
-var $rundis$elm_bootstrap$Bootstrap$Grid$Col$sm3 = A2($rundis$elm_bootstrap$Bootstrap$Grid$Internal$width, $rundis$elm_bootstrap$Bootstrap$General$Internal$SM, $rundis$elm_bootstrap$Bootstrap$Grid$Internal$Col3);
 var $rundis$elm_bootstrap$Bootstrap$Table$Small = {$: 'Small'};
 var $rundis$elm_bootstrap$Bootstrap$Table$small = $rundis$elm_bootstrap$Bootstrap$Table$Small;
 var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
@@ -8944,7 +8943,7 @@ var $author$project$Main$view = function (model) {
 						A2(
 						$rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_fromArray(
-							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$sm3]),
+							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$lg2]),
 						_List_fromArray(
 							[
 								A2(
@@ -8996,7 +8995,7 @@ var $author$project$Main$view = function (model) {
 						A2(
 						$rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_fromArray(
-							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$lg6]),
+							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$lg8]),
 						_List_fromArray(
 							[
 								A2(
@@ -9087,7 +9086,7 @@ var $author$project$Main$view = function (model) {
 						A2(
 						$rundis$elm_bootstrap$Bootstrap$Grid$col,
 						_List_fromArray(
-							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$lg3]),
+							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$lg2]),
 						_List_fromArray(
 							[
 								A2(

@@ -142,7 +142,7 @@ view model =
             []
             [ Grid.col [ Col.textAlign Text.alignLgCenter ] [ h1 [] [ text "Task Manager" ] ] ]
         , Grid.row []
-            [ Grid.col [ Col.sm3 ]
+            [ Grid.col [ Col.lg2 ]
                 [ Grid.row []
                     [ Grid.col []
                         [ simpleSecondary []
@@ -153,7 +153,7 @@ view model =
                     ]
                 , Grid.row [] [ Grid.col [] [ renderLog model.log ] ]
                 ]
-            , Grid.col [ Col.lg6 ]
+            , Grid.col [ Col.lg8 ]
                 [ Form.form []
                     [ InputGroup.config
                         (InputGroup.text
@@ -191,7 +191,7 @@ view model =
                     , tbody = Table.tbody [] (renderModel model model.persistentCore.checkpoint model.editBuffer)
                     }
                 ]
-            , Grid.col [ Col.lg3 ]
+            , Grid.col [ Col.lg2 ]
                 [ Grid.row [] [ Grid.col [] [ text "Actions:" ] ]
                 , Grid.row []
                     [ Grid.col []
