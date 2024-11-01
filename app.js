@@ -6836,7 +6836,17 @@ var $rundis$elm_bootstrap$Bootstrap$Form$Select$onChange = function (toMsg) {
 	return $rundis$elm_bootstrap$Bootstrap$Form$Select$OnChange(toMsg);
 };
 var $author$project$Main$renderNewBadge = function (isNew) {
-	return isNew ? $elm$html$Html$text('🌞') : $elm$html$Html$text('');
+	return isNew ? A2(
+		$elm$html$Html$span,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'background-color', 'white'),
+				A2($elm$html$Html$Attributes$style, 'border', '1px solid gray')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('🌞')
+			])) : $elm$html$Html$text('');
 };
 var $rundis$elm_bootstrap$Bootstrap$Badge$Danger = {$: 'Danger'};
 var $rundis$elm_bootstrap$Bootstrap$Badge$Roled = function (a) {
@@ -7482,9 +7492,9 @@ var $author$project$Main$renderTodoItem = F3(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(' ' + (todoItem.title + ' ')),
 											$author$project$Main$renderNewBadge(
-											_Utils_cmp(cp, todoItem.modificationTime) < 0)
+											_Utils_cmp(cp, todoItem.modificationTime) < 0),
+											$elm$html$Html$text(' ' + (todoItem.title + ' '))
 										]))
 								])) : A2(
 							$elm$html$Html$span,
@@ -7500,9 +7510,9 @@ var $author$project$Main$renderTodoItem = F3(
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(' ' + (todoItem.title + ' ')),
 											$author$project$Main$renderNewBadge(
-											_Utils_cmp(cp, todoItem.modificationTime) < 0)
+											_Utils_cmp(cp, todoItem.modificationTime) < 0),
+											$elm$html$Html$text(' ' + (todoItem.title + ' '))
 										]))
 								]))
 						])),
@@ -8963,14 +8973,20 @@ var $author$project$Main$view = function (model) {
 													[
 														A2(
 														$elm$html$Html$div,
-														_List_Nil,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('my-2')
+															]),
 														_List_fromArray(
 															[
 																$elm$html$Html$text('Database is persisted in this browser only!')
 															])),
 														A2(
 														$elm$html$Html$div,
-														_List_Nil,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('my-2')
+															]),
 														_List_fromArray(
 															[
 																$elm$html$Html$text('Page reload cleans undo history!')
@@ -9238,7 +9254,7 @@ var $author$project$Main$view = function (model) {
 										_List_Nil,
 										_List_fromArray(
 											[
-												$elm$html$Html$text('Model operations:')
+												$elm$html$Html$text('Database operations:')
 											]))
 									])),
 								A2(

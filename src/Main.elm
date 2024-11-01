@@ -17,7 +17,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, div, h1, p, span, text)
-import Html.Attributes exposing (autofocus, class, value)
+import Html.Attributes exposing (autofocus, class, style, value)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
@@ -146,8 +146,8 @@ view model =
                 [ Grid.row []
                     [ Grid.col []
                         [ simpleSecondary []
-                            [ div [] [ text "Database is persisted in this browser only!" ]
-                            , div [] [ text "Page reload cleans undo history!" ]
+                            [ div [ class "my-2" ] [ text "Database is persisted in this browser only!" ]
+                            , div [ class "my-2" ] [ text "Page reload cleans undo history!" ]
                             ]
                         ]
                     ]
@@ -240,7 +240,7 @@ view model =
                             [ text redoButtonText ]
                         ]
                     ]
-                , Grid.row [] [ Grid.col [] [ text "Model operations:" ] ]
+                , Grid.row [] [ Grid.col [] [ text "Database operations:" ] ]
                 , Grid.row []
                     [ Grid.col []
                         [ Button.button
@@ -345,8 +345,8 @@ renderTodoItem cp buffer todoItem =
                     span []
                         [ --Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
                           span [ onClick (Edit todoItem) ]
-                            [ text (" " ++ todoItem.title ++ " ")
-                            , renderNewBadge (cp < todoItem.modificationTime)
+                            [ renderNewBadge (cp < todoItem.modificationTime)
+                            , text (" " ++ todoItem.title ++ " ")
                             ]
                         ]
 
@@ -354,8 +354,8 @@ renderTodoItem cp buffer todoItem =
                     span []
                         [ --Spinner.spinner [ Spinner.grow, Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
                           span [ onClick (Edit todoItem) ]
-                            [ text (" " ++ todoItem.title ++ " ")
-                            , renderNewBadge (cp < todoItem.modificationTime)
+                            [ renderNewBadge (cp < todoItem.modificationTime)
+                            , text (" " ++ todoItem.title ++ " ")
                             ]
                         ]
                 ]
@@ -385,7 +385,7 @@ setTitleCellOptions state =
 renderNewBadge : Bool -> Html msg
 renderNewBadge isNew =
     if isNew then
-        text "🌞"
+        span [ style "background-color" "white", style "border" "1px solid gray" ] [ text "🌞" ]
 
     else
         text ""
