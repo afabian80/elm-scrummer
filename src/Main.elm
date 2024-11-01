@@ -17,7 +17,7 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, div, h1, img, p, small, span, text)
+import Html exposing (Attribute, Html, div, h1, img, p, span, text)
 import Html.Attributes exposing (autofocus, class, height, src, style, value)
 import Html.Events exposing (onClick)
 import Json.Decode as D
@@ -59,8 +59,6 @@ type Msg
     | CancelEdit TodoItem
     | SaveEdit TodoItem
     | EditBufferChange String
-    | Promote TodoItem
-    | Demote TodoItem
     | ClearOldDone
     | ToggleBlocked TodoItem
     | Sort
@@ -242,8 +240,6 @@ view model =
                             [ text redoButtonText ]
                         ]
                     ]
-
-                -- , Grid.row [] [ Grid.col [] [  ] ]
                 , Grid.row [] [ Grid.col [] [ text "Model operations:" ] ]
                 , Grid.row []
                     [ Grid.col []
@@ -329,8 +325,9 @@ renderTodoItem cp buffer todoItem =
                     [ Select.item [ value "todo" ] [ text "TODO" ]
                     , Select.item [ value "doing" ] [ text "DOING" ]
                     , Select.item [ value "done" ] [ text "DONE" ]
-                    , Select.item [ value "blocked" ] [ text "BLOCKED" ]
-                    , Select.item [ value "cancelld" ] [ text "CANCELLED" ]
+
+                    -- , Select.item [ value "blocked" ] [ text "BLOCKED" ]
+                    -- , Select.item [ value "cancelled" ] [ text "CANCELLED" ]
                     ]
                 ]
             , Table.td
@@ -596,24 +593,6 @@ update msg modelOriginal =
             , Cmd.none
             )
 
-        Promote todoItem ->
-            ( { model
-                | persistentCore = changeTodoItemStateInModel model todoItem promoteState
-                , undoStack = Stack.push model.persistentCore model.undoStack
-                , redoStack = Stack.initialise
-              }
-            , Cmd.none
-            )
-
-        Demote todoItem ->
-            ( { model
-                | persistentCore = changeTodoItemStateInModel model todoItem demoteState
-                , undoStack = Stack.push model.persistentCore model.undoStack
-                , redoStack = Stack.initialise
-              }
-            , Cmd.none
-            )
-
         ClearOldDone ->
             ( { model
                 | persistentCore = clearOldTodoItemsInModel model
@@ -641,8 +620,14 @@ update msg modelOriginal =
             , Cmd.none
             )
 
-        SelectChange todoItem s ->
-            ( { model | log = s ++ todoItem.title }, Cmd.none )
+        SelectChange todoItem state ->
+            ( { model
+                | persistentCore = changeTodoItemStateInModel model todoItem state
+                , undoStack = Stack.push model.persistentCore model.undoStack
+                , redoStack = Stack.initialise
+              }
+            , Cmd.none
+            )
 
 
 sortTodos : ModelCore -> ModelCore
@@ -714,11 +699,11 @@ cleaner checkpoint todoItem =
     (todoItem.state == Done) && (todoItem.modificationTime <= checkpoint)
 
 
-changeTodoItemStateInModel : Model -> TodoItem -> TodoStateFunction -> ModelCore
-changeTodoItemStateInModel model todoItem stateFun =
+changeTodoItemStateInModel : Model -> TodoItem -> String -> ModelCore
+changeTodoItemStateInModel model todoItem state =
     let
         newTodoItems =
-            changeTodoItemsState model.persistentCore.todoItems todoItem stateFun model.persistentCore.timestamp
+            changeTodoItemsState model.persistentCore.todoItems todoItem state model.persistentCore.timestamp
     in
     ModelCore
         model.persistentCore.timestamp
@@ -727,16 +712,31 @@ changeTodoItemStateInModel model todoItem stateFun =
         model.persistentCore.lastBackup
 
 
-changeTodoItemsState : List TodoItem -> TodoItem -> TodoStateFunction -> Int -> List TodoItem
-changeTodoItemsState todoItems todoItem stateFun time =
-    List.map (changeTodoItemState todoItem stateFun time) todoItems
+changeTodoItemsState : List TodoItem -> TodoItem -> String -> Int -> List TodoItem
+changeTodoItemsState todoItems todoItem state time =
+    List.map (changeTodoItemState todoItem state time) todoItems
 
 
-changeTodoItemState : TodoItem -> TodoStateFunction -> Int -> TodoItem -> TodoItem
-changeTodoItemState theTodoItem stateFun time aTodoItem =
+changeTodoItemState : TodoItem -> String -> Int -> TodoItem -> TodoItem
+changeTodoItemState theTodoItem state time aTodoItem =
+    let
+        newState =
+            case state of
+                "todo" ->
+                    Todo
+
+                "doing" ->
+                    Doing
+
+                "done" ->
+                    Done
+
+                _ ->
+                    Todo
+    in
     if aTodoItem == theTodoItem then
         { theTodoItem
-            | state = stateFun theTodoItem.state
+            | state = newState
             , modificationTime = time
         }
 

@@ -5526,24 +5526,33 @@ var $author$project$Main$addNewTodoItem = function (model) {
 	return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 };
 var $author$project$Main$changeTodoItemState = F4(
-	function (theTodoItem, stateFun, time, aTodoItem) {
+	function (theTodoItem, state, time, aTodoItem) {
+		var newState = function () {
+			switch (state) {
+				case 'todo':
+					return $author$project$TodoState$Todo;
+				case 'doing':
+					return $author$project$TodoState$Doing;
+				case 'done':
+					return $author$project$TodoState$Done;
+				default:
+					return $author$project$TodoState$Todo;
+			}
+		}();
 		return _Utils_eq(aTodoItem, theTodoItem) ? _Utils_update(
 			theTodoItem,
-			{
-				modificationTime: time,
-				state: stateFun(theTodoItem.state)
-			}) : aTodoItem;
+			{modificationTime: time, state: newState}) : aTodoItem;
 	});
 var $author$project$Main$changeTodoItemsState = F4(
-	function (todoItems, todoItem, stateFun, time) {
+	function (todoItems, todoItem, state, time) {
 		return A2(
 			$elm$core$List$map,
-			A3($author$project$Main$changeTodoItemState, todoItem, stateFun, time),
+			A3($author$project$Main$changeTodoItemState, todoItem, state, time),
 			todoItems);
 	});
 var $author$project$Main$changeTodoItemStateInModel = F3(
-	function (model, todoItem, stateFun) {
-		var newTodoItems = A4($author$project$Main$changeTodoItemsState, model.persistentCore.todoItems, todoItem, stateFun, model.persistentCore.timestamp);
+	function (model, todoItem, state) {
+		var newTodoItems = A4($author$project$Main$changeTodoItemsState, model.persistentCore.todoItems, todoItem, state, model.persistentCore.timestamp);
 		return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 	});
 var $elm$core$List$filter = F2(
@@ -5593,16 +5602,6 @@ var $author$project$Main$deleteTodoItem = F2(
 			model.persistentCore.checkpoint,
 			model.persistentCore.lastBackup);
 	});
-var $author$project$TodoState$demoteState = function (state) {
-	switch (state.$) {
-		case 'Todo':
-			return $author$project$TodoState$Todo;
-		case 'Doing':
-			return $author$project$TodoState$Todo;
-		default:
-			return $author$project$TodoState$Doing;
-	}
-};
 var $elm$time$Time$Posix = function (a) {
 	return {$: 'Posix', a: a};
 };
@@ -5626,16 +5625,6 @@ var $mhoare$elm_stack$Stack$pop = function (_v0) {
 		return _Utils_Tuple2(
 			$elm$core$Maybe$Just(head),
 			$mhoare$elm_stack$Stack$Stack(tail));
-	}
-};
-var $author$project$TodoState$promoteState = function (state) {
-	switch (state.$) {
-		case 'Todo':
-			return $author$project$TodoState$Doing;
-		case 'Doing':
-			return $author$project$TodoState$Done;
-		default:
-			return $author$project$TodoState$Done;
 	}
 };
 var $mhoare$elm_stack$Stack$push = F2(
@@ -5945,28 +5934,6 @@ var $author$project$Main$update = F2(
 							persistentCore: $author$project$Main$stepLastBackup(model.persistentCore)
 						}),
 					$elm$core$Platform$Cmd$none);
-			case 'Promote':
-				var todoItem = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							persistentCore: A3($author$project$Main$changeTodoItemStateInModel, model, todoItem, $author$project$TodoState$promoteState),
-							redoStack: $mhoare$elm_stack$Stack$initialise,
-							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 'Demote':
-				var todoItem = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							persistentCore: A3($author$project$Main$changeTodoItemStateInModel, model, todoItem, $author$project$TodoState$demoteState),
-							redoStack: $mhoare$elm_stack$Stack$initialise,
-							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
-						}),
-					$elm$core$Platform$Cmd$none);
 			case 'ClearOldDone':
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -6000,12 +5967,14 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$none);
 			default:
 				var todoItem = msg.a;
-				var s = msg.b;
+				var state = msg.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{
-							log: _Utils_ap(s, todoItem.title)
+							persistentCore: A3($author$project$Main$changeTodoItemStateInModel, model, todoItem, state),
+							redoStack: $mhoare$elm_stack$Stack$initialise,
+							undoStack: A2($mhoare$elm_stack$Stack$push, model.persistentCore, model.undoStack)
 						}),
 					$elm$core$Platform$Cmd$none);
 		}
@@ -7487,26 +7456,6 @@ var $author$project$Main$renderTodoItem = F3(
 									_List_fromArray(
 										[
 											$elm$html$Html$text('DONE')
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$value('blocked')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('BLOCKED')
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$value('cancelld')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('CANCELLED')
 										]))
 								]))
 						])),
