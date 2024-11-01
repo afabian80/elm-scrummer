@@ -30,7 +30,6 @@ import TodoState exposing (..)
 
 
 
--- TODO use bootstrap design
 -- TODO render links in task title
 -- TODO add filters for state
 
@@ -124,10 +123,22 @@ view model =
                 []
             , Grid.col [ Col.lg6 ]
                 [ Form.form []
-                    [ InputGroup.config (InputGroup.text [ Input.onInput InputBufferChange, Input.placeholder "Type to add new task...", Input.value model.inputBuffer ])
+                    [ InputGroup.config
+                        (InputGroup.text
+                            [ Input.onInput InputBufferChange
+                            , Input.placeholder "Type to add new task..."
+                            , Input.value model.inputBuffer
+                            ]
+                        )
                         |> InputGroup.small
                         |> InputGroup.successors
-                            [ InputGroup.button [ Button.primary, Button.onClick AddTodoItem ] [ text "Add" ] ]
+                            [ InputGroup.button
+                                [ Button.primary
+                                , Button.onClick AddTodoItem
+                                , Button.disabled (model.inputBuffer == "")
+                                ]
+                                [ text "Add" ]
+                            ]
                         |> InputGroup.view
                     ]
                 , p [] []
@@ -152,8 +163,9 @@ view model =
                 , Grid.row [] [ Grid.col [] [ text "Actions:" ] ]
                 , Grid.row []
                     [ Grid.col []
-                        [ Button.button [ Button.primary, Button.small, Button.attrs [ class "m-1" ] ] [ text "Checkpoint" ]
-                        , Button.button [ Button.danger, Button.small, Button.attrs [ class "m-1" ] ] [ text "Clean done" ]
+                        [ Button.button [ Button.primary, Button.small, Button.onClick Sort, Button.attrs [ class "m-1" ] ] [ text "Sort" ]
+                        , Button.button [ Button.primary, Button.small, Button.onClick SetCheckpoint, Button.attrs [ class "m-1" ] ] [ text "Checkpoint" ]
+                        , Button.button [ Button.danger, Button.small, Button.onClick ClearOldDone, Button.attrs [ class "m-1" ] ] [ text "Clean done" ]
                         ]
                     ]
                 , Grid.row [] [ Grid.col [] [ text "History:" ] ]
@@ -231,75 +243,6 @@ renderStatusBadge todoItem =
             Badge.badgeSuccess [] [ text "DONE" ]
 
 
-
--- let
---     undoStackSize =
---         List.length (Stack.toList model.undoStack)
---     undoStackSizeStr =
---         String.fromInt undoStackSize
---     undoButtonText =
---         "Undo (" ++ undoStackSizeStr ++ ")"
---     redoStackSize =
---         List.length (Stack.toList model.redoStack)
---     redoStackSizeStr =
---         String.fromInt redoStackSize
---     redoButtonText =
---         "Redo (" ++ redoStackSizeStr ++ ")"
---     cleanerList =
---         List.filter (cleaner model.persistentCore.checkpoint) model.persistentCore.todoItems
---     cleanButtonText =
---         "Clean old (" ++ String.fromInt (List.length cleanerList) ++ ")"
--- in
--- div [ class "table-container" ]
---     [ table []
---         ([ tr []
---             [ td [ colspan 5 ]
---                 [ input
---                     [ placeholder "New todo title"
---                     , value model.inputBuffer
---                     , onInput InputBufferChange
---                     , autofocus True
---                     , size 40
---                     ]
---                     []
---                 ]
---             , td []
---                 [ button
---                     [ onClick AddTodoItem
---                     , disabled (model.inputBuffer == "")
---                     ]
---                     [ text "Add Todo" ]
---                 ]
---             ]
---          , tr []
---             [ th [] [ text "State" ]
---             , th [] [ text "B!" ]
---             , th [] [ text "Title" ]
---             , th [] [ text "State ++" ]
---             , th [] [ text "State --" ]
---             , th [] [ text "Action" ]
---             ]
---          ]
---             ++ renderTodoItems model.persistentCore.todoItems model.persistentCore.checkpoint model.editBuffer
---         )
---     , div [ style "margin-top" "1em" ] [ text "Click Title to edit." ]
---     , span []
---         [ button [ onClick Sort ] [ text "Sort" ]
---         , button [ onClick Undo, disabled (undoStackSize == 0) ] [ text undoButtonText ]
---         , button [ onClick Redo, disabled (redoStackSize == 0) ] [ text redoButtonText ]
---         , button [ onClick SetCheckpoint ] [ text "Set Checkpoint" ]
---         , button [ onClick ClearOldDone, disabled (noCleanbles model) ] [ text cleanButtonText ]
---         ]
---     , div [] [ text "Database is persisted in this browser only!" ]
---     , div [] [ text "Page reload cleans undo history!" ]
---     , span []
---         [ button [ onClick Download, style "margin-right" "1em", timeToBackup model ] [ text "Download model" ]
---         , button [ onClick FileRequested ] [ text "Upload model" ]
---         ]
---     , div [ style "color" "red" ] [ text model.log ]
---     ]
-
-
 timeToBackup : Model -> Attribute msg
 timeToBackup model =
     -- Download button will be red after 10 updates since the last Download. Just to nidge user to backup regularly.
@@ -315,36 +258,6 @@ noCleanbles model =
     List.length
         (List.filter (keeper model.persistentCore.checkpoint) model.persistentCore.todoItems)
         == List.length model.persistentCore.todoItems
-
-
-
--- renderTodoItems : List TodoItem -> Int -> String -> List (Html Msg)
--- renderTodoItems todoItem cp buffer =
---     List.map (renderTodoItem cp buffer) todoItem
--- renderTodoItem : Int -> String -> TodoItem -> Html Msg
--- renderTodoItem cp buffer todoItem =
---     if todoItem.isEditing then
---         tr []
---             [ td [] [ renderTodoState todoItem.state ]
---             , td [] []
---             , td []
---                 [ input [ value buffer, onInput EditBufferChange ] []
---                 , button [ onClick (SaveEdit todoItem) ] [ text "Save" ]
---                 , button [ onClick (CancelEdit todoItem) ] [ text "Cancel" ]
---                 ]
---             , td [] [ button [ onClick (Promote todoItem), disabled True ] [ text "Promote" ] ]
---             , td [] [ button [ onClick (Demote todoItem), disabled True ] [ text "Demote" ] ]
---             , td [] [ button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink", disabled True ] [ text "Delete" ] ]
---             ]
---     else
---         tr []
---             [ td [] [ renderTodoState todoItem.state ]
---             , td [ onClick (ToggleBlocked todoItem), markBlocked todoItem.isBlocked ] [ text " " ]
---             , td [ markTodoItemNew cp todoItem.modificationTime ] [ span [ onClick (Edit todoItem) ] [ span [ setTitleStyle todoItem ] [ text todoItem.title ] ] ]
---             , td [] [ button [ onClick (Promote todoItem), disabled (todoItem.state == Done) ] [ text "Promote" ] ]
---             , td [] [ button [ onClick (Demote todoItem), disabled (todoItem.state == Todo) ] [ text "Demote" ] ]
---             , td [] [ button [ onClick (DeleteTodoItem todoItem), style "background-color" "lightpink" ] [ text "Delete" ] ]
---             ]
 
 
 setTitleStyle : TodoItem -> Attribute msg

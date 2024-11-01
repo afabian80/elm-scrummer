@@ -6027,9 +6027,12 @@ var $author$project$Main$updateWithStorage = F2(
 	});
 var $elm$json$Json$Decode$value = _Json_decodeValue;
 var $author$project$Main$AddTodoItem = {$: 'AddTodoItem'};
+var $author$project$Main$ClearOldDone = {$: 'ClearOldDone'};
 var $author$project$Main$InputBufferChange = function (a) {
 	return {$: 'InputBufferChange', a: a};
 };
+var $author$project$Main$SetCheckpoint = {$: 'SetCheckpoint'};
+var $author$project$Main$Sort = {$: 'Sort'};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Text$Center = {$: 'Center'};
 var $rundis$elm_bootstrap$Bootstrap$General$Internal$LG = {$: 'LG'};
 var $rundis$elm_bootstrap$Bootstrap$Text$alignLg = function (dir) {
@@ -6266,6 +6269,12 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled = function (a) {
 };
 var $rundis$elm_bootstrap$Bootstrap$Button$danger = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Danger));
+var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Disabled = function (a) {
+	return {$: 'Disabled', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Button$disabled = function (disabled_) {
+	return $rundis$elm_bootstrap$Bootstrap$Internal$Button$Disabled(disabled_);
+};
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $rundis$elm_bootstrap$Bootstrap$Form$form = F2(
 	function (attributes, children) {
@@ -8682,7 +8691,8 @@ var $author$project$Main$view = function (model) {
 													_List_fromArray(
 														[
 															$rundis$elm_bootstrap$Bootstrap$Button$primary,
-															$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$AddTodoItem)
+															$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$AddTodoItem),
+															$rundis$elm_bootstrap$Bootstrap$Button$disabled(model.inputBuffer === '')
 														]),
 													_List_fromArray(
 														[
@@ -8794,6 +8804,24 @@ var $author$project$Main$view = function (model) {
 													[
 														$rundis$elm_bootstrap$Bootstrap$Button$primary,
 														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$Sort),
+														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('m-1')
+															]))
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text('Sort')
+													])),
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Button$button,
+												_List_fromArray(
+													[
+														$rundis$elm_bootstrap$Bootstrap$Button$primary,
+														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$SetCheckpoint),
 														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[
@@ -8810,6 +8838,7 @@ var $author$project$Main$view = function (model) {
 													[
 														$rundis$elm_bootstrap$Bootstrap$Button$danger,
 														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$ClearOldDone),
 														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[
