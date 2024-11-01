@@ -6049,6 +6049,20 @@ var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs = function (a) {
 var $rundis$elm_bootstrap$Bootstrap$Button$attrs = function (attrs_) {
 	return $rundis$elm_bootstrap$Bootstrap$Internal$Button$Attrs(attrs_);
 };
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$Attrs = function (a) {
+	return {$: 'Attrs', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Input$attrs = function (attrs_) {
+	return $rundis$elm_bootstrap$Bootstrap$Form$Input$Attrs(attrs_);
+};
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$autofocus = $elm$html$Html$Attributes$boolProperty('autofocus');
 var $rundis$elm_bootstrap$Bootstrap$Table$Bordered = {$: 'Bordered'};
 var $rundis$elm_bootstrap$Bootstrap$Table$bordered = $rundis$elm_bootstrap$Bootstrap$Table$Bordered;
 var $elm$html$Html$button = _VirtualDom_node('button');
@@ -6119,13 +6133,6 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
 };
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$defaultOptions = {attributes: _List_Nil, block: false, coloring: $elm$core$Maybe$Nothing, disabled: false, size: $elm$core$Maybe$Nothing};
-var $elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$bool(bool));
-	});
 var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$roleClass = function (role) {
 	switch (role.$) {
@@ -8977,7 +8984,12 @@ var $author$project$Main$view = function (model) {
 															[
 																$rundis$elm_bootstrap$Bootstrap$Form$Input$onInput($author$project$Main$InputBufferChange),
 																$rundis$elm_bootstrap$Bootstrap$Form$Input$placeholder('Type to add new task...'),
-																$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.inputBuffer)
+																$rundis$elm_bootstrap$Bootstrap$Form$Input$value(model.inputBuffer),
+																$rundis$elm_bootstrap$Bootstrap$Form$Input$attrs(
+																_List_fromArray(
+																	[
+																		$elm$html$Html$Attributes$autofocus(true)
+																	]))
 															]))))))
 									])),
 								A2($elm$html$Html$p, _List_Nil, _List_Nil),

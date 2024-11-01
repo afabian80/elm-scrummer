@@ -20,7 +20,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, div, h1, img, p, span, text)
-import Html.Attributes exposing (class, height, src, style, value)
+import Html.Attributes exposing (autofocus, class, height, src, style, value)
 import Json.Decode as D
 import Json.Encode as E
 import ModelCore exposing (..)
@@ -163,6 +163,7 @@ view model =
                             [ Input.onInput InputBufferChange
                             , Input.placeholder "Type to add new task..."
                             , Input.value model.inputBuffer
+                            , Input.attrs [ autofocus True ]
                             ]
                         )
                         |> InputGroup.small
