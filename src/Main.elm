@@ -29,6 +29,7 @@ import TodoState exposing (..)
 
 
 
+-- TODO render hastags in title
 -- TODO remove is_blocked field from todoitem if still unused, make it a FLAG
 -- TODO render links in task title
 -- TODO add filters for state
