@@ -686,7 +686,7 @@ keeper checkpoint todoItem =
 
 cleaner : Int -> TodoItem -> Bool
 cleaner checkpoint todoItem =
-    (todoItem.state == Done) && (todoItem.modificationTime <= checkpoint)
+    (todoItem.state == Done || todoItem.state == Cancelled) && (todoItem.modificationTime <= checkpoint)
 
 
 changeTodoItemStateInModel : Model -> TodoItem -> String -> ModelCore

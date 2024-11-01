@@ -5582,7 +5582,7 @@ var $elm$core$List$filter = F2(
 	});
 var $author$project$Main$cleaner = F2(
 	function (checkpoint, todoItem) {
-		return _Utils_eq(todoItem.state, $author$project$TodoState$Done) && (_Utils_cmp(todoItem.modificationTime, checkpoint) < 1);
+		return (_Utils_eq(todoItem.state, $author$project$TodoState$Done) || _Utils_eq(todoItem.state, $author$project$TodoState$Cancelled)) && (_Utils_cmp(todoItem.modificationTime, checkpoint) < 1);
 	});
 var $elm$core$Basics$not = _Basics_not;
 var $author$project$Main$keeper = F2(
