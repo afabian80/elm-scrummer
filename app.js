@@ -7975,6 +7975,7 @@ var $rundis$elm_bootstrap$Bootstrap$Grid$row = F2(
 			$rundis$elm_bootstrap$Bootstrap$Grid$Internal$rowAttributes(options),
 			A2($elm$core$List$map, $rundis$elm_bootstrap$Bootstrap$Grid$renderCol, cols));
 	});
+var $rundis$elm_bootstrap$Bootstrap$Alert$simpleSecondary = $rundis$elm_bootstrap$Bootstrap$Alert$simple($rundis$elm_bootstrap$Bootstrap$Internal$Role$Secondary);
 var $rundis$elm_bootstrap$Bootstrap$Table$THead = function (a) {
 	return {$: 'THead', a: a};
 };
@@ -8885,6 +8886,38 @@ var $author$project$Main$view = function (model) {
 							[$rundis$elm_bootstrap$Bootstrap$Grid$Col$sm3]),
 						_List_fromArray(
 							[
+								A2(
+								$rundis$elm_bootstrap$Bootstrap$Grid$row,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										$rundis$elm_bootstrap$Bootstrap$Grid$col,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												$rundis$elm_bootstrap$Bootstrap$Alert$simpleSecondary,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A2(
+														$elm$html$Html$div,
+														_List_Nil,
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Database is persisted in this browser only!')
+															])),
+														A2(
+														$elm$html$Html$div,
+														_List_Nil,
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Page reload cleans undo history!')
+															]))
+													]))
+											]))
+									])),
 								A2(
 								$rundis$elm_bootstrap$Bootstrap$Grid$row,
 								_List_Nil,

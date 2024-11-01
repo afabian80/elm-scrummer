@@ -2,7 +2,7 @@ port module Main exposing (..)
 
 -- import Html.Events exposing ()
 
-import Bootstrap.Alert exposing (simpleDanger)
+import Bootstrap.Alert exposing (simpleDanger, simpleSecondary)
 import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
 import Bootstrap.CDN as CDN
@@ -19,7 +19,7 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, h1, img, p, span, text)
+import Html exposing (Attribute, Html, div, h1, img, p, span, text)
 import Html.Attributes exposing (class, height, src, style, value)
 import Json.Decode as D
 import Json.Encode as E
@@ -147,8 +147,14 @@ view model =
         , Grid.row []
             [ Grid.col [ Col.sm3 ]
                 [ Grid.row []
-                    [ Grid.col [] [ renderLog model.log ]
+                    [ Grid.col []
+                        [ simpleSecondary []
+                            [ div [] [ text "Database is persisted in this browser only!" ]
+                            , div [] [ text "Page reload cleans undo history!" ]
+                            ]
+                        ]
                     ]
+                , Grid.row [] [ Grid.col [] [ renderLog model.log ] ]
                 ]
             , Grid.col [ Col.lg6 ]
                 [ Form.form []
