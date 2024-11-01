@@ -5375,10 +5375,10 @@ var $author$project$TodoState$decodeTodoState = A2(
 				return $elm$json$Json$Decode$succeed($author$project$TodoState$Todo);
 			case 'Doing':
 				return $elm$json$Json$Decode$succeed($author$project$TodoState$Doing);
-			case 'Done':
-				return $elm$json$Json$Decode$succeed($author$project$TodoState$Done);
 			case 'Blocked':
 				return $elm$json$Json$Decode$succeed($author$project$TodoState$Blocked);
+			case 'Done':
+				return $elm$json$Json$Decode$succeed($author$project$TodoState$Done);
 			case 'Cancelled':
 				return $elm$json$Json$Decode$succeed($author$project$TodoState$Cancelled);
 			default:
@@ -5440,10 +5440,10 @@ var $author$project$TodoState$encodeTodoState = function (state) {
 			return $elm$json$Json$Encode$string('Todo');
 		case 'Doing':
 			return $elm$json$Json$Encode$string('Doing');
-		case 'Done':
-			return $elm$json$Json$Encode$string('Done');
 		case 'Blocked':
 			return $elm$json$Json$Encode$string('Blocked');
+		case 'Done':
+			return $elm$json$Json$Encode$string('Done');
 		default:
 			return $elm$json$Json$Encode$string('Cancelled');
 	}
@@ -5543,10 +5543,10 @@ var $author$project$Main$changeTodoItemState = F4(
 					return $author$project$TodoState$Todo;
 				case 'doing':
 					return $author$project$TodoState$Doing;
-				case 'done':
-					return $author$project$TodoState$Done;
 				case 'blocked':
 					return $author$project$TodoState$Blocked;
+				case 'done':
+					return $author$project$TodoState$Done;
 				case 'cancelled':
 					return $author$project$TodoState$Cancelled;
 				default:
@@ -5700,9 +5700,9 @@ var $author$project$TodoState$compareTodoState = F2(
 						return $elm$core$Basics$EQ;
 					case 'Doing':
 						return $elm$core$Basics$LT;
-					case 'Done':
-						return $elm$core$Basics$LT;
 					case 'Blocked':
+						return $elm$core$Basics$LT;
+					case 'Done':
 						return $elm$core$Basics$LT;
 					default:
 						return $elm$core$Basics$LT;
@@ -5713,22 +5713,9 @@ var $author$project$TodoState$compareTodoState = F2(
 						return $elm$core$Basics$GT;
 					case 'Doing':
 						return $elm$core$Basics$EQ;
-					case 'Done':
-						return $elm$core$Basics$LT;
 					case 'Blocked':
 						return $elm$core$Basics$LT;
-					default:
-						return $elm$core$Basics$LT;
-				}
-			case 'Done':
-				switch (s2.$) {
-					case 'Todo':
-						return $elm$core$Basics$GT;
-					case 'Doing':
-						return $elm$core$Basics$GT;
 					case 'Done':
-						return $elm$core$Basics$EQ;
-					case 'Blocked':
 						return $elm$core$Basics$LT;
 					default:
 						return $elm$core$Basics$LT;
@@ -5739,9 +5726,22 @@ var $author$project$TodoState$compareTodoState = F2(
 						return $elm$core$Basics$GT;
 					case 'Doing':
 						return $elm$core$Basics$GT;
+					case 'Blocked':
+						return $elm$core$Basics$EQ;
 					case 'Done':
+						return $elm$core$Basics$LT;
+					default:
+						return $elm$core$Basics$LT;
+				}
+			case 'Done':
+				switch (s2.$) {
+					case 'Todo':
+						return $elm$core$Basics$GT;
+					case 'Doing':
 						return $elm$core$Basics$GT;
 					case 'Blocked':
+						return $elm$core$Basics$GT;
+					case 'Done':
 						return $elm$core$Basics$EQ;
 					default:
 						return $elm$core$Basics$LT;
@@ -5752,9 +5752,9 @@ var $author$project$TodoState$compareTodoState = F2(
 						return $elm$core$Basics$GT;
 					case 'Doing':
 						return $elm$core$Basics$GT;
-					case 'Done':
-						return $elm$core$Basics$GT;
 					case 'Blocked':
+						return $elm$core$Basics$GT;
+					case 'Done':
 						return $elm$core$Basics$GT;
 					default:
 						return $elm$core$Basics$EQ;
@@ -6947,14 +6947,6 @@ var $author$project$Main$renderStatusBadge = function (todoItem) {
 					[
 						$elm$html$Html$text('DOING')
 					]));
-		case 'Done':
-			return A2(
-				$rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('DONE')
-					]));
 		case 'Blocked':
 			return A2(
 				$rundis$elm_bootstrap$Bootstrap$Badge$badgeDanger,
@@ -6962,6 +6954,14 @@ var $author$project$Main$renderStatusBadge = function (todoItem) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text('BLOCKED')
+					]));
+		case 'Done':
+			return A2(
+				$rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('DONE')
 					]));
 		default:
 			return A2(
@@ -7506,7 +7506,7 @@ var $author$project$Main$renderTodoItem = F3(
 							$rundis$elm_bootstrap$Bootstrap$Form$Select$custom,
 							_List_fromArray(
 								[
-									$rundis$elm_bootstrap$Bootstrap$Form$Select$id('valami'),
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$id('StatusSelector'),
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$onChange(
 									$author$project$Main$SelectChange(todoItem)),
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$small
@@ -7537,21 +7537,21 @@ var $author$project$Main$renderTodoItem = F3(
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$value('done')
-										]),
-									_List_fromArray(
-										[
-											$elm$html$Html$text('DONE')
-										])),
-									A2(
-									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
-									_List_fromArray(
-										[
 											$elm$html$Html$Attributes$value('blocked')
 										]),
 									_List_fromArray(
 										[
 											$elm$html$Html$text('BLOCKED')
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('done')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('DONE')
 										])),
 									A2(
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,

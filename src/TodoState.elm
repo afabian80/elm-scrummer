@@ -7,8 +7,8 @@ import Json.Encode as E
 type TodoState
     = Todo
     | Doing
-    | Done
     | Blocked
+    | Done
     | Cancelled
 
 
@@ -46,11 +46,11 @@ encodeTodoState state =
         Doing ->
             E.string "Doing"
 
-        Done ->
-            E.string "Done"
-
         Blocked ->
             E.string "Blocked"
+
+        Done ->
+            E.string "Done"
 
         Cancelled ->
             E.string "Cancelled"
@@ -68,11 +68,11 @@ decodeTodoState =
                     "Doing" ->
                         D.succeed Doing
 
-                    "Done" ->
-                        D.succeed Done
-
                     "Blocked" ->
                         D.succeed Blocked
+
+                    "Done" ->
+                        D.succeed Done
 
                     "Cancelled" ->
                         D.succeed Cancelled
@@ -93,10 +93,10 @@ compareTodoState s1 s2 =
                 Doing ->
                     LT
 
-                Done ->
+                Blocked ->
                     LT
 
-                Blocked ->
+                Done ->
                     LT
 
                 Cancelled ->
@@ -110,27 +110,10 @@ compareTodoState s1 s2 =
                 Doing ->
                     EQ
 
-                Done ->
-                    LT
-
                 Blocked ->
                     LT
 
-                Cancelled ->
-                    LT
-
-        Done ->
-            case s2 of
-                Todo ->
-                    GT
-
-                Doing ->
-                    GT
-
                 Done ->
-                    EQ
-
-                Blocked ->
                     LT
 
                 Cancelled ->
@@ -144,10 +127,27 @@ compareTodoState s1 s2 =
                 Doing ->
                     GT
 
+                Blocked ->
+                    EQ
+
                 Done ->
+                    LT
+
+                Cancelled ->
+                    LT
+
+        Done ->
+            case s2 of
+                Todo ->
+                    GT
+
+                Doing ->
                     GT
 
                 Blocked ->
+                    GT
+
+                Done ->
                     EQ
 
                 Cancelled ->
@@ -161,10 +161,10 @@ compareTodoState s1 s2 =
                 Doing ->
                     GT
 
-                Done ->
+                Blocked ->
                     GT
 
-                Blocked ->
+                Done ->
                     GT
 
                 Cancelled ->

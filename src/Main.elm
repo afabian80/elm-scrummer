@@ -319,14 +319,14 @@ renderTodoItem cp buffer todoItem =
             [ Table.td [] [ renderStatusBadge todoItem ]
             , Table.td []
                 [ Select.custom
-                    [ Select.id "valami"
+                    [ Select.id "StatusSelector"
                     , Select.onChange (SelectChange todoItem)
                     , Select.small
                     ]
                     [ Select.item [ value "todo" ] [ text "TODO" ]
                     , Select.item [ value "doing" ] [ text "DOING" ]
-                    , Select.item [ value "done" ] [ text "DONE" ]
                     , Select.item [ value "blocked" ] [ text "BLOCKED" ]
+                    , Select.item [ value "done" ] [ text "DONE" ]
                     , Select.item [ value "cancelled" ] [ text "CANCELLED" ]
                     ]
                 ]
@@ -372,11 +372,11 @@ renderStatusBadge todoItem =
         Doing ->
             Badge.badgeWarning [] [ text "DOING" ]
 
-        Done ->
-            Badge.badgeSuccess [] [ text "DONE" ]
-
         Blocked ->
             Badge.badgeDanger [] [ text "BLOCKED" ]
+
+        Done ->
+            Badge.badgeSuccess [] [ text "DONE" ]
 
         Cancelled ->
             Badge.badgePrimary [] [ text "CANCELLED" ]
@@ -690,11 +690,11 @@ changeTodoItemState theTodoItem state time aTodoItem =
                 "doing" ->
                     Doing
 
-                "done" ->
-                    Done
-
                 "blocked" ->
                     Blocked
+
+                "done" ->
+                    Done
 
                 "cancelled" ->
                     Cancelled
