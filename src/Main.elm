@@ -1,7 +1,5 @@
 port module Main exposing (..)
 
--- import Html.Events exposing ()
-
 import Bootstrap.Alert exposing (simpleDanger, simpleSecondary)
 import Bootstrap.Badge as Badge
 import Bootstrap.Button as Button
@@ -21,6 +19,7 @@ import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, div, h1, img, p, span, text)
 import Html.Attributes exposing (autofocus, class, height, src, style, value)
+import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
 import ModelCore exposing (..)
@@ -188,7 +187,7 @@ view model =
                         Table.simpleThead
                             [ Table.th [] [ text "State" ]
                             , Table.th [] [ text "Change" ]
-                            , Table.th [ Table.cellAttr (class "col-md-6") ] [ text "Title" ]
+                            , Table.th [ Table.cellAttr (class "col-md-6") ] [ text "Title (click to edit)" ]
                             , Table.th [] [ text "Actions" ]
                             ]
                     , tbody = Table.tbody [] (renderModel model model.persistentCore.checkpoint model.editBuffer)
@@ -285,39 +284,71 @@ renderModel model cp buffer =
 
 renderTodoItem : Int -> String -> TodoItem -> Table.Row Msg
 renderTodoItem cp buffer todoItem =
-    -- render conditionally, edit mode is different
-    Table.tr
-        []
-        [ Table.td [] [ renderStatusBadge todoItem ]
-        , Table.td []
-            [ Select.custom
-                [ Select.id "valami"
-                , Select.onChange (SelectChange todoItem)
-                , Select.small
-                ]
-                [ Select.item [ value "todo" ] [ text "TODO" ]
-                , Select.item [ value "doing" ] [ text "DOING" ]
-                , Select.item [ value "done" ] [ text "DONE" ]
-                , Select.item [ value "blocked" ] [ text "BLOCKED" ]
-                , Select.item [ value "cancelld" ] [ text "CANCELLED" ]
-                ]
-            ]
-        , Table.td
-            []
-            [ if todoItem.state == Done then
-                span []
-                    [ Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
-                    , text (" " ++ todoItem.title)
+    if todoItem.isEditing then
+        Table.tr []
+            [ Table.td [] []
+            , Table.td [] []
+            , Table.td []
+                [ Form.form []
+                    [ InputGroup.config
+                        (InputGroup.text
+                            [ Input.onInput EditBufferChange
+                            , Input.value buffer
+                            ]
+                        )
+                        |> InputGroup.small
+                        |> InputGroup.successors
+                            [ InputGroup.button
+                                [ Button.primary
+                                , Button.onClick (SaveEdit todoItem)
+                                , Button.disabled (buffer == "")
+                                ]
+                                [ text "Save" ]
+                            , InputGroup.button
+                                [ Button.secondary
+                                , Button.onClick (CancelEdit todoItem)
+                                ]
+                                [ text "Cancel" ]
+                            ]
+                        |> InputGroup.view
                     ]
+                ]
+            , Table.td [] []
+            ]
 
-              else
-                span []
-                    [ Spinner.spinner [ Spinner.grow, Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
-                    , text (" " ++ todoItem.title)
+    else
+        Table.tr
+            []
+            [ Table.td [] [ renderStatusBadge todoItem ]
+            , Table.td []
+                [ Select.custom
+                    [ Select.id "valami"
+                    , Select.onChange (SelectChange todoItem)
+                    , Select.small
                     ]
+                    [ Select.item [ value "todo" ] [ text "TODO" ]
+                    , Select.item [ value "doing" ] [ text "DOING" ]
+                    , Select.item [ value "done" ] [ text "DONE" ]
+                    , Select.item [ value "blocked" ] [ text "BLOCKED" ]
+                    , Select.item [ value "cancelld" ] [ text "CANCELLED" ]
+                    ]
+                ]
+            , Table.td
+                []
+                [ if todoItem.state == Done then
+                    span []
+                        [ Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
+                        , span [ onClick (Edit todoItem) ] [ text (" " ++ todoItem.title) ]
+                        ]
+
+                  else
+                    span []
+                        [ Spinner.spinner [ Spinner.grow, Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
+                        , span [ onClick (Edit todoItem) ] [ text (" " ++ todoItem.title) ]
+                        ]
+                ]
+            , Table.td [] [ Button.button [ Button.danger, Button.onClick (DeleteTodoItem todoItem), Button.small ] [ text "Delete" ] ]
             ]
-        , Table.td [] [ Button.button [ Button.danger, Button.onClick (DeleteTodoItem todoItem), Button.small ] [ text "Delete" ] ]
-        ]
 
 
 renderStatusBadge : TodoItem -> Html Msg
