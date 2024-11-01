@@ -247,6 +247,7 @@ view model =
                         , Button.button
                             [ Button.danger
                             , Button.small
+                            , Button.onClick FileRequested
                             , Button.attrs [ class "m-1" ]
                             ]
                             [ text "Upload" ]

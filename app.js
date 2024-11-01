@@ -6029,6 +6029,7 @@ var $elm$json$Json$Decode$value = _Json_decodeValue;
 var $author$project$Main$AddTodoItem = {$: 'AddTodoItem'};
 var $author$project$Main$ClearOldDone = {$: 'ClearOldDone'};
 var $author$project$Main$Download = {$: 'Download'};
+var $author$project$Main$FileRequested = {$: 'FileRequested'};
 var $author$project$Main$InputBufferChange = function (a) {
 	return {$: 'InputBufferChange', a: a};
 };
@@ -8983,6 +8984,7 @@ var $author$project$Main$view = function (model) {
 													[
 														$rundis$elm_bootstrap$Bootstrap$Button$danger,
 														$rundis$elm_bootstrap$Bootstrap$Button$small,
+														$rundis$elm_bootstrap$Bootstrap$Button$onClick($author$project$Main$FileRequested),
 														$rundis$elm_bootstrap$Bootstrap$Button$attrs(
 														_List_fromArray(
 															[
