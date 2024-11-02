@@ -29,9 +29,7 @@ import TodoState exposing (..)
 
 
 
--- TODO render hastags in title
 -- TODO remove is_blocked field from todoitem if still unused, make it a FLAG
--- TODO render links in task title
 -- TODO add filters for state
 
 
@@ -149,7 +147,7 @@ view model =
                         [ simpleSecondary []
                             [ div [ class "my-2" ] [ text "Database is persisted in this browser only!" ]
                             , div [ class "my-2" ] [ text "Page reload cleans undo history!" ]
-                            , div [ class "my-2" ] [ text "Use # in title to add tag. Links are also rendered. Start a link with slash (`/http`) to render a shorter link." ]
+                            , div [ class "my-2" ] [ text "Use # or ! in the title to add tags. Links are also rendered. Start a link with slash (`/http`) to render a shorter link." ]
                             ]
                         ]
                     ]
@@ -371,11 +369,17 @@ renderTitle title =
         words =
             String.words title
 
-        tagToBadge s =
+        tagToPrimaryBadge s =
             Badge.badgePrimary [] [ text s ]
+
+        tagToDangerBadge s =
+            Badge.badgeDanger [ class "blink" ] [ text s ]
 
         isTag =
             String.startsWith "#"
+
+        isImportant =
+            String.startsWith "!"
 
         isLink =
             String.startsWith "http"
@@ -402,7 +406,14 @@ renderTitle title =
             if isTag s then
                 span []
                     [ space
-                    , tagToBadge (String.dropLeft 1 s)
+                    , tagToPrimaryBadge (String.dropLeft 1 s)
+                    , space
+                    ]
+
+            else if isImportant s then
+                span []
+                    [ space
+                    , tagToDangerBadge (String.dropLeft 1 s)
                     , space
                     ]
 

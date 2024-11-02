@@ -7003,10 +7003,22 @@ var $elm$html$Html$Attributes$href = function (url) {
 var $elm$core$String$words = _String_words;
 var $author$project$Main$renderTitle = function (title) {
 	var words = $elm$core$String$words(title);
-	var tagToBadge = function (s) {
+	var tagToPrimaryBadge = function (s) {
 		return A2(
 			$rundis$elm_bootstrap$Bootstrap$Badge$badgePrimary,
 			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(s)
+				]));
+	};
+	var tagToDangerBadge = function (s) {
+		return A2(
+			$rundis$elm_bootstrap$Bootstrap$Badge$badgeDanger,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$class('blink')
+				]),
 			_List_fromArray(
 				[
 					$elm$html$Html$text(s)
@@ -7026,6 +7038,7 @@ var $author$project$Main$renderTitle = function (title) {
 	var isTag = $elm$core$String$startsWith('#');
 	var isShortLink = $elm$core$String$startsWith('/http');
 	var isLink = $elm$core$String$startsWith('http');
+	var isImportant = $elm$core$String$startsWith('!');
 	var wordToHtml = function (s) {
 		return isTag(s) ? A2(
 			$elm$html$Html$span,
@@ -7033,7 +7046,16 @@ var $author$project$Main$renderTitle = function (title) {
 			_List_fromArray(
 				[
 					space,
-					tagToBadge(
+					tagToPrimaryBadge(
+					A2($elm$core$String$dropLeft, 1, s)),
+					space
+				])) : (isImportant(s) ? A2(
+			$elm$html$Html$span,
+			_List_Nil,
+			_List_fromArray(
+				[
+					space,
+					tagToDangerBadge(
 					A2($elm$core$String$dropLeft, 1, s)),
 					space
 				])) : (isLink(s) ? A2(
@@ -7072,7 +7094,7 @@ var $author$project$Main$renderTitle = function (title) {
 							A2(lastPaths, 2, s))
 						])),
 					space
-				])) : $elm$html$Html$text(' ' + (s + ' '))));
+				])) : $elm$html$Html$text(' ' + (s + ' ')))));
 	};
 	return A2(
 		$elm$html$Html$span,
@@ -9100,7 +9122,7 @@ var $author$project$Main$view = function (model) {
 															]),
 														_List_fromArray(
 															[
-																$elm$html$Html$text('Use # in title to add tag. Links are also rendered. Start a link with slash (`/http`) to render a shorter link.')
+																$elm$html$Html$text('Use # or ! in the title to add tags. Links are also rendered. Start a link with slash (`/http`) to render a shorter link.')
 															]))
 													]))
 											]))
