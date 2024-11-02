@@ -149,6 +149,7 @@ view model =
                         [ simpleSecondary []
                             [ div [ class "my-2" ] [ text "Database is persisted in this browser only!" ]
                             , div [ class "my-2" ] [ text "Page reload cleans undo history!" ]
+                            , div [ class "my-2" ] [ text "Use # in title to add tag. Links are also rendered. Start a link with slash (`/http`) to render a shorter link." ]
                             ]
                         ]
                     ]

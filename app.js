@@ -9091,6 +9091,16 @@ var $author$project$Main$view = function (model) {
 														_List_fromArray(
 															[
 																$elm$html$Html$text('Page reload cleans undo history!')
+															])),
+														A2(
+														$elm$html$Html$div,
+														_List_fromArray(
+															[
+																$elm$html$Html$Attributes$class('my-2')
+															]),
+														_List_fromArray(
+															[
+																$elm$html$Html$text('Use # in title to add tag. Links are also rendered. Start a link with slash (`/http`) to render a shorter link.')
 															]))
 													]))
 											]))
