@@ -347,7 +347,7 @@ renderTodoItem cp buffer todoItem =
                         [ --Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
                           span [ onClick (Edit todoItem) ]
                             [ renderNewBadge (cp < todoItem.modificationTime)
-                            , text (" " ++ todoItem.title ++ " ")
+                            , renderTitle todoItem.title
                             ]
                         ]
 
@@ -356,12 +356,35 @@ renderTodoItem cp buffer todoItem =
                         [ --Spinner.spinner [ Spinner.grow, Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
                           span [ onClick (Edit todoItem) ]
                             [ renderNewBadge (cp < todoItem.modificationTime)
-                            , text (" " ++ todoItem.title ++ " ")
+                            , renderTitle todoItem.title
                             ]
                         ]
                 ]
             , Table.td [] [ Button.button [ Button.danger, Button.onClick (DeleteTodoItem todoItem), Button.small ] [ text "Delete" ] ]
             ]
+
+
+renderTitle : String -> Html Msg
+renderTitle title =
+    let
+        words =
+            String.words title
+
+        tagToBadge s =
+            Badge.badgePrimary [] [ text s ]
+
+        isTag =
+            String.startsWith "#"
+
+        wordToHtml : String -> Html Msg
+        wordToHtml s =
+            if isTag s then
+                span [] [ text " ", tagToBadge (String.dropLeft 1 s), text " " ]
+
+            else
+                text (" " ++ s ++ " ")
+    in
+    span [] (List.map wordToHtml words)
 
 
 setTitleCellOptions : TodoState -> List (Table.CellOption Msg)

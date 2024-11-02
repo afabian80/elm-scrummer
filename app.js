@@ -6972,6 +6972,36 @@ var $author$project$Main$renderStatusBadge = function (todoItem) {
 					]));
 	}
 };
+var $elm$core$String$words = _String_words;
+var $author$project$Main$renderTitle = function (title) {
+	var words = $elm$core$String$words(title);
+	var tagToBadge = function (s) {
+		return A2(
+			$rundis$elm_bootstrap$Bootstrap$Badge$badgePrimary,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(s)
+				]));
+	};
+	var isTag = $elm$core$String$startsWith('#');
+	var wordToHtml = function (s) {
+		return isTag(s) ? A2(
+			$elm$html$Html$span,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(' '),
+					tagToBadge(
+					A2($elm$core$String$dropLeft, 1, s)),
+					$elm$html$Html$text(' ')
+				])) : $elm$html$Html$text(' ' + (s + ' '));
+	};
+	return A2(
+		$elm$html$Html$span,
+		_List_Nil,
+		A2($elm$core$List$map, wordToHtml, words));
+};
 var $rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary = {$: 'Secondary'};
 var $rundis$elm_bootstrap$Bootstrap$Button$secondary = $rundis$elm_bootstrap$Bootstrap$Internal$Button$Coloring(
 	$rundis$elm_bootstrap$Bootstrap$Internal$Button$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Button$Secondary));
@@ -7494,7 +7524,7 @@ var $author$project$Main$renderTodoItem = F3(
 										[
 											$author$project$Main$renderNewBadge(
 											_Utils_cmp(cp, todoItem.modificationTime) < 0),
-											$elm$html$Html$text(' ' + (todoItem.title + ' '))
+											$author$project$Main$renderTitle(todoItem.title)
 										]))
 								])) : A2(
 							$elm$html$Html$span,
@@ -7512,7 +7542,7 @@ var $author$project$Main$renderTodoItem = F3(
 										[
 											$author$project$Main$renderNewBadge(
 											_Utils_cmp(cp, todoItem.modificationTime) < 0),
-											$elm$html$Html$text(' ' + (todoItem.title + ' '))
+											$author$project$Main$renderTitle(todoItem.title)
 										]))
 								]))
 						])),
