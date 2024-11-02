@@ -6972,6 +6972,34 @@ var $author$project$Main$renderStatusBadge = function (todoItem) {
 					]));
 	}
 };
+var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $elm$core$String$words = _String_words;
 var $author$project$Main$renderTitle = function (title) {
 	var words = $elm$core$String$words(title);
@@ -6984,18 +7012,67 @@ var $author$project$Main$renderTitle = function (title) {
 					$elm$html$Html$text(s)
 				]));
 	};
+	var space = $elm$html$Html$text(' ');
+	var lastPaths = F2(
+		function (n, s) {
+			var slashParts = $elm$core$String$split('/');
+			var lastParts = A2(
+				$elm$core$List$drop,
+				$elm$core$List$length(
+					slashParts(s)) - n,
+				slashParts(s));
+			return A2($elm$core$String$join, '/', lastParts);
+		});
 	var isTag = $elm$core$String$startsWith('#');
+	var isShortLink = $elm$core$String$startsWith('/http');
+	var isLink = $elm$core$String$startsWith('http');
 	var wordToHtml = function (s) {
 		return isTag(s) ? A2(
 			$elm$html$Html$span,
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text(' '),
+					space,
 					tagToBadge(
 					A2($elm$core$String$dropLeft, 1, s)),
-					$elm$html$Html$text(' ')
-				])) : $elm$html$Html$text(' ' + (s + ' '));
+					space
+				])) : (isLink(s) ? A2(
+			$elm$html$Html$span,
+			_List_Nil,
+			_List_fromArray(
+				[
+					space,
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href(s)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(s)
+						])),
+					space
+				])) : (isShortLink(s) ? A2(
+			$elm$html$Html$span,
+			_List_Nil,
+			_List_fromArray(
+				[
+					space,
+					A2(
+					$elm$html$Html$a,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$href(
+							A2($elm$core$String$dropLeft, 1, s))
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							A2(lastPaths, 2, s))
+						])),
+					space
+				])) : $elm$html$Html$text(' ' + (s + ' '))));
 	};
 	return A2(
 		$elm$html$Html$span,
@@ -8392,12 +8469,6 @@ var $rundis$elm_bootstrap$Bootstrap$Table$Small = {$: 'Small'};
 var $rundis$elm_bootstrap$Bootstrap$Table$small = $rundis$elm_bootstrap$Bootstrap$Table$Small;
 var $rundis$elm_bootstrap$Bootstrap$Table$Striped = {$: 'Striped'};
 var $rundis$elm_bootstrap$Bootstrap$Table$striped = $rundis$elm_bootstrap$Bootstrap$Table$Striped;
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
 var $elm$virtual_dom$VirtualDom$node = function (tag) {
 	return _VirtualDom_node(
 		_VirtualDom_noScript(tag));

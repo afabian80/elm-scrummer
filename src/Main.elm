@@ -16,8 +16,8 @@ import Browser
 import File
 import File.Download as Download
 import File.Select as Select
-import Html exposing (Attribute, Html, div, h1, p, span, text)
-import Html.Attributes exposing (autofocus, class, style, value)
+import Html exposing (Attribute, Html, a, div, h1, p, span, text)
+import Html.Attributes exposing (autofocus, class, href, style, value)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
@@ -376,10 +376,48 @@ renderTitle title =
         isTag =
             String.startsWith "#"
 
+        isLink =
+            String.startsWith "http"
+
+        isShortLink =
+            String.startsWith "/http"
+
+        space =
+            text " "
+
+        lastPaths : Int -> String -> String
+        lastPaths n s =
+            let
+                slashParts =
+                    String.split "/"
+
+                lastParts =
+                    List.drop (List.length (slashParts s) - n) (slashParts s)
+            in
+            String.join "/" lastParts
+
         wordToHtml : String -> Html Msg
         wordToHtml s =
             if isTag s then
-                span [] [ text " ", tagToBadge (String.dropLeft 1 s), text " " ]
+                span []
+                    [ space
+                    , tagToBadge (String.dropLeft 1 s)
+                    , space
+                    ]
+
+            else if isLink s then
+                span []
+                    [ space
+                    , a [ href s ] [ text s ]
+                    , space
+                    ]
+
+            else if isShortLink s then
+                span []
+                    [ space
+                    , a [ href (String.dropLeft 1 s) ] [ text (lastPaths 2 s) ]
+                    , space
+                    ]
 
             else
                 text (" " ++ s ++ " ")
