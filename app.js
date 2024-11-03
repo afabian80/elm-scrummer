@@ -9038,7 +9038,7 @@ var $author$project$Main$view = function (model) {
 		$elm$core$List$filter,
 		$author$project$Main$cleaner(model.persistentCore.checkpoint),
 		model.persistentCore.todoItems);
-	var cleanButtonText = 'Clean old (' + ($elm$core$String$fromInt(
+	var cleanButtonText = 'Clean OLD (' + ($elm$core$String$fromInt(
 		$elm$core$List$length(cleanerList)) + ')');
 	return A2(
 		$rundis$elm_bootstrap$Bootstrap$Grid$container,

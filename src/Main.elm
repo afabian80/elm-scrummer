@@ -132,7 +132,7 @@ view model =
             List.filter (cleaner model.persistentCore.checkpoint) model.persistentCore.todoItems
 
         cleanButtonText =
-            "Clean old (" ++ String.fromInt (List.length cleanerList) ++ ")"
+            "Clean OLD (" ++ String.fromInt (List.length cleanerList) ++ ")"
     in
     Grid.container
         []
