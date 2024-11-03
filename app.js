@@ -6848,10 +6848,10 @@ var $author$project$Main$renderNewBadge = function (isNew) {
 				$elm$html$Html$text('🌞')
 			])) : $elm$html$Html$text('');
 };
-var $rundis$elm_bootstrap$Bootstrap$Badge$Danger = {$: 'Danger'};
 var $rundis$elm_bootstrap$Bootstrap$Badge$Roled = function (a) {
 	return {$: 'Roled', a: a};
 };
+var $rundis$elm_bootstrap$Bootstrap$Badge$Success = {$: 'Success'};
 var $rundis$elm_bootstrap$Bootstrap$Badge$roleOption = function (role) {
 	switch (role.$) {
 		case 'Primary':
@@ -6898,6 +6898,22 @@ var $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal = F3(
 				attributes),
 			children);
 	});
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
+	_List_fromArray(
+		[
+			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Success)
+		]));
+var $author$project$Main$renderOld = F2(
+	function (todoItem, cp) {
+		return A2($author$project$Main$keeper, cp, todoItem) ? $elm$html$Html$text('') : A2(
+			$rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('OLD')
+				]));
+	});
+var $rundis$elm_bootstrap$Bootstrap$Badge$Danger = {$: 'Danger'};
 var $rundis$elm_bootstrap$Bootstrap$Badge$badgeDanger = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
 	_List_fromArray(
 		[
@@ -6914,12 +6930,6 @@ var $rundis$elm_bootstrap$Bootstrap$Badge$badgeSecondary = $rundis$elm_bootstrap
 	_List_fromArray(
 		[
 			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Secondary)
-		]));
-var $rundis$elm_bootstrap$Bootstrap$Badge$Success = {$: 'Success'};
-var $rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
-	_List_fromArray(
-		[
-			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Success)
 		]));
 var $rundis$elm_bootstrap$Bootstrap$Badge$Warning = {$: 'Warning'};
 var $rundis$elm_bootstrap$Bootstrap$Badge$badgeWarning = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
@@ -7631,7 +7641,8 @@ var $author$project$Main$renderTodoItem = F3(
 								[
 									$author$project$Main$renderNewBadge(
 									_Utils_cmp(cp, todoItem.modificationTime) < 0),
-									$author$project$Main$renderTitle(todoItem.title)
+									$author$project$Main$renderTitle(todoItem.title),
+									A2($author$project$Main$renderOld, todoItem, cp)
 								]))
 						])),
 					A2(

@@ -345,10 +345,20 @@ renderTodoItem cp buffer todoItem =
                 [ span [ onClick (Edit todoItem) ]
                     [ renderNewBadge (cp < todoItem.modificationTime)
                     , renderTitle todoItem.title
+                    , renderOld todoItem cp
                     ]
                 ]
             , Table.td [] [ Button.button [ Button.danger, Button.onClick (DeleteTodoItem todoItem), Button.small ] [ text "Delete" ] ]
             ]
+
+
+renderOld : TodoItem -> Int -> Html Msg
+renderOld todoItem cp =
+    if keeper cp todoItem then
+        text ""
+
+    else
+        Badge.badgeSuccess [] [ text "OLD" ]
 
 
 renderTitle : String -> Html Msg
