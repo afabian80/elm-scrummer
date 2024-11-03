@@ -5530,13 +5530,23 @@ var $elm$core$List$append = F2(
 			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
 		}
 	});
+var $elm$core$String$toUpper = _String_toUpper;
 var $author$project$Main$addNewTodoItem = function (model) {
 	var newTodoItems = $elm$core$String$isEmpty(model.inputBuffer) ? model.persistentCore.todoItems : A2(
 		$elm$core$List$append,
 		model.persistentCore.todoItems,
 		_List_fromArray(
 			[
-				A5($author$project$TodoItem$TodoItem, model.inputBuffer, model.persistentCore.timestamp, false, $author$project$TodoState$Todo, false)
+				A5(
+				$author$project$TodoItem$TodoItem,
+				_Utils_ap(
+					$elm$core$String$toUpper(
+						A2($elm$core$String$left, 1, model.inputBuffer)),
+					A2($elm$core$String$dropLeft, 1, model.inputBuffer)),
+				model.persistentCore.timestamp,
+				false,
+				$author$project$TodoState$Todo,
+				false)
 			]));
 	return A4($author$project$ModelCore$ModelCore, model.persistentCore.timestamp, newTodoItems, model.persistentCore.checkpoint, model.persistentCore.lastBackup);
 };

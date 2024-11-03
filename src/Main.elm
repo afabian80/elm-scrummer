@@ -884,7 +884,13 @@ addNewTodoItem model =
             else
                 List.append
                     model.persistentCore.todoItems
-                    [ TodoItem model.inputBuffer model.persistentCore.timestamp False Todo False ]
+                    [ TodoItem
+                        (String.toUpper (String.left 1 model.inputBuffer) ++ String.dropLeft 1 model.inputBuffer)
+                        model.persistentCore.timestamp
+                        False
+                        Todo
+                        False
+                    ]
     in
     ModelCore
         model.persistentCore.timestamp
