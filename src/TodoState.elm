@@ -7,6 +7,7 @@ import Json.Encode as E
 type TodoState
     = Todo
     | Doing
+    | Waiting
     | Blocked
     | Done
     | Cancelled
@@ -24,6 +25,9 @@ encodeTodoState state =
 
         Doing ->
             E.string "Doing"
+
+        Waiting ->
+            E.string "Waiting"
 
         Blocked ->
             E.string "Blocked"
@@ -46,6 +50,9 @@ decodeTodoState =
 
                     "Doing" ->
                         D.succeed Doing
+
+                    "Waiting" ->
+                        D.succeed Waiting
 
                     "Blocked" ->
                         D.succeed Blocked
@@ -72,6 +79,9 @@ compareTodoState s1 s2 =
                 Doing ->
                     LT
 
+                Waiting ->
+                    LT
+
                 Blocked ->
                     LT
 
@@ -87,6 +97,29 @@ compareTodoState s1 s2 =
                     GT
 
                 Doing ->
+                    EQ
+
+                Waiting ->
+                    LT
+
+                Blocked ->
+                    LT
+
+                Done ->
+                    LT
+
+                Cancelled ->
+                    LT
+
+        Waiting ->
+            case s2 of
+                Todo ->
+                    GT
+
+                Doing ->
+                    GT
+
+                Waiting ->
                     EQ
 
                 Blocked ->
@@ -106,6 +139,9 @@ compareTodoState s1 s2 =
                 Doing ->
                     GT
 
+                Waiting ->
+                    GT
+
                 Blocked ->
                     EQ
 
@@ -123,6 +159,9 @@ compareTodoState s1 s2 =
                 Doing ->
                     GT
 
+                Waiting ->
+                    GT
+
                 Blocked ->
                     GT
 
@@ -138,6 +177,9 @@ compareTodoState s1 s2 =
                     GT
 
                 Doing ->
+                    GT
+
+                Waiting ->
                     GT
 
                 Blocked ->

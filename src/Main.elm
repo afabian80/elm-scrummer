@@ -335,6 +335,7 @@ renderTodoItem cp buffer todoItem =
                     [ Select.item [ value "select" ] [ text "Select..." ]
                     , Select.item [ value "todo" ] [ text "TODO" ]
                     , Select.item [ value "doing" ] [ text "DOING" ]
+                    , Select.item [ value "waiting" ] [ text "WAITING" ]
                     , Select.item [ value "blocked" ] [ text "BLOCKED" ]
                     , Select.item [ value "done" ] [ text "DONE" ]
                     , Select.item [ value "cancelled" ] [ text "CANCELLED" ]
@@ -450,8 +451,11 @@ setTitleCellOptions state =
         Cancelled ->
             [ Table.cellSuccess, Table.cellAttr (style "border" "3px solid green") ]
 
-        _ ->
+        Todo ->
             []
+
+        Waiting ->
+            [ Table.cellInfo ]
 
 
 renderNewBadge : Bool -> Html msg
@@ -471,6 +475,9 @@ renderStatusBadge todoItem =
 
         Doing ->
             Badge.badgeWarning [] [ text "DOING" ]
+
+        Waiting ->
+            Badge.badgeInfo [] [ text "WAITING" ]
 
         Blocked ->
             Badge.badgeDanger [] [ text "BLOCKED" ]
@@ -779,6 +786,9 @@ changeTodoItemState theTodoItem state time aTodoItem =
 
                 "doing" ->
                     Doing
+
+                "waiting" ->
+                    Waiting
 
                 "blocked" ->
                     Blocked

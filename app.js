@@ -5364,6 +5364,7 @@ var $author$project$TodoState$Cancelled = {$: 'Cancelled'};
 var $author$project$TodoState$Doing = {$: 'Doing'};
 var $author$project$TodoState$Done = {$: 'Done'};
 var $author$project$TodoState$Todo = {$: 'Todo'};
+var $author$project$TodoState$Waiting = {$: 'Waiting'};
 var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$fail = _Json_fail;
 var $elm$json$Json$Decode$string = _Json_decodeString;
@@ -5375,6 +5376,8 @@ var $author$project$TodoState$decodeTodoState = A2(
 				return $elm$json$Json$Decode$succeed($author$project$TodoState$Todo);
 			case 'Doing':
 				return $elm$json$Json$Decode$succeed($author$project$TodoState$Doing);
+			case 'Waiting':
+				return $elm$json$Json$Decode$succeed($author$project$TodoState$Waiting);
 			case 'Blocked':
 				return $elm$json$Json$Decode$succeed($author$project$TodoState$Blocked);
 			case 'Done':
@@ -5440,6 +5443,8 @@ var $author$project$TodoState$encodeTodoState = function (state) {
 			return $elm$json$Json$Encode$string('Todo');
 		case 'Doing':
 			return $elm$json$Json$Encode$string('Doing');
+		case 'Waiting':
+			return $elm$json$Json$Encode$string('Waiting');
 		case 'Blocked':
 			return $elm$json$Json$Encode$string('Blocked');
 		case 'Done':
@@ -5543,6 +5548,8 @@ var $author$project$Main$changeTodoItemState = F4(
 					return $author$project$TodoState$Todo;
 				case 'doing':
 					return $author$project$TodoState$Doing;
+				case 'waiting':
+					return $author$project$TodoState$Waiting;
 				case 'blocked':
 					return $author$project$TodoState$Blocked;
 				case 'done':
@@ -5700,6 +5707,8 @@ var $author$project$TodoState$compareTodoState = F2(
 						return $elm$core$Basics$EQ;
 					case 'Doing':
 						return $elm$core$Basics$LT;
+					case 'Waiting':
+						return $elm$core$Basics$LT;
 					case 'Blocked':
 						return $elm$core$Basics$LT;
 					case 'Done':
@@ -5712,6 +5721,23 @@ var $author$project$TodoState$compareTodoState = F2(
 					case 'Todo':
 						return $elm$core$Basics$GT;
 					case 'Doing':
+						return $elm$core$Basics$EQ;
+					case 'Waiting':
+						return $elm$core$Basics$LT;
+					case 'Blocked':
+						return $elm$core$Basics$LT;
+					case 'Done':
+						return $elm$core$Basics$LT;
+					default:
+						return $elm$core$Basics$LT;
+				}
+			case 'Waiting':
+				switch (s2.$) {
+					case 'Todo':
+						return $elm$core$Basics$GT;
+					case 'Doing':
+						return $elm$core$Basics$GT;
+					case 'Waiting':
 						return $elm$core$Basics$EQ;
 					case 'Blocked':
 						return $elm$core$Basics$LT;
@@ -5726,6 +5752,8 @@ var $author$project$TodoState$compareTodoState = F2(
 						return $elm$core$Basics$GT;
 					case 'Doing':
 						return $elm$core$Basics$GT;
+					case 'Waiting':
+						return $elm$core$Basics$GT;
 					case 'Blocked':
 						return $elm$core$Basics$EQ;
 					case 'Done':
@@ -5739,6 +5767,8 @@ var $author$project$TodoState$compareTodoState = F2(
 						return $elm$core$Basics$GT;
 					case 'Doing':
 						return $elm$core$Basics$GT;
+					case 'Waiting':
+						return $elm$core$Basics$GT;
 					case 'Blocked':
 						return $elm$core$Basics$GT;
 					case 'Done':
@@ -5751,6 +5781,8 @@ var $author$project$TodoState$compareTodoState = F2(
 					case 'Todo':
 						return $elm$core$Basics$GT;
 					case 'Doing':
+						return $elm$core$Basics$GT;
+					case 'Waiting':
 						return $elm$core$Basics$GT;
 					case 'Blocked':
 						return $elm$core$Basics$GT;
@@ -6919,6 +6951,12 @@ var $rundis$elm_bootstrap$Bootstrap$Badge$badgeDanger = $rundis$elm_bootstrap$Bo
 		[
 			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Danger)
 		]));
+var $rundis$elm_bootstrap$Bootstrap$Badge$Info = {$: 'Info'};
+var $rundis$elm_bootstrap$Bootstrap$Badge$badgeInfo = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
+	_List_fromArray(
+		[
+			$rundis$elm_bootstrap$Bootstrap$Badge$Roled($rundis$elm_bootstrap$Bootstrap$Badge$Info)
+		]));
 var $rundis$elm_bootstrap$Bootstrap$Badge$Primary = {$: 'Primary'};
 var $rundis$elm_bootstrap$Bootstrap$Badge$badgePrimary = $rundis$elm_bootstrap$Bootstrap$Badge$badgeInternal(
 	_List_fromArray(
@@ -6955,6 +6993,14 @@ var $author$project$Main$renderStatusBadge = function (todoItem) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text('DOING')
+					]));
+		case 'Waiting':
+			return A2(
+				$rundis$elm_bootstrap$Bootstrap$Badge$badgeInfo,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('WAITING')
 					]));
 		case 'Blocked':
 			return A2(
@@ -7122,6 +7168,9 @@ var $rundis$elm_bootstrap$Bootstrap$Table$RoledCell = function (a) {
 };
 var $rundis$elm_bootstrap$Bootstrap$Table$cellDanger = $rundis$elm_bootstrap$Bootstrap$Table$RoledCell(
 	$rundis$elm_bootstrap$Bootstrap$Table$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Role$Danger));
+var $rundis$elm_bootstrap$Bootstrap$Internal$Role$Info = {$: 'Info'};
+var $rundis$elm_bootstrap$Bootstrap$Table$cellInfo = $rundis$elm_bootstrap$Bootstrap$Table$RoledCell(
+	$rundis$elm_bootstrap$Bootstrap$Table$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Role$Info));
 var $rundis$elm_bootstrap$Bootstrap$Internal$Role$Success = {$: 'Success'};
 var $rundis$elm_bootstrap$Bootstrap$Table$cellSuccess = $rundis$elm_bootstrap$Bootstrap$Table$RoledCell(
 	$rundis$elm_bootstrap$Bootstrap$Table$Roled($rundis$elm_bootstrap$Bootstrap$Internal$Role$Success));
@@ -7150,8 +7199,11 @@ var $author$project$Main$setTitleCellOptions = function (state) {
 					$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
 					A2($elm$html$Html$Attributes$style, 'border', '3px solid green'))
 				]);
-		default:
+		case 'Todo':
 			return _List_Nil;
+		default:
+			return _List_fromArray(
+				[$rundis$elm_bootstrap$Bootstrap$Table$cellInfo]);
 	}
 };
 var $rundis$elm_bootstrap$Bootstrap$General$Internal$SM = {$: 'SM'};
@@ -7592,6 +7644,16 @@ var $author$project$Main$renderTodoItem = F3(
 									_List_fromArray(
 										[
 											$elm$html$Html$text('DOING')
+										])),
+									A2(
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value('waiting')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('WAITING')
 										])),
 									A2(
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$item,
