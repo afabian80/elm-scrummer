@@ -7150,6 +7150,10 @@ var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$small = function (_v0) {
 				size: $elm$core$Maybe$Just($rundis$elm_bootstrap$Bootstrap$General$Internal$SM)
 			}));
 };
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$Size = function (a) {
+	return {$: 'Size', a: a};
+};
+var $rundis$elm_bootstrap$Bootstrap$Form$Select$small = $rundis$elm_bootstrap$Bootstrap$Form$Select$Size($rundis$elm_bootstrap$Bootstrap$General$Internal$SM);
 var $rundis$elm_bootstrap$Bootstrap$Form$InputGroup$successors = F2(
 	function (addons, _v0) {
 		var conf = _v0.a;
@@ -7536,7 +7540,8 @@ var $author$project$Main$renderTodoItem = F3(
 								[
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$id('StatusSelector'),
 									$rundis$elm_bootstrap$Bootstrap$Form$Select$onChange(
-									$author$project$Main$SelectChange(todoItem))
+									$author$project$Main$SelectChange(todoItem)),
+									$rundis$elm_bootstrap$Bootstrap$Form$Select$small
 								]),
 							_List_fromArray(
 								[
