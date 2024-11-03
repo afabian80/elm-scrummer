@@ -7620,42 +7620,18 @@ var $author$project$Main$renderTodoItem = F3(
 					$author$project$Main$setTitleCellOptions(todoItem.state),
 					_List_fromArray(
 						[
-							_Utils_eq(todoItem.state, $author$project$TodoState$Done) ? A2(
+							A2(
 							$elm$html$Html$span,
-							_List_Nil,
 							_List_fromArray(
 								[
-									A2(
-									$elm$html$Html$span,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick(
-											$author$project$Main$Edit(todoItem))
-										]),
-									_List_fromArray(
-										[
-											$author$project$Main$renderNewBadge(
-											_Utils_cmp(cp, todoItem.modificationTime) < 0),
-											$author$project$Main$renderTitle(todoItem.title)
-										]))
-								])) : A2(
-							$elm$html$Html$span,
-							_List_Nil,
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$Edit(todoItem))
+								]),
 							_List_fromArray(
 								[
-									A2(
-									$elm$html$Html$span,
-									_List_fromArray(
-										[
-											$elm$html$Html$Events$onClick(
-											$author$project$Main$Edit(todoItem))
-										]),
-									_List_fromArray(
-										[
-											$author$project$Main$renderNewBadge(
-											_Utils_cmp(cp, todoItem.modificationTime) < 0),
-											$author$project$Main$renderTitle(todoItem.title)
-										]))
+									$author$project$Main$renderNewBadge(
+									_Utils_cmp(cp, todoItem.modificationTime) < 0),
+									$author$project$Main$renderTitle(todoItem.title)
 								]))
 						])),
 					A2(

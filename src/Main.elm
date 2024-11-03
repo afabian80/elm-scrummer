@@ -342,23 +342,10 @@ renderTodoItem cp buffer todoItem =
                 ]
             , Table.td
                 (setTitleCellOptions todoItem.state)
-                [ if todoItem.state == Done then
-                    span []
-                        [ --Spinner.spinner [ Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
-                          span [ onClick (Edit todoItem) ]
-                            [ renderNewBadge (cp < todoItem.modificationTime)
-                            , renderTitle todoItem.title
-                            ]
-                        ]
-
-                  else
-                    span []
-                        [ --Spinner.spinner [ Spinner.grow, Spinner.small, Spinner.color Text.secondary ] [ Spinner.srMessage "Doing" ]
-                          span [ onClick (Edit todoItem) ]
-                            [ renderNewBadge (cp < todoItem.modificationTime)
-                            , renderTitle todoItem.title
-                            ]
-                        ]
+                [ span [ onClick (Edit todoItem) ]
+                    [ renderNewBadge (cp < todoItem.modificationTime)
+                    , renderTitle todoItem.title
+                    ]
                 ]
             , Table.td [] [ Button.button [ Button.danger, Button.onClick (DeleteTodoItem todoItem), Button.small ] [ text "Delete" ] ]
             ]
