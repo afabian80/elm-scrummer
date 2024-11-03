@@ -7122,7 +7122,11 @@ var $author$project$Main$setTitleCellOptions = function (state) {
 	switch (state.$) {
 		case 'Done':
 			return _List_fromArray(
-				[$rundis$elm_bootstrap$Bootstrap$Table$cellSuccess]);
+				[
+					$rundis$elm_bootstrap$Bootstrap$Table$cellSuccess,
+					$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+					A2($elm$html$Html$Attributes$style, 'border', '3px solid green'))
+				]);
 		case 'Doing':
 			return _List_fromArray(
 				[$rundis$elm_bootstrap$Bootstrap$Table$cellWarning]);
@@ -7131,7 +7135,11 @@ var $author$project$Main$setTitleCellOptions = function (state) {
 				[$rundis$elm_bootstrap$Bootstrap$Table$cellDanger]);
 		case 'Cancelled':
 			return _List_fromArray(
-				[$rundis$elm_bootstrap$Bootstrap$Table$cellSuccess]);
+				[
+					$rundis$elm_bootstrap$Bootstrap$Table$cellSuccess,
+					$rundis$elm_bootstrap$Bootstrap$Table$cellAttr(
+					A2($elm$html$Html$Attributes$style, 'border', '3px solid green'))
+				]);
 		default:
 			return _List_Nil;
 	}

@@ -442,7 +442,7 @@ setTitleCellOptions : TodoState -> List (Table.CellOption Msg)
 setTitleCellOptions state =
     case state of
         Done ->
-            [ Table.cellSuccess ]
+            [ Table.cellSuccess, Table.cellAttr (style "border" "3px solid green") ]
 
         Doing ->
             [ Table.cellWarning ]
@@ -451,7 +451,7 @@ setTitleCellOptions state =
             [ Table.cellDanger ]
 
         Cancelled ->
-            [ Table.cellSuccess ]
+            [ Table.cellSuccess, Table.cellAttr (style "border" "3px solid green") ]
 
         _ ->
             []
