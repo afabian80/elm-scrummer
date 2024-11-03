@@ -7639,10 +7639,10 @@ var $author$project$Main$renderTodoItem = F3(
 								]),
 							_List_fromArray(
 								[
+									A2($author$project$Main$renderOld, todoItem, cp),
 									$author$project$Main$renderNewBadge(
 									_Utils_cmp(cp, todoItem.modificationTime) < 0),
-									$author$project$Main$renderTitle(todoItem.title),
-									A2($author$project$Main$renderOld, todoItem, cp)
+									$author$project$Main$renderTitle(todoItem.title)
 								]))
 						])),
 					A2(

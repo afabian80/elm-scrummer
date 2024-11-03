@@ -17,7 +17,7 @@ import File
 import File.Download as Download
 import File.Select as Select
 import Html exposing (Attribute, Html, a, div, h1, p, span, text)
-import Html.Attributes exposing (autofocus, class, href, selected, style, value)
+import Html.Attributes exposing (autofocus, class, href, style, value)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Encode as E
@@ -343,9 +343,9 @@ renderTodoItem cp buffer todoItem =
             , Table.td
                 (setTitleCellOptions todoItem.state)
                 [ span [ onClick (Edit todoItem) ]
-                    [ renderNewBadge (cp < todoItem.modificationTime)
+                    [ renderOld todoItem cp
+                    , renderNewBadge (cp < todoItem.modificationTime)
                     , renderTitle todoItem.title
-                    , renderOld todoItem cp
                     ]
                 ]
             , Table.td [] [ Button.button [ Button.danger, Button.onClick (DeleteTodoItem todoItem), Button.small ] [ text "Delete" ] ]
