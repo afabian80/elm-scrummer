@@ -371,6 +371,9 @@ renderTitle title =
         tagToPrimaryBadge s =
             Badge.badgePrimary [] [ text s ]
 
+        tagToSuccessBadge s =
+            Badge.badgeSuccess [] [ text s ]
+
         tagToDangerBadge s =
             Badge.badgeDanger [ class "blink" ] [ text s ]
 
@@ -385,6 +388,9 @@ renderTitle title =
 
         isShortLink =
             String.startsWith "/http"
+
+        isTime =
+            String.startsWith "@"
 
         space =
             text " "
@@ -427,6 +433,13 @@ renderTitle title =
                 span []
                     [ space
                     , a [ href (String.dropLeft 1 s) ] [ text (lastPaths 2 s) ]
+                    , space
+                    ]
+
+            else if isTime s then
+                span []
+                    [ space
+                    , tagToSuccessBadge (String.dropLeft 1 s)
                     , space
                     ]
 

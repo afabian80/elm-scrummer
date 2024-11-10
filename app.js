@@ -7069,6 +7069,15 @@ var $elm$html$Html$Attributes$href = function (url) {
 var $elm$core$String$words = _String_words;
 var $author$project$Main$renderTitle = function (title) {
 	var words = $elm$core$String$words(title);
+	var tagToSuccessBadge = function (s) {
+		return A2(
+			$rundis$elm_bootstrap$Bootstrap$Badge$badgeSuccess,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text(s)
+				]));
+	};
 	var tagToPrimaryBadge = function (s) {
 		return A2(
 			$rundis$elm_bootstrap$Bootstrap$Badge$badgePrimary,
@@ -7101,6 +7110,7 @@ var $author$project$Main$renderTitle = function (title) {
 				slashParts(s));
 			return A2($elm$core$String$join, '/', lastParts);
 		});
+	var isTime = $elm$core$String$startsWith('@');
 	var isTag = $elm$core$String$startsWith('#');
 	var isShortLink = $elm$core$String$startsWith('/http');
 	var isLink = $elm$core$String$startsWith('http');
@@ -7160,7 +7170,16 @@ var $author$project$Main$renderTitle = function (title) {
 							A2(lastPaths, 2, s))
 						])),
 					space
-				])) : $elm$html$Html$text(' ' + (s + ' ')))));
+				])) : (isTime(s) ? A2(
+			$elm$html$Html$span,
+			_List_Nil,
+			_List_fromArray(
+				[
+					space,
+					tagToSuccessBadge(
+					A2($elm$core$String$dropLeft, 1, s)),
+					space
+				])) : $elm$html$Html$text(' ' + (s + ' '))))));
 	};
 	return A2(
 		$elm$html$Html$span,
